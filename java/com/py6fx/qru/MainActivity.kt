@@ -14,11 +14,12 @@ class MainActivity : AppCompatActivity() {
         // Conecta o ViewFlipper
         val viewFlipper = findViewById<ViewFlipper>(R.id.viewFlipper)
 
-        // Botão da Página 1 → Próxima Página
-        /* val btnNextPage1 = findViewById<Button>(R.id.btnNextPage1)
-        btnNextPage1.setOnClickListener {
-            viewFlipper.showNext()
-        } */
+        // Botão da Página 2 New User
+        val btnNewUser = findViewById<Button>(R.id.button_new_user)
+        btnNewUser.setOnClickListener {
+            val pageIndex = 1
+            viewFlipper.displayedChild = pageIndex
+        }
 
         // Botão da Página 2 → Página Anterior
         val btnPrevPage2 = findViewById<Button>(R.id.btnPrevPage2)
