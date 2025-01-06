@@ -22,12 +22,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Botão da Página 2 → Página Anterior
-        val btnPrevPage2 = findViewById<Button>(R.id.btnPrevPage2)
-        btnPrevPage2.setOnClickListener {
-            viewFlipper.showPrevious()
+        // val btnPrevPage2 = findViewById<Button>(R.id.btnPrevPage2)
+        // btnPrevPage2.setOnClickListener {
+        //    viewFlipper.showPrevious()
         }
     }
-}
+
 
 
 
