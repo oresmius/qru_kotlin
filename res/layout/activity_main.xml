@@ -109,13 +109,28 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-                    <!-- Adicione os EditTexts ou outros widgets aqui -->
-
+                    <EditText
+                        android:id="@+id/editText_new_user_call"
+                        style="@style/text_new_user"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="Call"
+                        android:inputType="text" />
+                    <EditText
+                        android:id="@+id/editText_new_user_name"
+                        style="@style/text_new_user"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="Name"
+                        android:inputType="text" />
                 </LinearLayout>
-
             </ScrollView>
+
 
 
 
