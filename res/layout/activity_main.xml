@@ -128,6 +128,94 @@
                         android:ems="10"
                         android:hint="Name"
                         android:inputType="text" />
+                    <EditText
+                        android:id="@+id/editText_new_user_address"
+                        style="@style/text_new_user"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="Address"
+                        android:inputType="text" />
+                    <EditText
+                        android:id="@+id/editText_new_user_city"
+                        style="@style/text_new_user"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="City"
+                        android:inputType="text" />
+                    <EditText
+                        android:id="@+id/editText_new_user_state"
+                        style="@style/text_new_user"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="State"
+                        android:inputType="text" />
+                    <EditText
+                        android:id="@+id/editText_new_user_zip"
+                        style="@style/text_new_user"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="ZIP"
+                        android:inputType="text" />
+                    <EditText
+                        android:id="@+id/editText_new_user_country"
+                        style="@style/text_new_user"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="Country"
+                        android:inputType="text" />
+                    <EditText
+                        android:id="@+id/editText_new_user_grid_square"
+                        style="@style/text_new_user"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="Grid Square"
+                        android:inputType="text" />
+                    <EditText
+                        android:id="@+id/editText_new_user_arrl_section"
+                        style="@style/text_new_user"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="ARRL Section"
+                        android:inputType="text" />
+                    <EditText
+                        android:id="@+id/editText_new_user_club"
+                        style="@style/text_new_user"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="Club"
+                        android:inputType="text" />
+                    <EditText
+                        android:id="@+id/editText_new_user_cq_zone"
+                        style="@style/text_new_user"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="CQ Zone"
+                        android:inputType="text" />
+                    <EditText
+                        android:id="@+id/editText_new_user_itu_zone"
+                        style="@style/text_new_user"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="ITU Zone"
+                        android:inputType="text" />
+                    <EditText
+                        android:id="@+id/editText_new_user_email"
+                        style="@style/text_new_user"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="E-Mail"
+                        android:inputType="text" />
                 </LinearLayout>
             </ScrollView>
 
