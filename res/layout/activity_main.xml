@@ -1,22 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#F6EFEF"
     tools:context=".MainActivity">
 
     <!-- ViewFlipper -->
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="79dp"
+        android:layout_height="41dp"
+        android:background="@drawable/rouded_button"
+        android:gravity="center"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="231dp" />
+
     <ViewFlipper
         android:id="@+id/viewFlipper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <!-- Página 1 -->
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <!--<androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/pag_1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -69,37 +80,53 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!-- Página 2 -->
+        <!- Página 2 -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/pag_2"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="#CCC2C2">
 
             <TextView
-                android:id="@+id/textPage2"
-                android:layout_width="0dp"
-                android:layout_height="60dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
+                android:id="@+id/label_new_user"
+                android:layout_width="694dp"
+                android:layout_height="38dp"
                 android:background="@drawable/rouded_button"
                 android:gravity="center"
                 android:text="New User"
                 android:textColor="#FFFFFF"
                 android:textSize="30sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                tools:layout_editor_absoluteX="16dp"
+                tools:layout_editor_absoluteY="4dp" />
+
+            <ScrollView
+                android:layout_width="681dp"
+                android:layout_height="292dp"
+                tools:layout_editor_absoluteX="24dp"
+                tools:layout_editor_absoluteY="55dp">
+
+                <!-- LinearLayout dentro do ScrollView -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <!-- Adicione os EditTexts ou outros widgets aqui -->
+
+                </LinearLayout>
+
+            </ScrollView>
+
+
 
             <Button
                 android:id="@+id/btnPrevPage2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
+                android:layout_width="172dp"
+                android:layout_height="37dp"
                 android:text="Página Anterior"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                tools:layout_editor_absoluteX="519dp"
+                tools:layout_editor_absoluteY="358dp" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ViewFlipper>
 </androidx.constraintlayout.widget.ConstraintLayout>
