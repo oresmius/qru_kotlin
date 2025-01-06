@@ -97,10 +97,10 @@
 
             <ScrollView
                 android:id="@+id/scrollView4"
-                android:layout_width="681dp"
-                android:layout_height="292dp"
+                android:layout_width="671dp"
+                android:layout_height="282dp"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="13dp"
+                android:layout_marginTop="2dp"
                 android:layout_marginEnd="26dp"
                 android:layout_marginBottom="64dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -149,7 +149,8 @@
                         android:layout_height="wrap_content"
                         android:ems="10"
                         android:hint="City"
-                        android:inputType="text" />
+                        android:inputType="text"
+                        android:textColor="#FFFEFE" />
 
                     <EditText
                         android:id="@+id/editText_new_user_state"
@@ -233,6 +234,36 @@
                         android:inputType="textEmailAddress" />
                 </LinearLayout>
             </ScrollView>
+
+            <Button
+                android:id="@+id/button_save_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="508dp"
+                android:layout_marginTop="7dp"
+                android:layout_marginEnd="23dp"
+                android:layout_marginBottom="13dp"
+                android:background="@drawable/rouded_button"
+                android:text="Save User"
+                android:textColor="#FFFFFF"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/button_cancel_save_user"
+                app:layout_constraintTop_toBottomOf="@+id/scrollView4" />
+
+            <Button
+                android:id="@+id/button_cancel_save_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="7dp"
+                android:layout_marginBottom="13dp"
+                android:background="@drawable/rouded_button"
+                android:text="Cancel"
+                android:textColor="#FFFFFF"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/scrollView4" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
