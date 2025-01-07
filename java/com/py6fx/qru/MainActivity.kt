@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.ViewFlipper
 import androidx.appcompat.app.AppCompatActivity
+import java.io.File
 
 class MainActivity : AppCompatActivity() {
 
@@ -13,6 +14,12 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        // Verifica e cria a pasta "db" se não existir
+        val dbFolder = File(applicationContext.filesDir , "db")
+        if (!dbFolder.exists()) {
+            dbFolder.mkdirs()
+        }
 
         // Inicializa componentes
         initializeComponents()
