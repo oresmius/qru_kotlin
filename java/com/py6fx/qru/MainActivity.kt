@@ -7,20 +7,35 @@ import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
 
+    // Declaração de variável para o ViewFlipper
+    private lateinit var viewFlipper: ViewFlipper
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Conecta o ViewFlipper
-        val viewFlipper = findViewById<ViewFlipper>(R.id.viewFlipper)
+        // Inicializa componentes
+        initializeComponents()
 
-        // New User
+        // Configura os botões
+        setupButtonListeners()
+    }
+
+    // Inicializa os componentes
+    private fun initializeComponents() {
+        viewFlipper = findViewById(R.id.viewFlipper)
+    }
+
+    // Configura os botões
+    private fun setupButtonListeners() {
         val btnNewUser = findViewById<Button>(R.id.button_new_user)
         btnNewUser.setOnClickListener {
-            val pageIndex = 1
-            viewFlipper.displayedChild = pageIndex
+            navigateToPage(1) // Move a lógica para um método específico
         }
     }
+
+    // Lógica para navegar entre páginas
+    private fun navigateToPage(pageIndex: Int) {
+        viewFlipper.displayedChild = pageIndex
+    }
 }
-
-
