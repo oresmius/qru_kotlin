@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F6EFEF"
+    tools:context=".MainActivity">
+
+    <!-- ViewFlipper -->
+
+    <ViewFlipper
+        android:id="@+id/viewFlipper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- Página 1 -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/pag_1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#CCC2C2">
+
+            <Button
+                android:id="@+id/button_new_user"
+                android:layout_width="0dp"
+                android:layout_height="87dp"
+                android:background="@drawable/rouded_button"
+                android:text="New User"
+                android:textAllCaps="false"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toTopOf="@+id/button_load_user"
+                app:layout_constraintEnd_toEndOf="@+id/button_load_user"
+                app:layout_constraintStart_toStartOf="@+id/button_load_user"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/button_load_user"
+                android:layout_width="184dp"
+                android:layout_height="87dp"
+                android:layout_marginEnd="107dp"
+                android:background="@drawable/rouded_button"
+                android:text="Load User"
+                android:textAllCaps="false"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imageView"
+                app:layout_constraintTop_toBottomOf="@+id/button_new_user" />
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="0dp"
+                android:layout_height="252dp"
+                android:layout_marginStart="65dp"
+                android:layout_marginEnd="65dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/button_load_user"
+                app:layout_constraintHorizontal_bias="0.169"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.496"
+                app:srcCompat="@drawable/cat2" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- Página 2 -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/pag_2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#CCC2C2">
+
+            <TextView
+                android:id="@+id/label_new_user"
+                android:layout_width="115dp"
+                android:layout_height="33dp"
+                android:layout_marginStart="308dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="308dp"
+                android:background="@drawable/rouded_button"
+                android:gravity="center"
+                android:text="New User"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ScrollView
+                android:id="@+id/scrollView4"
+                android:layout_width="671dp"
+                android:layout_height="250dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginBottom="21dp"
+                app:layout_constraintBottom_toTopOf="@+id/button_save_user"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/label_new_user">
+
+                <!-- LinearLayout dentro do ScrollView -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <EditText
+                        android:id="@+id/editText_new_user_call"
+                        style="@style/text_new_user"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="Call"
+                        android:inputType="text" />
+
+                    <EditText
+                        android:id="@+id/editText_new_user_name"
+                        style="@style/text_new_user"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="Name"
+                        android:inputType="text" />
+
+                    <EditText
+                        android:id="@+id/editText_new_user_address"
+                        style="@style/text_new_user"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="Address"
+                        android:inputType="text" />
+
+                    <EditText
+                        android:id="@+id/editText_new_user_city"
+                        style="@style/text_new_user"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="City"
+                        android:inputType="text"
+                        android:textColor="#FFFEFE" />
+
+                    <EditText
+                        android:id="@+id/editText_new_user_state"
+                        style="@style/text_new_user"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="State"
+                        android:inputType="text" />
+
+                    <EditText
+                        android:id="@+id/editText_new_user_zip"
+                        style="@style/text_new_user"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="ZIP"
+                        android:inputType="text" />
+
+                    <EditText
+                        android:id="@+id/editText_new_user_country"
+                        style="@style/text_new_user"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="Country"
+                        android:inputType="text" />
+
+                    <EditText
+                        android:id="@+id/editText_new_user_grid_square"
+                        style="@style/text_new_user"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="Grid Square"
+                        android:inputType="text" />
+
+                    <EditText
+                        android:id="@+id/editText_new_user_arrl_section"
+                        style="@style/text_new_user"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="ARRL Section"
+                        android:inputType="text" />
+
+                    <EditText
+                        android:id="@+id/editText_new_user_club"
+                        style="@style/text_new_user"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="Club"
+                        android:inputType="text" />
+
+                    <EditText
+                        android:id="@+id/editText_new_user_cq_zone"
+                        style="@style/text_new_user"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="CQ Zone"
+                        android:inputType="text" />
+
+                    <EditText
+                        android:id="@+id/editText_new_user_itu_zone"
+                        style="@style/text_new_user"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="ITU Zone"
+                        android:inputType="text" />
+
+                    <EditText
+                        android:id="@+id/editText_new_user_email"
+                        style="@style/text_new_user"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="E-Mail"
+                        android:inputType="textEmailAddress" />
+                </LinearLayout>
+            </ScrollView>
+
+            <Button
+                android:id="@+id/button_save_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="373dp"
+                android:layout_marginEnd="102dp"
+                android:layout_marginBottom="11dp"
+                android:background="@drawable/rouded_button"
+                android:text="Save User"
+                android:textColor="#FFFFFF"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/button_cancel_save_user" />
+
+            <Button
+                android:id="@+id/button_cancel_save_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="80dp"
+                android:layout_marginBottom="11dp"
+                android:background="@drawable/rouded_button"
+                android:text="Cancel"
+                android:textColor="#FFFFFF"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ViewFlipper>
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+
