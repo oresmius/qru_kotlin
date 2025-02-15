@@ -63,28 +63,33 @@ class MainActivity : AppCompatActivity() {
             val club = editTextClub.text.toString().trim()
             val email = editTextEmail.text.toString().trim()
 
-            // Validação: Verifica se algum campo está vazio
-            val missingFields = mutableListOf<String>()
-            if (call.isEmpty()) missingFields.add("Call")
-            if (name.isEmpty()) missingFields.add("Name")
-            if (address.isEmpty()) missingFields.add("Address")
-            if (city.isEmpty()) missingFields.add("City")
-            if (state.isEmpty()) missingFields.add("State")
-            if (zip.isEmpty()) missingFields.add("ZIP")
-            if (country.isEmpty()) missingFields.add("Country")
-            if (grid.isEmpty()) missingFields.add("Grid Square")
-            if (cq.isEmpty()) missingFields.add("CQ Zone")
-            if (itu.isEmpty()) missingFields.add("ITU Zone")
-            if (arrl.isEmpty()) missingFields.add("ARRL Section")
-            if (club.isEmpty()) missingFields.add("Club")
-            if (email.isEmpty()) missingFields.add("Email")
+            // Lista de campos com seus nomes
+            val fields = listOf(
+                "Call" to call,
+                "Name" to name,
+                "Address" to address,
+                "City" to city,
+                "State" to state,
+                "ZIP" to zip,
+                "Country" to country,
+                "Grid Square" to grid,
+                "CQ Zone" to cq,
+                "ITU Zone" to itu,
+                "ARRL Section" to arrl,
+                "Club" to club,
+                "Email" to email
+            )
 
-            // Exibe um alerta se houver campos vazios
+            // Filtra os campos vazios e extrai seus nomes
+            val missingFields = fields.filter { it.second.isEmpty() }.map { it.first }
+
+            // Se houver campos vazios, exibe um alerta
             if (missingFields.isNotEmpty()) {
                 val message = "Os seguintes campos estão vazios: ${missingFields.joinToString(", ")}"
                 Toast.makeText(this, message, Toast.LENGTH_LONG).show()
                 return@setOnClickListener // Cancela o salvamento
             }
+
 
             // Proxima etapa será salvar no banco
         }
