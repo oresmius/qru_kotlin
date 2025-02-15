@@ -7,6 +7,8 @@ import android.widget.Toast
 import android.widget.ViewFlipper
 import androidx.appcompat.app.AppCompatActivity
 import java.io.File
+import android.database.sqlite.SQLiteDatabase
+import android.database.sqlite.SQLiteException
 
 class MainActivity : AppCompatActivity() {
 
@@ -18,7 +20,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         // Verifica e cria a pasta "db" se não existir
-        val dbFolder = File(applicationContext.filesDir , "db")
+        val dbFolder = File(applicationContext.filesDir, "db")
         if (!dbFolder.exists()) {
             dbFolder.mkdirs()
         }
@@ -31,8 +33,14 @@ class MainActivity : AppCompatActivity() {
 
         // referência ao botão de salvar
         val buttonSaveUser = findViewById<Button>(R.id.button_save_user)
-
-        // Referências aos campos de editText
+        buttonSaveUser.setOnClickListener {
+            //chama o método que lida com o SQlite
+            saveUserToDb()
+        }
+    }
+        // método que salva os dados do usuário no bd
+    private fun saveUserToDb() {
+        // referências aos campos de editText
         val editTextCall = findViewById<EditText>(R.id.editText_new_user_call)
         val editTextName = findViewById<EditText>(R.id.editText_new_user_name)
         val editTextAddress = findViewById<EditText>(R.id.editText_new_user_address)
@@ -47,8 +55,8 @@ class MainActivity : AppCompatActivity() {
         val editTextITU = findViewById<EditText>(R.id.editText_new_user_itu_zone)
         val editTextEmail = findViewById<EditText>(R.id.editText_new_user_email)
 
-        buttonSaveUser.setOnClickListener {
-            // Coleta os dados dos campos EditText
+
+            //coleta e labidação dos dados
             val call = editTextCall.text.toString().trim().uppercase()
             val name = editTextName.text.toString().trim()
             val address = editTextAddress.text.toString().trim()
@@ -87,14 +95,55 @@ class MainActivity : AppCompatActivity() {
             if (missingFields.isNotEmpty()) {
                 val message = "Os seguintes campos estão vazios: ${missingFields.joinToString(", ")}"
                 Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-                return@setOnClickListener // Cancela o salvamento
+                return
             }
+            // caminho para salvar o bd na pasta "db"
+            val dbPath = File(applicationContext.filesDir, "db/$call.db")
 
+            // Verifica se o banco já existe
+            if (dbPath.exists()) {
+                Toast.makeText(this, "A database with this name already exists. Please choose a different call sign.", Toast.LENGTH_LONG).show()
+                return
+            }
+            try{
+                //cria ou abre o bd
+                val db = SQLiteDatabase.openOrCreateDatabase(dbPath, null)
+                // cria a tabela "user" se ainda não existir
+                val createTableQuery = """
+                    CREATE TABLE IF NOT EXISTS user (
+                        Call TEXT PRIMARY KEY,
+                        Name TEXT,
+                        Address TEXT,
+                        City TEXT,
+                        State TEXT,
+                        ZIP TEXT,
+                        Country TEXT,
+                        GridSquare TEXT,
+                        CQZone TEXT,
+                        ITUZone TEXT,
+                        ARRLSection TEXT,
+                        Club TEXT,
+                        Email TEXT
+                )
+            """.trimIndent()
+                db.execSQL(createTableQuery)
+                // Insere os dados na tabela
+                val insertQuery = """
+                INSERT INTO user (Call, Name, Address, City, State, ZIP, Country, GridSquare, CQZone, ITUZone, ARRLSection, Club, Email) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """.trimIndent()
+                db.execSQL(insertQuery, arrayOf(call, name, address, city, state, zip, country, grid, cq, itu, arrl, club, email))
 
-            // Proxima etapa será salvar no banco
+                // Fecha o banco de dados
+                db.close()
+
+                // Mensagem de sucesso
+                Toast.makeText(this, "User successfully saved!", Toast.LENGTH_LONG).show()
+
+            } catch (e: SQLiteException) {
+                Toast.makeText(this, "Error saving user: ${e.message}", Toast.LENGTH_LONG).show()
+            }
         }
-
-    }
 
     // Inicializa os componentes
     private fun initializeComponents() {
