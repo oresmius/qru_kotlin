@@ -9,6 +9,8 @@ import androidx.appcompat.app.AppCompatActivity
 import java.io.File
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteException
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 
 class MainActivity : AppCompatActivity() {
 
@@ -41,7 +43,8 @@ class MainActivity : AppCompatActivity() {
         val buttonLoadUser = findViewById<Button>(R.id.button_load_user)
         buttonLoadUser.setOnClickListener{
             // chama o método que lida com os dbs que são os usuários
-            loadUser()
+            loadUsers()
+            navigateToPage(2)
         }
     }
         // método que salva os dados do usuário no bd
@@ -152,6 +155,20 @@ class MainActivity : AppCompatActivity() {
         }
 
     // método que lê os dbs que são os usuários e cria uma lista de seleção.
+    private fun loadUsers() {
+        val spinnerUsers = findViewById<Spinner>(R.id.spinner_users)
+        val dbFolder = File(applicationContext.filesDir, "db")
+        // lista todos os arquivos .db na pasta db
+        val dbFiles = dbFolder.listFiles { _, name -> name.endsWith(".db") } ?: arrayOf()
+        // extrai apenas os nomes dos arquivos sem extenção
+        val userList = dbFiles.map {it.nameWithoutExtension}
+        //caso não exista usuários
+        val finalList = if (userList.isNotEmpty()) userList else listOf("No users available")
+        // cria o adaptador para o spinner
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, finalList)
+        // Aplica o adaptador ao Spinner
+        spinnerUsers.adapter = adapter
+    }
 
     // Inicializa os componentes
     private fun initializeComponents() {
