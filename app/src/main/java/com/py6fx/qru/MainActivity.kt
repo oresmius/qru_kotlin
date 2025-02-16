@@ -37,6 +37,12 @@ class MainActivity : AppCompatActivity() {
             //chama o método que lida com o SQlite
             saveUserToDb()
         }
+        // referência ao botão load user
+        val buttonLoadUser = findViewById<Button>(R.id.button_load_user)
+        buttonLoadUser.setOnClickListener{
+            // chama o método que lida com os dbs que são os usuários
+            loadUser()
+        }
     }
         // método que salva os dados do usuário no bd
     private fun saveUserToDb() {
@@ -144,6 +150,8 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "Error saving user: ${e.message}", Toast.LENGTH_LONG).show()
             }
         }
+
+    // método que lê os dbs que são os usuários e cria uma lista de seleção.
 
     // Inicializa os componentes
     private fun initializeComponents() {
