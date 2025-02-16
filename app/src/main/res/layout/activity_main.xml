@@ -259,6 +259,76 @@
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- Página 3 -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/pag_3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#CCC2C2">
+
+            <TextView
+                android:id="@+id/label_load_user"
+                android:layout_width="115dp"
+                android:layout_height="33dp"
+                android:layout_marginStart="308dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="308dp"
+                android:background="@drawable/rouded_button"
+                android:gravity="center"
+                android:text="Load User"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Spinner
+                android:id="@+id/spinner_users"
+                android:layout_width="491dp"
+                android:layout_height="67dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/label_load_user"
+                app:layout_constraintVertical_bias="0.155" />
+
+            <Button
+                android:id="@+id/button_select_user"
+                android:layout_width="118dp"
+                android:layout_height="51dp"
+                android:layout_marginTop="205dp"
+                android:layout_marginEnd="108dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/rouded_button"
+                android:text="Select"
+                android:textColor="#FFFFFF"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/spinner_users"
+                app:layout_constraintVertical_bias="1.0" />
+
+            <Button
+                android:id="@+id/button_cancel1"
+                android:layout_width="118dp"
+                android:layout_height="51dp"
+                android:layout_marginTop="187dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/rouded_button"
+                android:text="Cancel"
+                android:textColor="#FFFFFF"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/button_select_user"
+                app:layout_constraintHorizontal_bias="0.286"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/spinner_users"
+                app:layout_constraintVertical_bias="0.0" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
     </ViewFlipper>
 </androidx.constraintlayout.widget.ConstraintLayout>
 
