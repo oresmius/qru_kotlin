@@ -179,7 +179,15 @@ class MainActivity : AppCompatActivity() {
     private fun setupButtonListeners() {
         val btnNewUser = findViewById<Button>(R.id.button_new_user)
         btnNewUser.setOnClickListener {
-            navigateToPage(1) // Move a lógica para um método específico
+            navigateToPage(1) // vira a página
+        }
+        val btnCancelLoadUser = findViewById<Button>(R.id.button_cancel_load_user)
+        btnCancelLoadUser.setOnClickListener{
+            navigateToPage(0)
+        }
+        val btnCancelNewUser = findViewById<Button>(R.id.button_cancel_new_user)
+        btnCancelNewUser.setOnClickListener{
+            navigateToPage(0)
         }
     }
 

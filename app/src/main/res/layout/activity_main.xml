@@ -243,10 +243,10 @@
                 android:textColor="#FFFFFF"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/button_cancel_save_user" />
+                app:layout_constraintStart_toEndOf="@+id/button_cancel_new_user" />
 
             <Button
-                android:id="@+id/button_cancel_save_user"
+                android:id="@+id/button_cancel_new_user"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="80dp"
@@ -310,7 +310,7 @@
                 app:layout_constraintVertical_bias="1.0" />
 
             <Button
-                android:id="@+id/button_cancel1"
+                android:id="@+id/button_cancel_load_user"
                 android:layout_width="118dp"
                 android:layout_height="51dp"
                 android:layout_marginTop="187dp"
