@@ -14,7 +14,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!-- Página 1 -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/pag_1"
             android:layout_width="match_parent"
@@ -68,7 +67,7 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!-- Página 2 -->
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/pag_2"
             android:layout_width="match_parent"
@@ -104,7 +103,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/label_new_user">
 
-                <!-- LinearLayout dentro do ScrollView -->
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -260,7 +259,6 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!-- Página 3 -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/pag_3"
             android:layout_width="match_parent"
@@ -328,6 +326,157 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <!-- Página 4 -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/pag_4"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#CCC2C2">
+
+            <TextView
+                android:id="@+id/label_main_menu"
+                android:layout_width="115dp"
+                android:layout_height="33dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/rouded_button"
+                android:gravity="center"
+                android:text="Main Menu"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toTopOf="@+id/user_indicator"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <TextView
+                android:id="@+id/user_indicator"
+                android:layout_width="197dp"
+                android:layout_height="65dp"
+                android:layout_marginStart="52dp"
+                android:layout_marginTop="61dp"
+                android:layout_marginEnd="234dp"
+                android:layout_marginBottom="23dp"
+                android:background="@android:drawable/dialog_holo_light_frame"
+                android:gravity="center"
+                android:text="USER"
+                android:textColor="@color/design_default_color_primary"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toTopOf="@+id/button_contests"
+                app:layout_constraintEnd_toStartOf="@+id/contest_indicator"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/contest_indicator"
+                android:layout_width="197dp"
+                android:layout_height="65dp"
+                android:layout_marginStart="60dp"
+                android:layout_marginTop="61dp"
+                android:layout_marginEnd="51dp"
+                android:layout_marginBottom="23dp"
+                android:background="@android:drawable/dialog_holo_light_frame"
+                android:gravity="center"
+                android:text="CONTEST"
+                android:textColor="@color/design_default_color_primary"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toTopOf="@+id/button_bluetooth"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/label_main_menu"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/button_about"
+                android:layout_width="118dp"
+                android:layout_height="51dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="134dp"
+                android:background="@drawable/rouded_button"
+                android:text="About"
+                android:textColor="#FFFFFF"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/button_Logger"
+                app:layout_constraintTop_toBottomOf="@+id/button_bluetooth" />
+
+            <Button
+                android:id="@+id/button_Logger"
+                android:layout_width="118dp"
+                android:layout_height="51dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="126dp"
+                android:background="@drawable/rouded_button"
+                android:text="Logger"
+                android:textColor="#FFFFFF"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/button_about"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/button_contests" />
+
+            <Button
+                android:id="@+id/button_contests"
+                android:layout_width="118dp"
+                android:layout_height="51dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/rouded_button"
+                android:text="CONTESTS"
+                android:textColor="#FFFFFF"
+                app:layout_constraintBottom_toTopOf="@+id/button_about"
+                app:layout_constraintEnd_toStartOf="@+id/button_Change_User"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/user_indicator" />
+
+            <Button
+                android:id="@+id/button_Change_User"
+                android:layout_width="118dp"
+                android:layout_height="51dp"
+                android:layout_marginTop="105dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/rouded_button"
+                android:text="Change User"
+                android:textColor="#FFFFFF"
+                app:layout_constraintBottom_toTopOf="@+id/button_Logger"
+                app:layout_constraintEnd_toStartOf="@+id/button_Edit_User"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/button_contests"
+                app:layout_constraintTop_toBottomOf="@+id/label_main_menu" />
+
+            <Button
+                android:id="@+id/button_bluetooth"
+                android:layout_width="118dp"
+                android:layout_height="51dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/rouded_button"
+                android:text="Bluetooth"
+                android:textColor="#FFFFFF"
+                app:layout_constraintBottom_toTopOf="@+id/button_about"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/button_Edit_User"
+                app:layout_constraintTop_toBottomOf="@+id/contest_indicator"
+                app:layout_constraintVertical_bias="0.0" />
+
+            <Button
+                android:id="@+id/button_Edit_User"
+                android:layout_width="118dp"
+                android:layout_height="51dp"
+                android:layout_marginTop="105dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/rouded_button"
+                android:text="Edit User"
+                android:textColor="#FFFFFF"
+                app:layout_constraintBottom_toTopOf="@+id/button_about"
+                app:layout_constraintEnd_toStartOf="@+id/button_bluetooth"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/button_Change_User"
+                app:layout_constraintTop_toBottomOf="@+id/label_main_menu" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ViewFlipper>
 </androidx.constraintlayout.widget.ConstraintLayout>

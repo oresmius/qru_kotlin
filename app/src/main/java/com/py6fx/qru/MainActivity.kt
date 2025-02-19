@@ -11,6 +11,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteException
 import android.widget.ArrayAdapter
 import android.widget.Spinner
+import android.widget.TextView
 
 class MainActivity : AppCompatActivity() {
 
@@ -45,6 +46,13 @@ class MainActivity : AppCompatActivity() {
             // chama o método que lida com os dbs que são os usuários
             loadUsers()
             navigateToPage(2)
+        }
+
+        // referência ao botão select
+        val buttonSelectUser = findViewById<Button>(R.id.button_select_user)
+        buttonSelectUser.setOnClickListener{
+            // chama o método que seleciona o usuário
+            selectUser()
         }
     }
         // método que salva os dados do usuário no bd
@@ -169,6 +177,53 @@ class MainActivity : AppCompatActivity() {
         // Aplica o adaptador ao Spinner
         spinnerUsers.adapter = adapter
     }
+
+    private fun selectUser() {
+        val spinnerUsers = findViewById<Spinner>(R.id.spinner_users)
+
+        // Obtém o nome do usuário selecionado no Spinner
+        val selectedUser = spinnerUsers.selectedItem?.toString()
+
+        // Verifica se a seleção é válida
+        if (selectedUser == null || selectedUser == "No users available") {
+            Toast.makeText(this, "No valid user selected!", Toast.LENGTH_LONG).show()
+            return
+        }
+
+        // Caminho para o banco de dados do usuário selecionado
+        val dbPath = File(applicationContext.filesDir, "db/$selectedUser.db")
+
+        // Verifica se o banco de dados realmente existe
+        if (!dbPath.exists()) {
+            Toast.makeText(this, "Database for $selectedUser not found!", Toast.LENGTH_LONG).show()
+            return
+        }
+
+        try {
+            // Abre o banco de dados para garantir que está íntegro
+            val db = SQLiteDatabase.openDatabase(dbPath.path, null, SQLiteDatabase.OPEN_READWRITE)
+
+            // Armazena o usuário carregado
+            var currentUser = selectedUser
+
+            // Atualiza o TextView para exibir o indicativo do usuário
+            val userIndicator = findViewById<TextView>(R.id.user_indicator)
+            userIndicator.text = selectedUser
+
+            // Fecha o banco de dados (será reaberto quando necessário)
+            db.close()
+
+            // Mensagem de confirmação
+            Toast.makeText(this, "User $selectedUser loaded successfully!", Toast.LENGTH_LONG).show()
+
+            // navegar para menu principal
+            navigateToPage(3)
+
+        } catch (e: SQLiteException) {
+            Toast.makeText(this, "Error loading user: ${e.message}", Toast.LENGTH_LONG).show()
+        }
+    }
+
 
     // Inicializa os componentes
     private fun initializeComponents() {
