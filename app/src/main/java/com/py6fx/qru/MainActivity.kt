@@ -12,6 +12,9 @@ import android.database.sqlite.SQLiteException
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.TextView
+import android.view.MenuItem
+import android.view.View
+import android.widget.PopupMenu
 
 class MainActivity : AppCompatActivity() {
 
@@ -33,6 +36,9 @@ class MainActivity : AppCompatActivity() {
 
         // Configura os botões
         setupButtonListeners()
+
+        // Inicializa menus popup
+        setupPopupMenu()
 
         // referência ao botão de salvar
         val buttonSaveUser = findViewById<Button>(R.id.button_save_user)
@@ -245,6 +251,33 @@ class MainActivity : AppCompatActivity() {
             navigateToPage(0)
         }
     }
+
+    //cria as opções do menu e as faz aparecer.
+
+    private fun setupPopupMenu() {
+        val buttonContests = findViewById<Button>(R.id.button_contests)
+
+        buttonContests.setOnClickListener { view ->
+            showPopupMenu(view) // Chama o método que exibe o menu
+        }
+    }
+
+    private fun showPopupMenu(view: View) {
+        val popup = PopupMenu(this, view)
+        popup.menuInflater.inflate(R.menu.contests_menu, popup.menu)
+
+        popup.setOnMenuItemClickListener { item: MenuItem ->
+            when (item.itemId) {
+                R.id.menu_new_contest -> { /* Ação para iniciar novo conteste */ }
+                R.id.menu_resume_contest -> { /* Ação para continuar conteste */ }
+                R.id.menu_export_contest -> { /* Ação para exportar conteste */ }
+                R.id.menu_delete_contest -> { /* Ação para deletar conteste */ }
+            }
+            true
+        }
+        popup.show()
+    }
+
 
     // Lógica para navegar entre páginas
     private fun navigateToPage(pageIndex: Int) {

@@ -321,7 +321,6 @@
             app:layout_constraintTop_toBottomOf="@+id/spinner_users"
             app:layout_constraintVertical_bias="0.671" />
 
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
