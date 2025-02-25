@@ -263,6 +263,10 @@ class MainActivity : AppCompatActivity() {
         cursor.close()
         db.close()
 
+        //ordem alfabética
+
+        contests.sort()
+
         // Configura o Spinner com os dados carregados
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, contests)
         spinnerContests.adapter = adapter

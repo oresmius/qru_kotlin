@@ -12,7 +12,7 @@
         android:id="@+id/viewFlipper"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
+        
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/pag_1"
             android:layout_width="match_parent"
@@ -472,8 +472,8 @@
 
             <Spinner
                 android:id="@+id/spinner_contests"
-                android:layout_width="703dp"
-                android:layout_height="45dp"
+                android:layout_width="594dp"
+                android:layout_height="48dp"
                 android:layout_marginBottom="221dp"
                 android:hint="Club"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -487,6 +487,7 @@
                 android:id="@+id/label_new_contests"
                 android:layout_width="130dp"
                 android:layout_height="33dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginBottom="322dp"
                 android:background="@drawable/rouded_button"
                 android:gravity="center"
