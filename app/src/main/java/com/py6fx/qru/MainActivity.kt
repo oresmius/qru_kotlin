@@ -230,6 +230,45 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun loadContests() {
+        val spinnerContests = findViewById<Spinner>(R.id.spinner_contests) // Referência ao Spinner
+
+        // Caminho do banco de dados main.qru
+        val dbPath = File(applicationContext.filesDir, "db/main.qru")
+
+        // Verifica se o arquivo existe antes de tentar abrir
+        if (!dbPath.exists()) {
+            Toast.makeText(this, "Error: Data base main.qru not found!", Toast.LENGTH_LONG).show()
+            return
+        }
+
+        // Abre o banco de dados em modo somente leitura
+        val db = SQLiteDatabase.openDatabase(dbPath.path, null, SQLiteDatabase.OPEN_READONLY)
+
+        // Executa a consulta SQL para buscar os nomes dos contests
+        val cursor = db.rawQuery("SELECT DisplayName FROM CONTEST", null)
+
+        // Lista para armazenar os nomes dos contests
+        val contests = mutableListOf<String>()
+
+        // Percorre o cursor e adiciona os nomes à lista
+        if (cursor.moveToFirst()) {
+            do {
+                val displayName = cursor.getString(0) // Obtém o valor da coluna DisplayName
+                contests.add(displayName)
+            } while (cursor.moveToNext())
+        }
+
+        // Fecha o cursor e o banco de dados
+        cursor.close()
+        db.close()
+
+        // Configura o Spinner com os dados carregados
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, contests)
+        spinnerContests.adapter = adapter
+    }
+
+
 
     // Inicializa os componentes
     private fun initializeComponents() {
@@ -268,7 +307,10 @@ class MainActivity : AppCompatActivity() {
 
         popup.setOnMenuItemClickListener { item: MenuItem ->
             when (item.itemId) {
-                R.id.menu_new_contest -> { /* Ação para iniciar novo conteste */ }
+                R.id.menu_new_contest -> {
+                    loadContests()
+                    navigateToPage(4)
+                }
                 R.id.menu_resume_contest -> { /* Ação para continuar conteste */ }
                 R.id.menu_export_contest -> { /* Ação para exportar conteste */ }
                 R.id.menu_delete_contest -> { /* Ação para deletar conteste */ }

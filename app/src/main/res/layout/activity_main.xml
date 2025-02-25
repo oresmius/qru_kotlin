@@ -463,6 +463,45 @@
                 app:layout_constraintVertical_bias="0.5" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+        <!--pagina-->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/pag_5"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#CCC2C2">
+
+            <Spinner
+                android:id="@+id/spinner_contests"
+                android:layout_width="703dp"
+                android:layout_height="45dp"
+                android:layout_marginBottom="221dp"
+                android:hint="Club"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.428"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/label_new_contests"
+                app:layout_constraintVertical_bias="0.5" />
+
+            <TextView
+                android:id="@+id/label_new_contests"
+                android:layout_width="130dp"
+                android:layout_height="33dp"
+                android:layout_marginBottom="322dp"
+                android:background="@drawable/rouded_button"
+                android:gravity="center"
+                android:text="New Contest"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.497"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.5" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ViewFlipper>
 </androidx.constraintlayout.widget.ConstraintLayout>
