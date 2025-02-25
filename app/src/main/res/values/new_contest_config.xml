@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="operator">
+        <item>OPERATOR</item>
+        <item>SINGLE-OP</item>
+        <item>MULTI-OP</item>
+        <item>CHECKLOG</item>
+    </string-array>
+
+    <string-array name="band">
+        <item>BAND</item>
+        <item>ALL</item>
+        <item>160m</item>
+        <item>80m</item>
+        <item>40m</item>
+        <item>20m</item>
+        <item>15m</item>
+        <item>10m</item>
+        <item>6m</item>
+        <item>4m</item>
+        <item>2m</item>
+        <item>70cm</item>
+    </string-array>
+
+    <string-array name="power">
+        <item>POWER</item>
+        <item>HIGH</item>
+        <item>LOW</item>
+        <item>QRP</item>
+        <item>QRPP</item>
+    </string-array>
+
+    <string-array name="mode">
+        <item>MODE</item>
+        <item>CW</item>
+        <item>SSB</item>
+        <item>RTTY</item>
+        <item>PSK</item>
+        <item>SSB+CW</item>
+        <item>DIGITAL</item>
+        <item>SSB+CW+DIGITAL</item>
+        <item>FM</item>
+    </string-array>
+
+    <string-array name="overlay">
+        <item>OVERLAY</item>
+        <item>N/A</item>
+        <item>CLASSIC</item>
+        <item>TB-WIRES</item>
+        <item>NOVICE-TECH</item>
+        <item>OVER-60</item>
+        <item>ROOKIE</item>
+        <item>YL</item>
+        <item>YOUTH</item>
+    </string-array>
+
+    <string-array name="station">
+        <item>STATION</item>
+        <item>DISTRIBUTED</item>
+        <item>EXPEDITION</item>
+        <item>EXPLORER</item>
+        <item>FIXED</item>
+        <item>HQ</item>
+        <item>MOBILE</item>
+        <item>PORTABLE</item>
+        <item>ROVER</item>
+        <item>ROVER-LIMITED</item>
+        <item>ROVER-UNLIMITED</item>
+        <item>SCHOOL</item>
+    </string-array>
+
+    <string-array name="asssisted">
+        <item>ASSISTED-?</item>
+        <item>ASSISTED</item>
+        <item>NON-ASSISTED</item>
+    </string-array>
+    
+    <string-array name="transmitter">
+        <item>TRANSMITTER</item>
+        <item>ONE</item>
+        <item>TWO</item>
+        <item>LIMITED</item>
+        <item>UNLIMITED</item>
+        <item>SWL</item>
+    </string-array>
+
+    <string-array name="time_category">
+        <item>N/A</item>
+        <item>6-HOURS</item>
+        <item>8-HOURS</item>
+        <item>12-HOURS</item>
+        <item>24-HOURS</item>
+    </string-array>
+</resources>
