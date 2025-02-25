@@ -10,8 +10,12 @@
     <!-- ViewFlipper -->
     <ViewFlipper
         android:id="@+id/viewFlipper"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
         
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/pag_1"
@@ -472,23 +476,26 @@
 
             <Spinner
                 android:id="@+id/spinner_contests"
-                android:layout_width="594dp"
-                android:layout_height="48dp"
-                android:layout_marginBottom="221dp"
+                android:layout_width="450dp"
+                android:layout_height="45dp"
+                android:layout_marginStart="231dp"
+                android:layout_marginTop="29dp"
+                android:layout_marginEnd="50dp"
+                android:layout_marginBottom="334dp"
                 android:hint="Club"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.428"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/label_new_contests"
-                app:layout_constraintVertical_bias="0.5" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/label_new_contests"
                 android:layout_width="130dp"
                 android:layout_height="33dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="322dp"
+                android:layout_marginStart="75dp"
+                android:layout_marginTop="37dp"
+                android:layout_marginEnd="526dp"
+                android:layout_marginBottom="341dp"
                 android:background="@drawable/rouded_button"
                 android:gravity="center"
                 android:text="New Contest"
@@ -496,9 +503,168 @@
                 android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.497"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Spinner
+                android:id="@+id/spinner_operator"
+                android:layout_width="290dp"
+                android:layout_height="45dp"
+                app:layout_constraintBottom_toTopOf="@+id/spinner_band"
+                app:layout_constraintEnd_toStartOf="@+id/spinner_assisted"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/spinner_contests"
+                app:layout_constraintVertical_bias="0.5" />
+
+            <Spinner
+                android:id="@+id/spinner_band"
+                android:layout_width="290dp"
+                android:layout_height="45dp"
+                app:layout_constraintBottom_toTopOf="@+id/spinner_power"
+                app:layout_constraintEnd_toStartOf="@+id/spinner_transmitter"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/spinner_operator"
+                app:layout_constraintVertical_bias="0.5" />
+
+            <Spinner
+                android:id="@+id/spinner_power"
+                android:layout_width="290dp"
+                android:layout_height="45dp"
+                app:layout_constraintBottom_toTopOf="@+id/spinner_mode"
+                app:layout_constraintEnd_toStartOf="@+id/spinner_time_category"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/spinner_band"
+                app:layout_constraintVertical_bias="0.5" />
+
+            <Spinner
+                android:id="@+id/spinner_mode"
+                android:layout_width="290dp"
+                android:layout_height="45dp"
+                app:layout_constraintBottom_toTopOf="@+id/spinner_overlay"
+                app:layout_constraintEnd_toStartOf="@+id/editText_send_exchange"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/spinner_power"
+                app:layout_constraintVertical_bias="0.5" />
+
+            <Spinner
+                android:id="@+id/spinner_overlay"
+                android:layout_width="290dp"
+                android:layout_height="45dp"
+                app:layout_constraintBottom_toTopOf="@+id/spinner_station"
+                app:layout_constraintEnd_toStartOf="@+id/editText_operators"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/spinner_mode"
+                app:layout_constraintVertical_bias="0.5" />
+
+            <Spinner
+                android:id="@+id/spinner_station"
+                android:layout_width="290dp"
+                android:layout_height="45dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/label_new_contests_ok"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/spinner_overlay"
+                app:layout_constraintVertical_bias="0.5" />
+
+            <Spinner
+                android:id="@+id/spinner_assisted"
+                android:layout_width="290dp"
+                android:layout_height="45dp"
+                app:layout_constraintBottom_toTopOf="@+id/spinner_transmitter"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/spinner_operator"
+                app:layout_constraintTop_toBottomOf="@+id/spinner_contests"
+                app:layout_constraintVertical_bias="0.5" />
+
+            <Spinner
+                android:id="@+id/spinner_transmitter"
+                android:layout_width="290dp"
+                android:layout_height="45dp"
+                app:layout_constraintBottom_toTopOf="@+id/spinner_time_category"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/spinner_band"
+                app:layout_constraintTop_toBottomOf="@+id/spinner_assisted"
+                app:layout_constraintVertical_bias="0.5" />
+
+            <Spinner
+                android:id="@+id/spinner_time_category"
+                android:layout_width="290dp"
+                android:layout_height="45dp"
+                app:layout_constraintBottom_toTopOf="@+id/editText_send_exchange"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/spinner_power"
+                app:layout_constraintTop_toBottomOf="@+id/spinner_transmitter"
+                app:layout_constraintVertical_bias="0.5" />
+
+            <EditText
+                android:id="@+id/editText_send_exchange"
+                style="@style/text_new_user"
+                android:layout_width="290dp"
+                android:layout_height="42dp"
+                android:ems="10"
+                android:hint="Send Exchange"
+                android:inputType="text"
+                app:layout_constraintBottom_toTopOf="@+id/editText_operators"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/spinner_mode"
+                app:layout_constraintTop_toBottomOf="@+id/spinner_time_category"
+                app:layout_constraintVertical_bias="0.5" />
+
+            <EditText
+                android:id="@+id/editText_operators"
+                style="@style/text_new_user"
+                android:layout_width="290dp"
+                android:layout_height="34dp"
+                android:ems="10"
+                android:hint="Operators"
+                android:inputType="text"
+                app:layout_constraintBottom_toTopOf="@+id/label_new_contests_cancel"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/spinner_overlay"
+                app:layout_constraintTop_toBottomOf="@+id/editText_send_exchange"
+                app:layout_constraintVertical_bias="0.5" />
+
+            <TextView
+                android:id="@+id/label_new_contests_cancel"
+                android:layout_width="130dp"
+                android:layout_height="33dp"
+                android:background="@drawable/rouded_button"
+                android:gravity="center"
+                android:text="Cancel"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/label_new_contests_ok"
+                app:layout_constraintTop_toBottomOf="@+id/editText_operators"
+                app:layout_constraintVertical_bias="0.5" />
+
+            <TextView
+                android:id="@+id/label_new_contests_ok"
+                android:layout_width="130dp"
+                android:layout_height="33dp"
+                android:background="@drawable/rouded_button"
+                android:gravity="center"
+                android:text="OK"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/label_new_contests_cancel"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/spinner_station"
+                app:layout_constraintTop_toBottomOf="@+id/editText_operators"
                 app:layout_constraintVertical_bias="0.5" />
 
 

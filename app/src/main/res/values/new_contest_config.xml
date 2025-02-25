@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="operator">
-        <item>OPERATOR</item>
+        <item>OPERATOR?</item>
         <item>SINGLE-OP</item>
         <item>MULTI-OP</item>
         <item>CHECKLOG</item>
     </string-array>
 
     <string-array name="band">
-        <item>BAND</item>
+        <item>BAND?</item>
         <item>ALL</item>
         <item>160m</item>
         <item>80m</item>
@@ -23,7 +23,7 @@
     </string-array>
 
     <string-array name="power">
-        <item>POWER</item>
+        <item>POWER?</item>
         <item>HIGH</item>
         <item>LOW</item>
         <item>QRP</item>
@@ -31,7 +31,7 @@
     </string-array>
 
     <string-array name="mode">
-        <item>MODE</item>
+        <item>MODE?</item>
         <item>CW</item>
         <item>SSB</item>
         <item>RTTY</item>
@@ -43,7 +43,7 @@
     </string-array>
 
     <string-array name="overlay">
-        <item>OVERLAY</item>
+        <item>OVERLAY?</item>
         <item>N/A</item>
         <item>CLASSIC</item>
         <item>TB-WIRES</item>
@@ -55,7 +55,7 @@
     </string-array>
 
     <string-array name="station">
-        <item>STATION</item>
+        <item>STATION?</item>
         <item>DISTRIBUTED</item>
         <item>EXPEDITION</item>
         <item>EXPLORER</item>
@@ -70,13 +70,13 @@
     </string-array>
 
     <string-array name="asssisted">
-        <item>ASSISTED-?</item>
+        <item>ASSISTED?</item>
         <item>ASSISTED</item>
         <item>NON-ASSISTED</item>
     </string-array>
     
     <string-array name="transmitter">
-        <item>TRANSMITTER</item>
+        <item>TRANSMITTER?</item>
         <item>ONE</item>
         <item>TWO</item>
         <item>LIMITED</item>
@@ -85,6 +85,7 @@
     </string-array>
 
     <string-array name="time_category">
+        <item>TIME CATEGORY?</item>
         <item>N/A</item>
         <item>6-HOURS</item>
         <item>8-HOURS</item>

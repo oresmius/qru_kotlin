@@ -264,12 +264,14 @@ class MainActivity : AppCompatActivity() {
         db.close()
 
         //ordem alfabética
-
         contests.sort()
 
         // Configura o Spinner com os dados carregados
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, contests)
         spinnerContests.adapter = adapter
+
+        // inicia os spinners de novo conteste
+        setupContestSpinners()
     }
 
 
@@ -322,6 +324,37 @@ class MainActivity : AppCompatActivity() {
             true
         }
         popup.show()
+    }
+
+    //função dos spinners de novo conteste
+    private fun setupContestSpinners() {
+        findViewById<Spinner>(R.id.spinner_operator).adapter = ArrayAdapter.createFromResource(
+            this, R.array.operator, android.R.layout.simple_spinner_dropdown_item
+        )
+        findViewById<Spinner>(R.id.spinner_band).adapter = ArrayAdapter.createFromResource(
+            this, R.array.band, android.R.layout.simple_spinner_dropdown_item
+        )
+        findViewById<Spinner>(R.id.spinner_power).adapter = ArrayAdapter.createFromResource(
+            this, R.array.power, android.R.layout.simple_spinner_dropdown_item
+        )
+        findViewById<Spinner>(R.id.spinner_mode).adapter = ArrayAdapter.createFromResource(
+            this, R.array.mode, android.R.layout.simple_spinner_dropdown_item
+        )
+        findViewById<Spinner>(R.id.spinner_overlay).adapter = ArrayAdapter.createFromResource(
+            this, R.array.overlay, android.R.layout.simple_spinner_dropdown_item
+        )
+        findViewById<Spinner>(R.id.spinner_station).adapter = ArrayAdapter.createFromResource(
+            this, R.array.station, android.R.layout.simple_spinner_dropdown_item
+        )
+        findViewById<Spinner>(R.id.spinner_assisted).adapter = ArrayAdapter.createFromResource(
+            this, R.array.asssisted, android.R.layout.simple_spinner_dropdown_item
+        )
+        findViewById<Spinner>(R.id.spinner_transmitter).adapter = ArrayAdapter.createFromResource(
+            this, R.array.transmitter, android.R.layout.simple_spinner_dropdown_item
+        )
+        findViewById<Spinner>(R.id.spinner_time_category).adapter = ArrayAdapter.createFromResource(
+            this, R.array.time_category, android.R.layout.simple_spinner_dropdown_item
+        )
     }
 
 
