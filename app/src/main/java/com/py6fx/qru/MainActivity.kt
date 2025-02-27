@@ -1,5 +1,6 @@
 package com.py6fx.qru
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -18,8 +19,12 @@ import android.widget.PopupMenu
 
 class MainActivity : AppCompatActivity() {
 
-    // Declaração de variável para o ViewFlipper
+    // Declaração universal de variável para o ViewFlipper
     private lateinit var viewFlipper: ViewFlipper
+
+    //declaração universal do banco de dados em uso
+    private lateinit var dbPath: File
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -197,7 +202,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Caminho para o banco de dados do usuário selecionado
-        val dbPath = File(applicationContext.filesDir, "db/$selectedUser.db")
+        dbPath = File(applicationContext.filesDir, "db/$selectedUser.db")
 
         // Verifica se o banco de dados realmente existe
         if (!dbPath.exists()) {
@@ -208,9 +213,6 @@ class MainActivity : AppCompatActivity() {
         try {
             // Abre o banco de dados para garantir que está íntegro
             val db = SQLiteDatabase.openDatabase(dbPath.path, null, SQLiteDatabase.OPEN_READWRITE)
-
-            // Armazena o usuário carregado
-            var currentUser = selectedUser
 
             // Atualiza o TextView para exibir o indicativo do usuário
             val userIndicator = findViewById<TextView>(R.id.user_indicator)
@@ -295,6 +297,10 @@ class MainActivity : AppCompatActivity() {
         btnCancelNewUser.setOnClickListener{
             navigateToPage(0)
         }
+        val btnOkNewContest = findViewById<Button>(R.id.button_new_contests_ok)
+        btnOkNewContest.setOnClickListener {
+            createContestInstance() // ativa o botão OK do new contest
+        }
     }
 
     //cria as opções do menu e as faz aparecer.
@@ -356,6 +362,116 @@ class MainActivity : AppCompatActivity() {
             this, R.array.time_category, android.R.layout.simple_spinner_dropdown_item
         )
     }
+    //instanciamento de novo conteste
+    private fun createContestInstance() {
+        if (!this::dbPath.isInitialized) {
+            Toast.makeText(this, "Database path is not initialized! Select a user first.", Toast.LENGTH_LONG).show()
+            return
+        }
+
+        try {
+            // Usa a variável dbPath já definida anteriormente
+            val userDb = SQLiteDatabase.openOrCreateDatabase(dbPath, null)
+            // Criar a tabela Contest se ainda não existir
+            val createTableQuery = """
+            CREATE TABLE IF NOT EXISTS Contest (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                StartTime DATETIME DEFAULT CURRENT_TIMESTAMP,
+                Name TEXT,
+                DisplayName TEXT,
+                CabrilloName TEXT,
+                Operator TEXT,
+                Band TEXT,
+                Power TEXT,
+                Mode TEXT,
+                Overlay TEXT,
+                Station TEXT,
+                Assisted TEXT,
+                Transmitter TEXT,
+                TimeCategory TEXT,
+                SendExchange TEXT,
+                Operators TEXT
+            )
+        """.trimIndent()
+            userDb.execSQL(createTableQuery)
+            // Obtém o conteste selecionado no spinner de contests
+            val spinnerContests = findViewById<Spinner>(R.id.spinner_contests)
+            val selectedContest = spinnerContests.selectedItem?.toString() ?: ""
+
+            if (selectedContest.isEmpty()) {
+                Toast.makeText(this, "No contest selected!", Toast.LENGTH_LONG).show()
+                return
+            }
+
+            // Abrir o banco main.qru para buscar os dados do contest
+            val mainDbPath = File(applicationContext.filesDir, "db/main.qru")
+            if (!mainDbPath.exists()) {
+                Toast.makeText(this, "Main contest database not found!", Toast.LENGTH_LONG).show()
+                return
+            }
+
+            val mainDb = SQLiteDatabase.openDatabase(mainDbPath.path, null, SQLiteDatabase.OPEN_READONLY)
+            val cursor = mainDb.rawQuery(
+                "SELECT Name, DisplayName, CabrilloName FROM Contest WHERE DisplayName = ?",
+                arrayOf(selectedContest)
+            )
+
+            if (!cursor.moveToFirst()) {
+                Toast.makeText(this, "Contest data not found!", Toast.LENGTH_LONG).show()
+                cursor.close()
+                mainDb.close()
+                return
+            }
+
+            // Obtém os valores do banco main.qru
+            val name = cursor.getString(0)
+            val displayName = cursor.getString(1)
+            val cabrilloName = cursor.getString(2)
+
+            cursor.close()
+            mainDb.close()
+
+            // Obtém os valores dos spinners da tela de novo conteste
+            val spinnerOperator = findViewById<Spinner>(R.id.spinner_operator).selectedItem.toString()
+            val spinnerBand = findViewById<Spinner>(R.id.spinner_band).selectedItem.toString()
+            val spinnerPower = findViewById<Spinner>(R.id.spinner_power).selectedItem.toString()
+            val spinnerMode = findViewById<Spinner>(R.id.spinner_mode).selectedItem.toString()
+            val spinnerOverlay = findViewById<Spinner>(R.id.spinner_overlay).selectedItem.toString()
+            val spinnerStation = findViewById<Spinner>(R.id.spinner_station).selectedItem.toString()
+            val spinnerAssisted = findViewById<Spinner>(R.id.spinner_assisted).selectedItem.toString()
+            val spinnerTransmitter = findViewById<Spinner>(R.id.spinner_transmitter).selectedItem.toString()
+            val spinnerTimeCategory = findViewById<Spinner>(R.id.spinner_time_category).selectedItem.toString()
+
+            // Obtém os valores dos campos de texto
+            val sendExchange = findViewById<EditText>(R.id.editText_send_exchange).text.toString().trim()
+            val operators = findViewById<EditText>(R.id.editText_operators).text.toString().trim()
+
+            // Insere os dados na tabela Contest do usuário
+            val insertQuery = """
+            INSERT INTO Contest (Name, DisplayName, CabrilloName, Operator, Band, Power, Mode, Overlay, Station, Assisted, Transmitter, TimeCategory, SendExchange, Operators) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """.trimIndent()
+
+            userDb.execSQL(insertQuery, arrayOf(
+                name, displayName, cabrilloName,
+                spinnerOperator, spinnerBand, spinnerPower, spinnerMode, spinnerOverlay,
+                spinnerStation, spinnerAssisted, spinnerTransmitter, spinnerTimeCategory,
+                sendExchange, operators
+            ))
+
+            userDb.close()
+
+            Toast.makeText(this, "Contest $displayName created successfully!", Toast.LENGTH_LONG).show()
+
+            // Opcional: Voltar para a tela principal após salvar
+            navigateToPage(3)
+
+        } catch (e: SQLiteException) {
+            Toast.makeText(this, "Error creating contest: ${e.message}", Toast.LENGTH_LONG).show()
+
+    }
+
+}
 
 
     // Lógica para navegar entre páginas

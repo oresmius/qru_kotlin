@@ -566,7 +566,7 @@
                 android:layout_width="290dp"
                 android:layout_height="45dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/label_new_contests_ok"
+                app:layout_constraintEnd_toStartOf="@+id/button_new_contests_ok"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/spinner_overlay"
@@ -628,15 +628,15 @@
                 android:ems="10"
                 android:hint="Operators"
                 android:inputType="text"
-                app:layout_constraintBottom_toTopOf="@+id/label_new_contests_cancel"
+                app:layout_constraintBottom_toTopOf="@+id/button_new_contests_cancel"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/spinner_overlay"
                 app:layout_constraintTop_toBottomOf="@+id/editText_send_exchange"
                 app:layout_constraintVertical_bias="0.5" />
 
-            <TextView
-                android:id="@+id/label_new_contests_cancel"
+            <Button
+                android:id="@+id/button_new_contests_cancel"
                 android:layout_width="130dp"
                 android:layout_height="33dp"
                 android:background="@drawable/rouded_button"
@@ -647,12 +647,12 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/label_new_contests_ok"
+                app:layout_constraintStart_toEndOf="@+id/button_new_contests_ok"
                 app:layout_constraintTop_toBottomOf="@+id/editText_operators"
                 app:layout_constraintVertical_bias="0.5" />
 
-            <TextView
-                android:id="@+id/label_new_contests_ok"
+            <Button
+                android:id="@+id/button_new_contests_ok"
                 android:layout_width="130dp"
                 android:layout_height="33dp"
                 android:background="@drawable/rouded_button"
@@ -661,7 +661,7 @@
                 android:textColor="#FFFFFF"
                 android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/label_new_contests_cancel"
+                app:layout_constraintEnd_toStartOf="@+id/button_new_contests_cancel"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/spinner_station"
                 app:layout_constraintTop_toBottomOf="@+id/editText_operators"
