@@ -16,6 +16,8 @@ import android.widget.TextView
 import android.view.MenuItem
 import android.view.View
 import android.widget.PopupMenu
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.children
 
 class MainActivity : AppCompatActivity() {
 
@@ -370,9 +372,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         try {
-            // Usa a variável dbPath já definida anteriormente
             val userDb = SQLiteDatabase.openOrCreateDatabase(dbPath, null)
-            // Criar a tabela Contest se ainda não existir
+
             val createTableQuery = """
             CREATE TABLE IF NOT EXISTS Contest (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -394,7 +395,7 @@ class MainActivity : AppCompatActivity() {
             )
         """.trimIndent()
             userDb.execSQL(createTableQuery)
-            // Obtém o conteste selecionado no spinner de contests
+
             val spinnerContests = findViewById<Spinner>(R.id.spinner_contests)
             val selectedContest = spinnerContests.selectedItem?.toString() ?: ""
 
@@ -403,7 +404,6 @@ class MainActivity : AppCompatActivity() {
                 return
             }
 
-            // Abrir o banco main.qru para buscar os dados do contest
             val mainDbPath = File(applicationContext.filesDir, "db/main.qru")
             if (!mainDbPath.exists()) {
                 Toast.makeText(this, "Main contest database not found!", Toast.LENGTH_LONG).show()
@@ -423,7 +423,6 @@ class MainActivity : AppCompatActivity() {
                 return
             }
 
-            // Obtém os valores do banco main.qru
             val name = cursor.getString(0)
             val displayName = cursor.getString(1)
             val cabrilloName = cursor.getString(2)
@@ -431,22 +430,18 @@ class MainActivity : AppCompatActivity() {
             cursor.close()
             mainDb.close()
 
-            // Obtém os valores dos spinners da tela de novo conteste
-            val spinnerOperator = findViewById<Spinner>(R.id.spinner_operator).selectedItem.toString()
-            val spinnerBand = findViewById<Spinner>(R.id.spinner_band).selectedItem.toString()
-            val spinnerPower = findViewById<Spinner>(R.id.spinner_power).selectedItem.toString()
-            val spinnerMode = findViewById<Spinner>(R.id.spinner_mode).selectedItem.toString()
-            val spinnerOverlay = findViewById<Spinner>(R.id.spinner_overlay).selectedItem.toString()
-            val spinnerStation = findViewById<Spinner>(R.id.spinner_station).selectedItem.toString()
-            val spinnerAssisted = findViewById<Spinner>(R.id.spinner_assisted).selectedItem.toString()
-            val spinnerTransmitter = findViewById<Spinner>(R.id.spinner_transmitter).selectedItem.toString()
-            val spinnerTimeCategory = findViewById<Spinner>(R.id.spinner_time_category).selectedItem.toString()
+            val page = findViewById<ConstraintLayout>(R.id.pag_5)
+            val spinners = page.children.filterIsInstance<Spinner>().toList()
+            val invalidSelections = spinners
+                .map { it.selectedItem?.toString() ?: "" }
+                .filter { it.endsWith("?") || it.isEmpty() }
 
-            // Obtém os valores dos campos de texto
-            val sendExchange = findViewById<EditText>(R.id.editText_send_exchange).text.toString().trim()
-            val operators = findViewById<EditText>(R.id.editText_operators).text.toString().trim()
+            if (invalidSelections.isNotEmpty()) {
+                val message = "These options are invalid: ${invalidSelections.joinToString(", ")}"
+                Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+                return
+            }
 
-            // Insere os dados na tabela Contest do usuário
             val insertQuery = """
             INSERT INTO Contest (Name, DisplayName, CabrilloName, Operator, Band, Power, Mode, Overlay, Station, Assisted, Transmitter, TimeCategory, SendExchange, Operators) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -454,24 +449,28 @@ class MainActivity : AppCompatActivity() {
 
             userDb.execSQL(insertQuery, arrayOf(
                 name, displayName, cabrilloName,
-                spinnerOperator, spinnerBand, spinnerPower, spinnerMode, spinnerOverlay,
-                spinnerStation, spinnerAssisted, spinnerTransmitter, spinnerTimeCategory,
-                sendExchange, operators
+                findViewById<Spinner>(R.id.spinner_operator).selectedItem.toString(),
+                findViewById<Spinner>(R.id.spinner_band).selectedItem.toString(),
+                findViewById<Spinner>(R.id.spinner_power).selectedItem.toString(),
+                findViewById<Spinner>(R.id.spinner_mode).selectedItem.toString(),
+                findViewById<Spinner>(R.id.spinner_overlay).selectedItem.toString(),
+                findViewById<Spinner>(R.id.spinner_station).selectedItem.toString(),
+                findViewById<Spinner>(R.id.spinner_assisted).selectedItem.toString(),
+                findViewById<Spinner>(R.id.spinner_transmitter).selectedItem.toString(),
+                findViewById<Spinner>(R.id.spinner_time_category).selectedItem.toString(),
+                findViewById<EditText>(R.id.editText_send_exchange).text.toString().trim(),
+                findViewById<EditText>(R.id.editText_operators).text.toString().trim()
             ))
 
             userDb.close()
 
             Toast.makeText(this, "Contest $displayName created successfully!", Toast.LENGTH_LONG).show()
-
-            // Opcional: Voltar para a tela principal após salvar
             navigateToPage(3)
 
         } catch (e: SQLiteException) {
             Toast.makeText(this, "Error creating contest: ${e.message}", Toast.LENGTH_LONG).show()
-
+        }
     }
-
-}
 
 
     // Lógica para navegar entre páginas
