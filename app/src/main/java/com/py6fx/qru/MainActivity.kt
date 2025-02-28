@@ -430,6 +430,7 @@ class MainActivity : AppCompatActivity() {
             cursor.close()
             mainDb.close()
 
+            // Procedimento de validação dos spinners
             val page = findViewById<ConstraintLayout>(R.id.pag_5)
             val spinners = page.children.filterIsInstance<Spinner>().toList()
             val invalidSelections = spinners
@@ -441,6 +442,17 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, message, Toast.LENGTH_LONG).show()
                 return
             }
+
+            // procedimento para a validação dos campos de texto
+            val editTexts = page.children.filterIsInstance<EditText>().toList()
+            val emptyFields = editTexts.filter { it.text.toString().trim().isEmpty() }
+
+            if (emptyFields.isNotEmpty()) {
+                val message = "These fields cannot be null: ${emptyFields.joinToString(", ") { it.hint?.toString() ?: "Unnamed" }}"
+                Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+                return
+            }
+
 
             val insertQuery = """
             INSERT INTO Contest (Name, DisplayName, CabrilloName, Operator, Band, Power, Mode, Overlay, Station, Assisted, Transmitter, TimeCategory, SendExchange, Operators) 
