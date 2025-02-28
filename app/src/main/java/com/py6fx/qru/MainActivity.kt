@@ -295,6 +295,11 @@ class MainActivity : AppCompatActivity() {
         btnCancelLoadUser.setOnClickListener{
             navigateToPage(0)
         }
+        val btnCancelNewContest = findViewById<Button>(R.id.button_cancel_new_contest)
+        btnCancelNewContest.setOnClickListener {
+            navigateToPage(3)
+        }
+
         val btnCancelNewUser = findViewById<Button>(R.id.button_cancel_new_user)
         btnCancelNewUser.setOnClickListener{
             navigateToPage(0)
