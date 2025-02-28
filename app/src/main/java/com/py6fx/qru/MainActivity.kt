@@ -369,7 +369,7 @@ class MainActivity : AppCompatActivity() {
             this, R.array.time_category, android.R.layout.simple_spinner_dropdown_item
         )
     }
-    //instanciamento de novo conteste
+    //instanciamento de novo contest
     private fun createContestInstance() {
         if (!this::dbPath.isInitialized) {
             Toast.makeText(this, "Database path is not initialized! Select a user first.", Toast.LENGTH_LONG).show()
