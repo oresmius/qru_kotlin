@@ -1,29 +1,33 @@
 package com.py6fx.qru
 
+import android.content.Context
 import android.database.sqlite.SQLiteDatabase
+import android.database.sqlite.SQLiteException
+import android.view.View
+import android.widget.EditText
 import android.widget.Toast
 import java.io.File
 
-class UserManager {
+class UserManager(private val context: Context) {
     // método que salva os dados do usuário no bd
 
-    private fun saveUserToDb() {
+    fun saveUserToDb(view: View) {
 
         // referências aos campos de editText
 
-        val editTextCall = findViewById<EditText>(R.id.editText_new_user_call)
-        val editTextName = findViewById<EditText>(R.id.editText_new_user_name)
-        val editTextAddress = findViewById<EditText>(R.id.editText_new_user_address)
-        val editTextCity = findViewById<EditText>(R.id.editText_new_user_city)
-        val editTextState = findViewById<EditText>(R.id.editText_new_user_state)
-        val editTextZIP = findViewById<EditText>(R.id.editText_new_user_zip)
-        val editTextCountry = findViewById<EditText>(R.id.editText_new_user_country)
-        val editTextGrid = findViewById<EditText>(R.id.editText_new_user_grid_square)
-        val editTextARRL = findViewById<EditText>(R.id.editText_new_user_arrl_section)
-        val editTextClub = findViewById<EditText>(R.id.editText_new_user_club)
-        val editTextCQ = findViewById<EditText>(R.id.editText_new_user_cq_zone)
-        val editTextITU = findViewById<EditText>(R.id.editText_new_user_itu_zone)
-        val editTextEmail = findViewById<EditText>(R.id.editText_new_user_email)
+        val editTextCall = view.findViewById<EditText>(R.id.editText_new_user_call)
+        val editTextName = view.findViewById<EditText>(R.id.editText_new_user_name)
+        val editTextAddress = view.findViewById<EditText>(R.id.editText_new_user_address)
+        val editTextCity = view.findViewById<EditText>(R.id.editText_new_user_city)
+        val editTextState = view.findViewById<EditText>(R.id.editText_new_user_state)
+        val editTextZIP = view.findViewById<EditText>(R.id.editText_new_user_zip)
+        val editTextCountry = view.findViewById<EditText>(R.id.editText_new_user_country)
+        val editTextGrid = view.findViewById<EditText>(R.id.editText_new_user_grid_square)
+        val editTextARRL = view.findViewById<EditText>(R.id.editText_new_user_arrl_section)
+        val editTextClub = view.findViewById<EditText>(R.id.editText_new_user_club)
+        val editTextCQ = view.findViewById<EditText>(R.id.editText_new_user_cq_zone)
+        val editTextITU = view.findViewById<EditText>(R.id.editText_new_user_itu_zone)
+        val editTextEmail = view.findViewById<EditText>(R.id.editText_new_user_email)
 
         //coleta e labidação dos dados
 
@@ -64,16 +68,16 @@ class UserManager {
         // Se houver campos vazios, exibe um alerta
         if (missingFields.isNotEmpty()) {
             val message = "Os seguintes campos estão vazios: ${missingFields.joinToString(", ")}"
-            Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
             return
         }
 
         // caminho para salvar o bd na pasta "db"
-        val dbPath = File(applicationContext.filesDir, "db/$call.db")
+        val dbPath = File(context.filesDir, "db/$call.db")
 
         // Verifica se o banco já existe
         if (dbPath.exists()) {
-            Toast.makeText(this, "A database with this name already exists. Please choose a different call sign.", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, "A database with this name already exists. Please choose a different call sign.", Toast.LENGTH_LONG).show()
             return
         }
 
@@ -111,10 +115,10 @@ class UserManager {
             db.close()
 
             // Mensagem de sucesso
-            Toast.makeText(this, "User successfully saved!", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, "User successfully saved!", Toast.LENGTH_LONG).show()
 
         } catch (e: SQLiteException) {
-            Toast.makeText(this, "Error saving user: ${e.message}", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, "Error saving user: ${e.message}", Toast.LENGTH_LONG).show()
 
         }
     }

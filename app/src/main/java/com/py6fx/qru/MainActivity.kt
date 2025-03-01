@@ -27,6 +27,9 @@ class MainActivity : AppCompatActivity() {
     // Instância do ContestManager
     private lateinit var contestManager: ContestManager
 
+    // Instância do UserManager
+    private lateinit var userManager: UserManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -42,6 +45,9 @@ class MainActivity : AppCompatActivity() {
 
         // Inicializa o ContestManager
         contestManager = ContestManager(this)
+
+        // Inicializa o UserManager
+        userManager = UserManager(this)
 
         // Inicializa componentes
         initializeComponents()
@@ -151,6 +157,11 @@ class MainActivity : AppCompatActivity() {
             loadUsers()
             navigateToPage(2)
         }
+        //configuração do botão "save user"
+        findViewById<Button>(R.id.button_save_user).setOnClickListener {
+            userManager.saveUserToDb(findViewById(R.id.pag_2))
+        }
+
         // Chamar a função correta do ContestManager
         findViewById<Button>(R.id.button_new_contests_ok).setOnClickListener {
             contestManager.createContestInstance(findViewById(R.id.pag_5), dbPath)
