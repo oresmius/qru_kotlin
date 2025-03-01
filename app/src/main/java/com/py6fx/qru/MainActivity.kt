@@ -59,17 +59,6 @@ class MainActivity : AppCompatActivity() {
         setupPopupMenu()
     }
 
-    // Método que lê os dbs que são os usuários e cria uma lista de seleção.
-    private fun loadUsers() {
-        val spinnerUsers = findViewById<Spinner>(R.id.spinner_users)
-        val dbFolder = File(applicationContext.filesDir, "db")
-        val dbFiles = dbFolder.listFiles { _, name -> name.endsWith(".db") } ?: arrayOf()
-        val userList = dbFiles.map { it.nameWithoutExtension }
-        val finalList = if (userList.isNotEmpty()) userList else listOf("No users available")
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, finalList)
-        spinnerUsers.adapter = adapter
-    }
-
     private fun selectUser() {
         val spinnerUsers = findViewById<Spinner>(R.id.spinner_users)
         val selectedUser = spinnerUsers.selectedItem?.toString()
@@ -154,7 +143,7 @@ class MainActivity : AppCompatActivity() {
 
         // Configuração do botão "Load User"
         findViewById<Button>(R.id.button_load_user).setOnClickListener {
-            loadUsers()
+            userManager.loadUsers(findViewById(R.id.pag_3))
             navigateToPage(2)
         }
         //configuração do botão "save user"

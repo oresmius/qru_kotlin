@@ -4,30 +4,45 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteException
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.EditText
+import android.widget.Spinner
+import android.widget.TextView
 import android.widget.Toast
 import java.io.File
+import java.util.concurrent.atomic.LongAdder
 
 class UserManager(private val context: Context, private val activity: MainActivity) {
-    // método que salva os dados do usuário no bd
 
-    fun saveUserToDb(view: View) {
+    // Método que lê os dbs que são os usuários e cria uma lista de seleção.
+
+    fun loadUsers(loadUserPage: View) {
+        val spinnerUsers = loadUserPage.findViewById<Spinner>(R.id.spinner_users)
+        val dbFolder = File(context.filesDir, "db")
+        val dbFiles = dbFolder.listFiles { _, name -> name.endsWith(".db") } ?: arrayOf()
+        val userList = dbFiles.map { it.nameWithoutExtension }
+        val finalList = if (userList.isNotEmpty()) userList else listOf("No users available")
+        val adapter = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, finalList)
+        spinnerUsers.adapter = adapter
+    }
+    // método que salva os dados do usuário no bd
+    fun saveUserToDb(newUserPage: View) {
 
         // referências aos campos de editText
 
-        val editTextCall = view.findViewById<EditText>(R.id.editText_new_user_call)
-        val editTextName = view.findViewById<EditText>(R.id.editText_new_user_name)
-        val editTextAddress = view.findViewById<EditText>(R.id.editText_new_user_address)
-        val editTextCity = view.findViewById<EditText>(R.id.editText_new_user_city)
-        val editTextState = view.findViewById<EditText>(R.id.editText_new_user_state)
-        val editTextZIP = view.findViewById<EditText>(R.id.editText_new_user_zip)
-        val editTextCountry = view.findViewById<EditText>(R.id.editText_new_user_country)
-        val editTextGrid = view.findViewById<EditText>(R.id.editText_new_user_grid_square)
-        val editTextARRL = view.findViewById<EditText>(R.id.editText_new_user_arrl_section)
-        val editTextClub = view.findViewById<EditText>(R.id.editText_new_user_club)
-        val editTextCQ = view.findViewById<EditText>(R.id.editText_new_user_cq_zone)
-        val editTextITU = view.findViewById<EditText>(R.id.editText_new_user_itu_zone)
-        val editTextEmail = view.findViewById<EditText>(R.id.editText_new_user_email)
+        val editTextCall = newUserPage.findViewById<EditText>(R.id.editText_new_user_call)
+        val editTextName = newUserPage.findViewById<EditText>(R.id.editText_new_user_name)
+        val editTextAddress = newUserPage.findViewById<EditText>(R.id.editText_new_user_address)
+        val editTextCity = newUserPage.findViewById<EditText>(R.id.editText_new_user_city)
+        val editTextState = newUserPage.findViewById<EditText>(R.id.editText_new_user_state)
+        val editTextZIP = newUserPage.findViewById<EditText>(R.id.editText_new_user_zip)
+        val editTextCountry = newUserPage.findViewById<EditText>(R.id.editText_new_user_country)
+        val editTextGrid = newUserPage.findViewById<EditText>(R.id.editText_new_user_grid_square)
+        val editTextARRL = newUserPage.findViewById<EditText>(R.id.editText_new_user_arrl_section)
+        val editTextClub = newUserPage.findViewById<EditText>(R.id.editText_new_user_club)
+        val editTextCQ = newUserPage.findViewById<EditText>(R.id.editText_new_user_cq_zone)
+        val editTextITU = newUserPage.findViewById<EditText>(R.id.editText_new_user_itu_zone)
+        val editTextEmail = newUserPage.findViewById<EditText>(R.id.editText_new_user_email)
 
         //coleta e labidação dos dados
 
@@ -117,6 +132,9 @@ class UserManager(private val context: Context, private val activity: MainActivi
             // Mensagem de sucesso
             Toast.makeText(context, "User successfully saved!", Toast.LENGTH_LONG).show()
             activity.navigateToPage(3)
+
+            val userIndicator = newUserPage.findViewById<TextView>(R.id.user_indicator)
+            userIndicator.text = call
 
         } catch (e: SQLiteException) {
             Toast.makeText(context, "Error saving user: ${e.message}", Toast.LENGTH_LONG).show()
