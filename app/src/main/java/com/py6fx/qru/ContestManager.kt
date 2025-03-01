@@ -3,12 +3,15 @@ package com.py6fx.qru
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteException
+import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
 import java.io.File
+import kotlin.coroutines.coroutineContext
 
 class ContestManager(private val context: Context) {
 
@@ -119,7 +122,66 @@ class ContestManager(private val context: Context) {
         }
     }
 
-    private fun showToast(message: String) {
+    fun showToast(message: String) {
         Toast.makeText(context, message, Toast.LENGTH_LONG).show()
     }
+    fun loadContests(newContestLoad: View) {
+        val spinnerContests = newContestLoad.findViewById<Spinner>(R.id.spinner_contests)
+        val dbPath = File(context.filesDir, "db/main.qru")
+
+        if (!dbPath.exists()) {
+            Toast.makeText(context, "Error: Database main.qru not found!", Toast.LENGTH_LONG).show()
+            return
+        }
+
+        val db = SQLiteDatabase.openDatabase(dbPath.path, null, SQLiteDatabase.OPEN_READONLY)
+        val cursor = db.rawQuery("SELECT DisplayName FROM CONTEST", null)
+        val contests = mutableListOf<String>()
+
+        if (cursor.moveToFirst()) {
+            do {
+                val displayName = cursor.getString(0)
+                contests.add(displayName)
+            } while (cursor.moveToNext())
+        }
+
+        cursor.close()
+        db.close()
+        contests.sort()
+
+        val adapter = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, contests)
+        spinnerContests.adapter = adapter
+
+        // Configuração dos spinners dentro da mesma função
+        newContestLoad.findViewById<Spinner>(R.id.spinner_operator).adapter =
+            ArrayAdapter.createFromResource(context, R.array.operator, android.R.layout.simple_spinner_dropdown_item)
+
+        newContestLoad.findViewById<Spinner>(R.id.spinner_band).adapter =
+            ArrayAdapter.createFromResource(context, R.array.band, android.R.layout.simple_spinner_dropdown_item)
+
+        newContestLoad.findViewById<Spinner>(R.id.spinner_power).adapter =
+            ArrayAdapter.createFromResource(context, R.array.power, android.R.layout.simple_spinner_dropdown_item)
+
+        newContestLoad.findViewById<Spinner>(R.id.spinner_mode).adapter =
+            ArrayAdapter.createFromResource(context, R.array.mode, android.R.layout.simple_spinner_dropdown_item)
+
+        newContestLoad.findViewById<Spinner>(R.id.spinner_overlay).adapter =
+            ArrayAdapter.createFromResource(context, R.array.overlay, android.R.layout.simple_spinner_dropdown_item)
+
+        newContestLoad.findViewById<Spinner>(R.id.spinner_station).adapter =
+            ArrayAdapter.createFromResource(context, R.array.station, android.R.layout.simple_spinner_dropdown_item)
+
+        newContestLoad.findViewById<Spinner>(R.id.spinner_assisted).adapter =
+            ArrayAdapter.createFromResource(context, R.array.asssisted, android.R.layout.simple_spinner_dropdown_item)
+
+        newContestLoad.findViewById<Spinner>(R.id.spinner_transmitter).adapter =
+            ArrayAdapter.createFromResource(context, R.array.transmitter, android.R.layout.simple_spinner_dropdown_item)
+
+        newContestLoad.findViewById<Spinner>(R.id.spinner_time_category).adapter =
+            ArrayAdapter.createFromResource(context, R.array.time_category, android.R.layout.simple_spinner_dropdown_item)
+    }
 }
+
+
+
+

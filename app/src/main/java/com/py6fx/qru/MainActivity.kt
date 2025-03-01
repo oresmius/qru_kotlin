@@ -57,38 +57,6 @@ class MainActivity : AppCompatActivity() {
         setupPopupMenu()
     }
 
-
-
-    private fun loadContests() {
-        val spinnerContests = findViewById<Spinner>(R.id.spinner_contests)
-        val dbPath = File(applicationContext.filesDir, "db/main.qru")
-
-        if (!dbPath.exists()) {
-            Toast.makeText(this, "Error: Database main.qru not found!", Toast.LENGTH_LONG).show()
-            return
-        }
-
-        val db = SQLiteDatabase.openDatabase(dbPath.path, null, SQLiteDatabase.OPEN_READONLY)
-        val cursor = db.rawQuery("SELECT DisplayName FROM CONTEST", null)
-        val contests = mutableListOf<String>()
-
-        if (cursor.moveToFirst()) {
-            do {
-                val displayName = cursor.getString(0)
-                contests.add(displayName)
-            } while (cursor.moveToNext())
-        }
-
-        cursor.close()
-        db.close()
-        contests.sort()
-
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, contests)
-        spinnerContests.adapter = adapter
-
-        setupContestSpinners()
-    }
-
     // Inicializa os componentes
     private fun initializeComponents() {
         viewFlipper = findViewById(R.id.viewFlipper)
@@ -142,7 +110,7 @@ class MainActivity : AppCompatActivity() {
         popup.setOnMenuItemClickListener { item: MenuItem ->
             when (item.itemId) {
                 R.id.menu_new_contest -> {
-                    loadContests()
+                    contestManager.loadContests(findViewById(R.id.pag_5))
                     navigateToPage(4)
                 }
                 R.id.menu_resume_contest -> { /* Ação para continuar conteste */ }
