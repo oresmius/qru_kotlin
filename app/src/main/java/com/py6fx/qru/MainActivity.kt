@@ -59,33 +59,7 @@ class MainActivity : AppCompatActivity() {
         setupPopupMenu()
     }
 
-    private fun selectUser() {
-        val spinnerUsers = findViewById<Spinner>(R.id.spinner_users)
-        val selectedUser = spinnerUsers.selectedItem?.toString()
 
-        if (selectedUser == null || selectedUser == "No users available") {
-            Toast.makeText(this, "No valid user selected!", Toast.LENGTH_LONG).show()
-            return
-        }
-
-        dbPath = File(applicationContext.filesDir, "db/$selectedUser.db")
-
-        if (!dbPath.exists()) {
-            Toast.makeText(this, "Database for $selectedUser not found!", Toast.LENGTH_LONG).show()
-            return
-        }
-
-        try {
-            val db = SQLiteDatabase.openDatabase(dbPath.path, null, SQLiteDatabase.OPEN_READWRITE)
-            val userIndicator = findViewById<TextView>(R.id.user_indicator)
-            userIndicator.text = selectedUser
-            db.close()
-            Toast.makeText(this, "User $selectedUser loaded successfully!", Toast.LENGTH_LONG).show()
-            navigateToPage(3)
-        } catch (e: SQLiteException) {
-            Toast.makeText(this, "Error loading user: ${e.message}", Toast.LENGTH_LONG).show()
-        }
-    }
 
     private fun loadContests() {
         val spinnerContests = findViewById<Spinner>(R.id.spinner_contests)
@@ -135,7 +109,7 @@ class MainActivity : AppCompatActivity() {
         }
         val buttonSelectUser = findViewById<Button>(R.id.button_select_user)
         buttonSelectUser.setOnClickListener {
-            selectUser()
+            userManager.selectUser(findViewById(R.id.pag_3))
         }
         findViewById<Button>(R.id.button_cancel_new_user).setOnClickListener {
             navigateToPage(0)

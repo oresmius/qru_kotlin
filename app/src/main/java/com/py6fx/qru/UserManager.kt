@@ -133,12 +133,44 @@ class UserManager(private val context: Context, private val activity: MainActivi
             Toast.makeText(context, "User successfully saved!", Toast.LENGTH_LONG).show()
             activity.navigateToPage(3)
 
-            val userIndicator = newUserPage.findViewById<TextView>(R.id.user_indicator)
-            userIndicator.text = call
 
         } catch (e: SQLiteException) {
             Toast.makeText(context, "Error saving user: ${e.message}", Toast.LENGTH_LONG).show()
 
         }
     }
+    // função que seleciona o usuário
+
+    fun selectUser(loadUserPage: View) {
+        val spinnerUsers = loadUserPage.findViewById<Spinner>(R.id.spinner_users)
+        val selectedUser = spinnerUsers.selectedItem?.toString()
+
+        if (selectedUser.isNullOrEmpty() || selectedUser == "No users available") {
+            Toast.makeText(context, "No valid user selected!", Toast.LENGTH_LONG).show()
+            return
+        }
+
+        val dbPath = File(context.filesDir, "db/$selectedUser.db")
+
+        if (!dbPath.exists()) {
+            Toast.makeText(context, "Database for $selectedUser not found!", Toast.LENGTH_LONG).show()
+            return
+        }
+
+        try {
+            val db = SQLiteDatabase.openDatabase(dbPath.path, null, SQLiteDatabase.OPEN_READWRITE)
+            db.close()
+
+            // Atualiza o indicador de usuário
+            val userIndicator = activity.findViewById<TextView>(R.id.user_indicator)
+            userIndicator.text = selectedUser
+
+            Toast.makeText(context, "User $selectedUser loaded successfully!", Toast.LENGTH_LONG).show()
+            activity.navigateToPage(3)
+        } catch (e: SQLiteException) {
+            Toast.makeText(context, "Error loading user: ${e.message}", Toast.LENGTH_LONG).show()
+        }
+    }
+
+
 }
