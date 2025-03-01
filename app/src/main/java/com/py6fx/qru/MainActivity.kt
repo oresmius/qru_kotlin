@@ -7,10 +7,8 @@ import android.widget.ViewFlipper
 import androidx.appcompat.app.AppCompatActivity
 import java.io.File
 import android.database.sqlite.SQLiteDatabase
-import android.database.sqlite.SQLiteException
 import android.widget.ArrayAdapter
 import android.widget.Spinner
-import android.widget.TextView
 import android.view.MenuItem
 import android.view.View
 import android.widget.PopupMenu

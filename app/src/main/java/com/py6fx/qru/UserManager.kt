@@ -126,6 +126,12 @@ class UserManager(private val context: Context, private val activity: MainActivi
             """.trimIndent()
             db.execSQL(insertQuery, arrayOf(call, name, address, city, state, zip, country, grid, cq, itu, arrl, club, email))
 
+            // Atualiza o userIndicator com o indicativo salvo
+            updateUserIndicator(call)
+
+            // Fecha o banco de dados
+            db.close()
+
             // Fecha o banco de dados
             db.close()
 
@@ -161,9 +167,8 @@ class UserManager(private val context: Context, private val activity: MainActivi
             val db = SQLiteDatabase.openDatabase(dbPath.path, null, SQLiteDatabase.OPEN_READWRITE)
             db.close()
 
-            // Atualiza o indicador de usuário
-            val userIndicator = activity.findViewById<TextView>(R.id.user_indicator)
-            userIndicator.text = selectedUser
+            // atualiza o indicador de usuário.
+            updateUserIndicator(selectedUser)
 
             Toast.makeText(context, "User $selectedUser loaded successfully!", Toast.LENGTH_LONG).show()
             activity.navigateToPage(3)
@@ -171,6 +176,9 @@ class UserManager(private val context: Context, private val activity: MainActivi
             Toast.makeText(context, "Error loading user: ${e.message}", Toast.LENGTH_LONG).show()
         }
     }
-
-
+    // função do indicador de usuário
+    fun updateUserIndicator(call: String) {
+        val userIndicator = activity.findViewById<TextView>(R.id.user_indicator)
+        userIndicator.text = call
+    }
 }
