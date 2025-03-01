@@ -8,7 +8,7 @@ import android.widget.EditText
 import android.widget.Toast
 import java.io.File
 
-class UserManager(private val context: Context) {
+class UserManager(private val context: Context, private val activity: MainActivity) {
     // método que salva os dados do usuário no bd
 
     fun saveUserToDb(view: View) {
@@ -116,6 +116,7 @@ class UserManager(private val context: Context) {
 
             // Mensagem de sucesso
             Toast.makeText(context, "User successfully saved!", Toast.LENGTH_LONG).show()
+            activity.navigateToPage(3)
 
         } catch (e: SQLiteException) {
             Toast.makeText(context, "Error saving user: ${e.message}", Toast.LENGTH_LONG).show()

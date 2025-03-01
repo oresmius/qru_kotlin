@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
         contestManager = ContestManager(this)
 
         // Inicializa o UserManager
-        userManager = UserManager(this)
+        userManager = UserManager(this, this)
 
         // Inicializa componentes
         initializeComponents()
@@ -224,7 +224,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // Lógica para navegar entre páginas
-    private fun navigateToPage(pageIndex: Int) {
+    fun navigateToPage(pageIndex: Int) {
         viewFlipper.displayedChild = pageIndex
     }
 }
