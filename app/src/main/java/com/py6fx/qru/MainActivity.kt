@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
         dbPath = File(applicationContext.filesDir, "db")
 
         // Inicializa o ContestManager
-        contestManager = ContestManager(this)
+        contestManager = ContestManager(this, this)
 
         // Inicializa o UserManager
         userManager = UserManager(this, this)
@@ -93,7 +93,8 @@ class MainActivity : AppCompatActivity() {
 
         // Chamar a função correta do ContestManager
         findViewById<Button>(R.id.button_new_contests_ok).setOnClickListener {
-            contestManager.createContestInstance(findViewById(R.id.pag_5), dbPath)
+            contestManager.createContestInstance(findViewById(R.id.pag_5), File(dbPath, "user.qru"))
+
         }
     }
 

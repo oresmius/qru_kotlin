@@ -7,17 +7,18 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.Spinner
+import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
 import java.io.File
 import kotlin.coroutines.coroutineContext
 
-class ContestManager(private val context: Context) {
-
+class ContestManager(private val context: Context, private val activity: MainActivity){
     fun createContestInstance(page: ConstraintLayout, dbPath: File) {
         try {
-            val userDb = SQLiteDatabase.openOrCreateDatabase(dbPath, null)
+            val userDb = SQLiteDatabase.openOrCreateDatabase(dbPath.path, null)
 
             val createTableQuery = """
                 CREATE TABLE IF NOT EXISTS Contest (
@@ -55,7 +56,8 @@ class ContestManager(private val context: Context) {
                 return
             }
 
-            val mainDb = SQLiteDatabase.openDatabase(mainDbPath.path, null, SQLiteDatabase.OPEN_READONLY)
+            val mainDb =
+                SQLiteDatabase.openDatabase(mainDbPath.path, null, SQLiteDatabase.OPEN_READONLY)
             val cursor = mainDb.rawQuery(
                 "SELECT Name, DisplayName, CabrilloName FROM Contest WHERE DisplayName = ?",
                 arrayOf(selectedContest)
@@ -98,26 +100,34 @@ class ContestManager(private val context: Context) {
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """.trimIndent()
 
-            userDb.execSQL(insertQuery, arrayOf(
-                name, displayName, cabrilloName,
-                page.findViewById<Spinner>(R.id.spinner_operator).selectedItem.toString(),
-                page.findViewById<Spinner>(R.id.spinner_band).selectedItem.toString(),
-                page.findViewById<Spinner>(R.id.spinner_power).selectedItem.toString(),
-                page.findViewById<Spinner>(R.id.spinner_mode).selectedItem.toString(),
-                page.findViewById<Spinner>(R.id.spinner_overlay).selectedItem.toString(),
-                page.findViewById<Spinner>(R.id.spinner_station).selectedItem.toString(),
-                page.findViewById<Spinner>(R.id.spinner_assisted).selectedItem.toString(),
-                page.findViewById<Spinner>(R.id.spinner_transmitter).selectedItem.toString(),
-                page.findViewById<Spinner>(R.id.spinner_time_category).selectedItem.toString(),
-                page.findViewById<EditText>(R.id.editText_send_exchange).text.toString().trim(),
-                page.findViewById<EditText>(R.id.editText_operators).text.toString().trim()
-            ))
+            userDb.execSQL(
+                insertQuery, arrayOf(
+                    name, displayName, cabrilloName,
+                    page.findViewById<Spinner>(R.id.spinner_operator).selectedItem.toString(),
+                    page.findViewById<Spinner>(R.id.spinner_band).selectedItem.toString(),
+                    page.findViewById<Spinner>(R.id.spinner_power).selectedItem.toString(),
+                    page.findViewById<Spinner>(R.id.spinner_mode).selectedItem.toString(),
+                    page.findViewById<Spinner>(R.id.spinner_overlay).selectedItem.toString(),
+                    page.findViewById<Spinner>(R.id.spinner_station).selectedItem.toString(),
+                    page.findViewById<Spinner>(R.id.spinner_assisted).selectedItem.toString(),
+                    page.findViewById<Spinner>(R.id.spinner_transmitter).selectedItem.toString(),
+                    page.findViewById<Spinner>(R.id.spinner_time_category).selectedItem.toString(),
+                    page.findViewById<EditText>(R.id.editText_send_exchange).text.toString().trim(),
+                    page.findViewById<EditText>(R.id.editText_operators).text.toString().trim()
+                )
+            )
 
             userDb.close()
 
             showToast("Contest $displayName created successfully!")
 
-        } catch (e: SQLiteException) {
+            //atualiza a exibição do conteste
+            contestIndicator(displayName)
+
+            activity.navigateToPage(3)
+
+        }
+        catch (e: SQLiteException) {
             showToast("Error creating contest: ${e.message}")
         }
     }
@@ -125,6 +135,7 @@ class ContestManager(private val context: Context) {
     fun showToast(message: String) {
         Toast.makeText(context, message, Toast.LENGTH_LONG).show()
     }
+
     fun loadContests(newContestLoad: View) {
         val spinnerContests = newContestLoad.findViewById<Spinner>(R.id.spinner_contests)
         val dbPath = File(context.filesDir, "db/main.qru")
@@ -154,33 +165,79 @@ class ContestManager(private val context: Context) {
 
         // Configuração dos spinners dentro da mesma função
         newContestLoad.findViewById<Spinner>(R.id.spinner_operator).adapter =
-            ArrayAdapter.createFromResource(context, R.array.operator, android.R.layout.simple_spinner_dropdown_item)
+            ArrayAdapter.createFromResource(
+                context,
+                R.array.operator,
+                android.R.layout.simple_spinner_dropdown_item
+            )
 
         newContestLoad.findViewById<Spinner>(R.id.spinner_band).adapter =
-            ArrayAdapter.createFromResource(context, R.array.band, android.R.layout.simple_spinner_dropdown_item)
+            ArrayAdapter.createFromResource(
+                context,
+                R.array.band,
+                android.R.layout.simple_spinner_dropdown_item
+            )
 
         newContestLoad.findViewById<Spinner>(R.id.spinner_power).adapter =
-            ArrayAdapter.createFromResource(context, R.array.power, android.R.layout.simple_spinner_dropdown_item)
+            ArrayAdapter.createFromResource(
+                context,
+                R.array.power,
+                android.R.layout.simple_spinner_dropdown_item
+            )
 
         newContestLoad.findViewById<Spinner>(R.id.spinner_mode).adapter =
-            ArrayAdapter.createFromResource(context, R.array.mode, android.R.layout.simple_spinner_dropdown_item)
+            ArrayAdapter.createFromResource(
+                context,
+                R.array.mode,
+                android.R.layout.simple_spinner_dropdown_item
+            )
 
         newContestLoad.findViewById<Spinner>(R.id.spinner_overlay).adapter =
-            ArrayAdapter.createFromResource(context, R.array.overlay, android.R.layout.simple_spinner_dropdown_item)
+            ArrayAdapter.createFromResource(
+                context,
+                R.array.overlay,
+                android.R.layout.simple_spinner_dropdown_item
+            )
 
         newContestLoad.findViewById<Spinner>(R.id.spinner_station).adapter =
-            ArrayAdapter.createFromResource(context, R.array.station, android.R.layout.simple_spinner_dropdown_item)
+            ArrayAdapter.createFromResource(
+                context,
+                R.array.station,
+                android.R.layout.simple_spinner_dropdown_item
+            )
 
         newContestLoad.findViewById<Spinner>(R.id.spinner_assisted).adapter =
-            ArrayAdapter.createFromResource(context, R.array.asssisted, android.R.layout.simple_spinner_dropdown_item)
+            ArrayAdapter.createFromResource(
+                context,
+                R.array.asssisted,
+                android.R.layout.simple_spinner_dropdown_item
+            )
 
         newContestLoad.findViewById<Spinner>(R.id.spinner_transmitter).adapter =
-            ArrayAdapter.createFromResource(context, R.array.transmitter, android.R.layout.simple_spinner_dropdown_item)
+            ArrayAdapter.createFromResource(
+                context,
+                R.array.transmitter,
+                android.R.layout.simple_spinner_dropdown_item
+            )
 
         newContestLoad.findViewById<Spinner>(R.id.spinner_time_category).adapter =
-            ArrayAdapter.createFromResource(context, R.array.time_category, android.R.layout.simple_spinner_dropdown_item)
+            ArrayAdapter.createFromResource(
+                context,
+                R.array.time_category,
+                android.R.layout.simple_spinner_dropdown_item
+            )
+    }
+
+    // Função para atualizar o indicador de contest
+    fun contestIndicator(contest: String?) {
+        val contestIndicator = activity.findViewById<TextView?>(R.id.contest_indicator)
+        if (contestIndicator != null) {
+            contestIndicator.text = contest ?: "No contest"
+        }
     }
 }
+
+
 
 
 
