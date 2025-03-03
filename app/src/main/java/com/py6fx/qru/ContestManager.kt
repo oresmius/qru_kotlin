@@ -263,7 +263,12 @@ class ContestManager(private val context: Context, private val activity: MainAct
         val db = SQLiteDatabase.openDatabase(dbPath.path, null, SQLiteDatabase.OPEN_READONLY)
 
         // Consulta os contests armazenados do usuário ativo
-        val cursor = db.rawQuery("SELECT StartTime, DisplayName FROM Contest", null)
+        val cursor = db.rawQuery(
+            "SELECT StartTime, DisplayName FROM Contest ORDER BY datetime(StartTime) DESC",
+            null
+        )
+
+
         val contests = mutableListOf<String>()
 
         // Processa os resultados
@@ -280,7 +285,7 @@ class ContestManager(private val context: Context, private val activity: MainAct
         db.close()
 
         // Ordena os contests para melhor exibição
-        contests.sort()
+        contests.sortDescending()
 
         // Atualiza o spinner com os contests recuperados
         val adapter = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, contests)
