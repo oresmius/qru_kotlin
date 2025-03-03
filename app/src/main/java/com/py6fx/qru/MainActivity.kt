@@ -8,6 +8,7 @@ import java.io.File
 import android.view.MenuItem
 import android.view.View
 import android.widget.PopupMenu
+import android.widget.TextView
 
 
 class MainActivity : AppCompatActivity() {
@@ -87,9 +88,11 @@ class MainActivity : AppCompatActivity() {
             userManager.saveUserToDb(findViewById(R.id.pag_2))
         }
 
-        // Chamar a função correta do ContestManager
+        // Chamar a função correta do ContestManager com o banco do usuário ativo
         findViewById<Button>(R.id.button_new_contests_ok).setOnClickListener {
-            contestManager.createContestInstance(findViewById(R.id.pag_5), File(dbPath, "user.qru"))
+            val userIndicator = findViewById<TextView>(R.id.user_indicator).text.toString().trim()
+            val userDbPath = File(dbPath, "$userIndicator.db") // Agora usa o banco correto
+            contestManager.createContestInstance(findViewById(R.id.pag_5), userDbPath)
         }
 
         // chamar a função resumeContest
