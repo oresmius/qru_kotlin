@@ -114,8 +114,18 @@ class MainActivity : AppCompatActivity() {
                     contestManager.loadInitializedContests(findViewById(R.id.pag_6))
                     navigateToPage(5)
                 }
-                R.id.menu_export_contest -> { /* Ação para exportar conteste */ }
-                R.id.menu_delete_contest -> { /* Ação para deletar conteste */ }
+                R.id.menu_edit_contest -> {
+                    contestManager.loadInitializedContests(findViewById(R.id.pag_6))
+                    navigateToPage(5)
+                }
+                R.id.menu_export_contest -> {
+                    contestManager.loadInitializedContests(findViewById(R.id.pag_6))
+                    navigateToPage(5)
+                }
+                R.id.menu_delete_contest -> {
+                    contestManager.loadInitializedContests(findViewById(R.id.pag_6))
+                    navigateToPage(5)
+                }
             }
             true
         }

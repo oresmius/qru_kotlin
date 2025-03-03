@@ -7,6 +7,9 @@
         android:id="@+id/menu_resume_contest"
         android:title="Resume Contest"/>
     <item
+        android:id="@+id/menu_edit_contest"
+        android:title="Edit Contest"/>
+    <item
         android:id="@+id/menu_export_contest"
         android:title="Export Contest"/>
     <item
