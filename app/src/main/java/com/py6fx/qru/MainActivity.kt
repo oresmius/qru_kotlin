@@ -2,13 +2,9 @@ package com.py6fx.qru
 
 import android.os.Bundle
 import android.widget.Button
-import android.widget.Toast
 import android.widget.ViewFlipper
 import androidx.appcompat.app.AppCompatActivity
 import java.io.File
-import android.database.sqlite.SQLiteDatabase
-import android.widget.ArrayAdapter
-import android.widget.Spinner
 import android.view.MenuItem
 import android.view.View
 import android.widget.PopupMenu
@@ -114,43 +110,16 @@ class MainActivity : AppCompatActivity() {
                     contestManager.loadContests(findViewById(R.id.pag_5))
                     navigateToPage(4)
                 }
-                R.id.menu_resume_contest -> { /* Ação para continuar conteste */ }
+                R.id.menu_resume_contest -> {
+                    contestManager.loadInitializedContests(findViewById(R.id.pag_6))
+                    navigateToPage(5)
+                }
                 R.id.menu_export_contest -> { /* Ação para exportar conteste */ }
                 R.id.menu_delete_contest -> { /* Ação para deletar conteste */ }
             }
             true
         }
         popup.show()
-    }
-
-    // Função dos spinners de novo conteste
-    private fun setupContestSpinners() {
-        findViewById<Spinner>(R.id.spinner_operator).adapter =
-            ArrayAdapter.createFromResource(this, R.array.operator, android.R.layout.simple_spinner_dropdown_item)
-
-        findViewById<Spinner>(R.id.spinner_band).adapter =
-            ArrayAdapter.createFromResource(this, R.array.band, android.R.layout.simple_spinner_dropdown_item)
-
-        findViewById<Spinner>(R.id.spinner_power).adapter =
-            ArrayAdapter.createFromResource(this, R.array.power, android.R.layout.simple_spinner_dropdown_item)
-
-        findViewById<Spinner>(R.id.spinner_mode).adapter =
-            ArrayAdapter.createFromResource(this, R.array.mode, android.R.layout.simple_spinner_dropdown_item)
-
-        findViewById<Spinner>(R.id.spinner_overlay).adapter =
-            ArrayAdapter.createFromResource(this, R.array.overlay, android.R.layout.simple_spinner_dropdown_item)
-
-        findViewById<Spinner>(R.id.spinner_station).adapter =
-            ArrayAdapter.createFromResource(this, R.array.station, android.R.layout.simple_spinner_dropdown_item)
-
-        findViewById<Spinner>(R.id.spinner_assisted).adapter =
-            ArrayAdapter.createFromResource(this, R.array.asssisted, android.R.layout.simple_spinner_dropdown_item)
-
-        findViewById<Spinner>(R.id.spinner_transmitter).adapter =
-            ArrayAdapter.createFromResource(this, R.array.transmitter, android.R.layout.simple_spinner_dropdown_item)
-
-        findViewById<Spinner>(R.id.spinner_time_category).adapter =
-            ArrayAdapter.createFromResource(this, R.array.time_category, android.R.layout.simple_spinner_dropdown_item)
     }
 
     // Lógica para navegar entre páginas

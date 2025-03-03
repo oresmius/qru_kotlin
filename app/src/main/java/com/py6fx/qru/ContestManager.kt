@@ -9,11 +9,9 @@ import android.widget.EditText
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
 import java.io.File
-import kotlin.coroutines.coroutineContext
 
 class ContestManager(private val context: Context, private val activity: MainActivity){
     fun createContestInstance(page: ConstraintLayout, dbPath: File) {
@@ -234,6 +232,59 @@ class ContestManager(private val context: Context, private val activity: MainAct
         if (contestIndicator != null) {
             contestIndicator.text = contest ?: "No contest"
         }
+    }
+
+    //função que acrrega os contestes inicializados
+
+    fun loadInitializedContests(initializedContests: View) {
+        // Obtém referência ao spinner na pag_6
+        val spinner = initializedContests.findViewById<Spinner>(R.id.spinner_contests_initialized)
+
+        // Obtém o usuário ativo pelo indicador
+        val userIndicator = activity.findViewById<TextView>(R.id.user_indicator)
+        val activeUser = userIndicator.text.toString().trim()
+
+        // Verifica se há um usuário ativo
+        if (activeUser.isEmpty() || activeUser == "USER") {
+            showToast("No active user selected!")
+            return
+        }
+
+        // Caminho do banco de dados do usuário ativo
+        val dbPath = File(context.filesDir, "db/$activeUser.db")
+
+        // Verifica se o banco de dados do usuário existe
+        if (!dbPath.exists()) {
+            showToast("Error: Database for user $activeUser not found!")
+            return
+        }
+
+        // Abre o banco de dados em modo leitura
+        val db = SQLiteDatabase.openDatabase(dbPath.path, null, SQLiteDatabase.OPEN_READONLY)
+
+        // Consulta os contests armazenados do usuário ativo
+        val cursor = db.rawQuery("SELECT StartTime, DisplayName FROM Contest", null)
+        val contests = mutableListOf<String>()
+
+        // Processa os resultados
+        if (cursor.moveToFirst()) {
+            do {
+                val startTime = cursor.getString(0)
+                val displayName = cursor.getString(1)
+                contests.add("$startTime - $displayName")
+            } while (cursor.moveToNext())
+        }
+
+        // Fecha o cursor e o banco de dados
+        cursor.close()
+        db.close()
+
+        // Ordena os contests para melhor exibição
+        contests.sort()
+
+        // Atualiza o spinner com os contests recuperados
+        val adapter = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, contests)
+        spinner.adapter = adapter
     }
 }
 

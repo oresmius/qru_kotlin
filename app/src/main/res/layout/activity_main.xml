@@ -16,7 +16,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-        
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/pag_1"
             android:layout_width="match_parent"
@@ -467,7 +467,7 @@
                 app:layout_constraintVertical_bias="0.5" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-        <!--pagina-->
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/pag_5"
             android:layout_width="match_parent"
@@ -669,6 +669,128 @@
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!--pagina-->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/pag_6"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#CCC2C2">
+
+            <TextView
+                android:id="@+id/label_resume_export_delete_contest"
+                android:layout_width="474dp"
+                android:layout_height="43dp"
+                android:background="@drawable/rouded_button"
+                android:gravity="center"
+                android:text="Contest General Options"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toTopOf="@+id/spinner_contests_initialized"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.5" />
+
+            <Spinner
+                android:id="@+id/spinner_contests_initialized"
+                android:layout_width="635dp"
+                android:layout_height="47dp"
+                android:layout_marginTop="90dp"
+                android:layout_marginBottom="274dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/button_resume_contest"
+                android:layout_width="130dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="254dp"
+                android:layout_marginBottom="107dp"
+                android:background="@drawable/rouded_button"
+                android:gravity="center"
+                android:text="Resume"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/button_edit_contest"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/button_edit_contest"
+                android:layout_width="130dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="254dp"
+                android:layout_marginBottom="107dp"
+                android:background="@drawable/rouded_button"
+                android:gravity="center"
+                android:text="Edit"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/button_export_contest"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/button_resume_contest"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/button_export_contest"
+                android:layout_width="130dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="254dp"
+                android:layout_marginBottom="107dp"
+                android:background="@drawable/rouded_button"
+                android:gravity="center"
+                android:text="Export"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/button_edit_contest"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/button_delete_contest"
+                android:layout_width="130dp"
+                android:layout_height="50dp"
+                android:background="@drawable/rouded_button"
+                android:gravity="center"
+                android:text="Delete"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/button_contest_general_cancel"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/button_resume_contest"
+                app:layout_constraintVertical_bias="0.5" />
+
+            <Button
+                android:id="@+id/button_contest_general_cancel"
+                android:layout_width="130dp"
+                android:layout_height="50dp"
+                android:background="@drawable/rouded_button"
+                android:gravity="center"
+                android:text="Cancel"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/button_delete_contest"
+                app:layout_constraintTop_toBottomOf="@+id/button_export_contest"
+                app:layout_constraintVertical_bias="0.5" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     </ViewFlipper>
 </androidx.constraintlayout.widget.ConstraintLayout>

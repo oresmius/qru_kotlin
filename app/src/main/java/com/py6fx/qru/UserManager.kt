@@ -10,7 +10,6 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import java.io.File
-import java.util.concurrent.atomic.LongAdder
 
 class UserManager(private val context: Context, private val activity: MainActivity) {
 
