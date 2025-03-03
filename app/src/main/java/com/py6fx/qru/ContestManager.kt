@@ -286,10 +286,28 @@ class ContestManager(private val context: Context, private val activity: MainAct
         val adapter = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, contests)
         spinner.adapter = adapter
     }
+    fun resumeContest(page: View) {
+        // Obtém referência ao spinner na pag_6
+        val spinner = page.findViewById<Spinner>(R.id.spinner_contests_initialized)
+        val selectedItem = spinner.selectedItem?.toString()
+
+        // Verifica se algum contest foi selecionado
+        if (selectedItem.isNullOrEmpty()) {
+            showToast("No contest selected!")
+            return
+        }
+
+        // Extrai apenas o DisplayName (ignora a data/hora de início)
+        val selectedContest = selectedItem.substringAfter(" - ").trim()
+
+        // Atualiza o contest_indicator na UI
+        contestIndicator(selectedContest)
+
+        // Exibe mensagem de sucesso
+        showToast("Contest $selectedContest resumed successfully!")
+
+        // Navega automaticamente para o Main Menu (página 4)
+        activity.navigateToPage(3)
+    }
+
 }
-
-
-
-
-
-

@@ -90,7 +90,11 @@ class MainActivity : AppCompatActivity() {
         // Chamar a função correta do ContestManager
         findViewById<Button>(R.id.button_new_contests_ok).setOnClickListener {
             contestManager.createContestInstance(findViewById(R.id.pag_5), File(dbPath, "user.qru"))
+        }
 
+        // chamar a função resumeContest
+        findViewById<Button>(R.id.button_resume_contest).setOnClickListener{
+           contestManager.resumeContest(findViewById(R.id.pag_6))
         }
     }
 
