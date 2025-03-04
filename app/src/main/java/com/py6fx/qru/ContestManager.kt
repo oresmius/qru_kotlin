@@ -353,7 +353,7 @@ class ContestManager(private val context: Context, private val activity: MainAct
 
             // Consulta os dados do contest usando DisplayName
             val cursor = db.rawQuery(
-                "SELECT Operator, Band, Power, Mode, Overlay, Station, Assisted, Transmitter, TimeCategory " +
+                "SELECT Operator, Band, Power, Mode, Overlay, Station, Assisted, Transmitter, TimeCategory, SendExchange, Operators " +
                         "FROM Contest WHERE DisplayName = ?",
                 arrayOf(contestDisplayName)
             )
@@ -368,6 +368,8 @@ class ContestManager(private val context: Context, private val activity: MainAct
                 val assistedValue = cursor.getString(6)
                 val transmitterValue = cursor.getString(7)
                 val timeCategoryValue = cursor.getString(8)
+                val sendExchangeValue = cursor.getString(9) // Recuperando Send Exchange
+                val operatorsValue = cursor.getString(10) // Recuperando Operators
 
                 cursor.close()
                 db.close()
@@ -377,8 +379,6 @@ class ContestManager(private val context: Context, private val activity: MainAct
                     val spinner = activity.findViewById<Spinner>(spinnerId)
 
                     if (spinner.adapter == null) {
-                        showToast("Spinner adapter was null! Assigning a default adapter.")
-
                         val defaultAdapter = ArrayAdapter(
                             activity,
                             android.R.layout.simple_spinner_dropdown_item,
@@ -406,6 +406,10 @@ class ContestManager(private val context: Context, private val activity: MainAct
                 updateSpinner(R.id.spinner_assisted, assistedValue, R.array.asssisted)
                 updateSpinner(R.id.spinner_transmitter, transmitterValue, R.array.transmitter)
                 updateSpinner(R.id.spinner_time_category, timeCategoryValue, R.array.time_category)
+
+                // Aplicando valores nos EditTexts
+                activity.findViewById<EditText>(R.id.editText_send_exchange).setText(sendExchangeValue)
+                activity.findViewById<EditText>(R.id.editText_operators).setText(operatorsValue)
 
                 showToast("Contest data loaded successfully!")
 
