@@ -97,7 +97,11 @@ class MainActivity : AppCompatActivity() {
 
         // chamar a função resumeContest
         findViewById<Button>(R.id.button_resume_contest).setOnClickListener{
-           contestManager.resumeContest(findViewById(R.id.pag_6))
+            contestManager.resumeContest(findViewById(R.id.pag_6))
+        }
+        // chamar a funcao editcontest
+        findViewById<Button>(R.id.button_edit_contest).setOnClickListener {
+            contestManager.editContest(findViewById(R.id.pag_6))
         }
     }
 

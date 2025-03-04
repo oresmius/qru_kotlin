@@ -314,5 +314,98 @@ class ContestManager(private val context: Context, private val activity: MainAct
         // Navega automaticamente para o Main Menu (página 4)
         activity.navigateToPage(3)
     }
+    fun editContest(page: View) {
+        // Obtém referência ao spinner da pag_6
+        val spinner = page.findViewById<Spinner>(R.id.spinner_contests_initialized)
+        val selectedItem = spinner.selectedItem?.toString()
+
+        // Verifica se algum contest foi selecionado
+        if (selectedItem.isNullOrEmpty()) {
+            showToast("No contest selected!")
+            return
+        }
+
+        // Extrai apenas o DisplayName (ignora a data/hora de início)
+        val contestDisplayName = selectedItem.substringAfter(" - ").trim()
+
+        // Obtém o usuário ativo pelo indicador
+        val userIndicator = activity.findViewById<TextView>(R.id.user_indicator)
+        val activeUser = userIndicator.text.toString().trim()
+
+        // Verifica se há um usuário ativo
+        if (activeUser.isEmpty() || activeUser == "USER") {
+            showToast("No active user selected!")
+            return
+        }
+
+        // Caminho do banco de dados do usuário ativo
+        val dbPath = File(context.filesDir, "db/$activeUser.db")
+
+        // Verifica se o banco de dados do usuário existe
+        if (!dbPath.exists()) {
+            showToast("Error: Database for user $activeUser not found!")
+            return
+        }
+
+        try {
+            // Abre o banco de dados em modo leitura
+            val db = SQLiteDatabase.openDatabase(dbPath.path, null, SQLiteDatabase.OPEN_READONLY)
+
+            // Consulta a coluna 'Band' do contest usando DisplayName
+            val cursor = db.rawQuery(
+                "SELECT Band FROM Contest WHERE DisplayName = ?",
+                arrayOf(contestDisplayName)
+            )
+
+            if (cursor.moveToFirst()) {
+                val bandValue = cursor.getString(0) // Obtém o valor da coluna 'Band'
+
+                // Fecha o cursor e o banco de dados
+                cursor.close()
+                db.close()
+
+                // Obtém referência ao spinner_band na pag_5
+                val spinnerBand = activity.findViewById<Spinner>(R.id.spinner_band)
+
+                // Verifica se o Adapter está inicializado e o atribui se necessário
+                if (spinnerBand.adapter == null) {
+                    showToast("Spinner adapter was null! Assigning a default adapter.")
+
+                    // Criamos um novo adapter baseado no array de bandas do resources
+                    val defaultAdapter = ArrayAdapter(
+                        activity,
+                        android.R.layout.simple_spinner_dropdown_item,
+                        activity.resources.getStringArray(R.array.band) // Certifique-se de que esse array existe
+                    )
+                    spinnerBand.adapter = defaultAdapter
+                }
+
+                // Obtém o Adapter atualizado
+                val adapter = spinnerBand.adapter
+
+                // Percorre os itens do Spinner para encontrar o índice correto
+                for (i in 0 until adapter.count) {
+                    if (adapter.getItem(i).toString() == bandValue) {
+                        spinnerBand.setSelection(i)
+                        break
+                    }
+                }
+
+                showToast("Band loaded successfully!")
+
+            } else {
+                showToast("No data found for contest: $contestDisplayName")
+                cursor.close()
+                db.close()
+            }
+
+        } catch (e: SQLiteException) {
+            showToast("Error loading contest: ${e.message}")
+        }
+        activity.navigateToPage(4)
+    }
 
 }
+
+
+
