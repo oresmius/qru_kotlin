@@ -439,6 +439,10 @@ class ContestManager(private val context: Context, private val activity: MainAct
                         break
                     }
                 }
+                for (i in 0 until adapter.count) {
+                    println("Item $i: ${adapter.getItem(i)}")
+                }
+
 
                 showToast("Contest data loaded successfully!")
 
@@ -453,9 +457,23 @@ class ContestManager(private val context: Context, private val activity: MainAct
         }
         activity.navigateToPage(4)
     }
+    fun resetSpinnerContests() {
+        val spinnerContests = activity.findViewById<Spinner>(R.id.spinner_contests)
 
+        // Força a atualização do Adapter do Spinner
+        loadContests(spinnerContests.rootView)
+
+        // Aguarda o recarregamento e reseta a seleção
+        spinnerContests.post {
+            spinnerContests.setSelection(-1, true)
+        }
+    }
 
 }
+
+
+
+
 
 
 

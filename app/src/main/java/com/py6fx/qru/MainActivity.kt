@@ -68,8 +68,10 @@ class MainActivity : AppCompatActivity() {
             navigateToPage(0)
         }
         findViewById<Button>(R.id.button_cancel_new_contest).setOnClickListener {
+            contestManager.resetSpinnerContests() // Resetar a seleção do spinner
             navigateToPage(3)
         }
+
         val buttonSelectUser = findViewById<Button>(R.id.button_select_user)
         buttonSelectUser.setOnClickListener {
             userManager.selectUser(findViewById(R.id.pag_3))
