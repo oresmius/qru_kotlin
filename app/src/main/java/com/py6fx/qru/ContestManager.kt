@@ -351,7 +351,7 @@ class ContestManager(private val context: Context, private val activity: MainAct
             // Abre o banco de dados em modo leitura
             val db = SQLiteDatabase.openDatabase(dbPath.path, null, SQLiteDatabase.OPEN_READONLY)
 
-            // Consulta os dados do contest usando DisplayName
+            // Consulta os dados do contest usando apenas o DisplayName extraído
             val cursor = db.rawQuery(
                 "SELECT Operator, Band, Power, Mode, Overlay, Station, Assisted, Transmitter, TimeCategory, SendExchange, Operators " +
                         "FROM Contest WHERE DisplayName = ?",
@@ -368,8 +368,8 @@ class ContestManager(private val context: Context, private val activity: MainAct
                 val assistedValue = cursor.getString(6)
                 val transmitterValue = cursor.getString(7)
                 val timeCategoryValue = cursor.getString(8)
-                val sendExchangeValue = cursor.getString(9) // Recuperando Send Exchange
-                val operatorsValue = cursor.getString(10) // Recuperando Operators
+                val sendExchangeValue = cursor.getString(9)
+                val operatorsValue = cursor.getString(10)
 
                 cursor.close()
                 db.close()
@@ -379,6 +379,8 @@ class ContestManager(private val context: Context, private val activity: MainAct
                     val spinner = activity.findViewById<Spinner>(spinnerId)
 
                     if (spinner.adapter == null) {
+                        showToast("Spinner adapter was null! Assigning a default adapter.")
+
                         val defaultAdapter = ArrayAdapter(
                             activity,
                             android.R.layout.simple_spinner_dropdown_item,
@@ -396,7 +398,7 @@ class ContestManager(private val context: Context, private val activity: MainAct
                     }
                 }
 
-                // Aplicar a lógica para todos os Spinners EXCETO o nome do contest
+                // Atualiza os Spinners corretamente
                 updateSpinner(R.id.spinner_operator, operatorValue, R.array.operator)
                 updateSpinner(R.id.spinner_band, bandValue, R.array.band)
                 updateSpinner(R.id.spinner_power, powerValue, R.array.power)
@@ -407,9 +409,36 @@ class ContestManager(private val context: Context, private val activity: MainAct
                 updateSpinner(R.id.spinner_transmitter, transmitterValue, R.array.transmitter)
                 updateSpinner(R.id.spinner_time_category, timeCategoryValue, R.array.time_category)
 
-                // Aplicando valores nos EditTexts
+                // Atualiza os EditTexts
                 activity.findViewById<EditText>(R.id.editText_send_exchange).setText(sendExchangeValue)
                 activity.findViewById<EditText>(R.id.editText_operators).setText(operatorsValue)
+
+                // Atualiza o próprio spinner_contests com o DisplayName correto
+                val spinnerContests = activity.findViewById<Spinner>(R.id.spinner_contests)
+
+                // Verifica se o Adapter está inicializado e o atribui se necessário
+                if (spinnerContests.adapter == null) {
+                    showToast("Spinner adapter was null! Assigning a default adapter.")
+
+                    // Criamos um novo adapter baseado na lista de contests disponíveis
+                    val defaultAdapter = ArrayAdapter(
+                        activity,
+                        android.R.layout.simple_spinner_dropdown_item,
+                        arrayOf(contestDisplayName) // Adiciona o contest atual pelo menos como placeholder
+                    )
+                    spinnerContests.adapter = defaultAdapter
+                }
+
+                // Obtém o Adapter atualizado
+                val adapter = spinnerContests.adapter
+
+                // Percorre os itens do Spinner para encontrar o índice correto
+                for (i in 0 until adapter.count) {
+                    if (adapter.getItem(i).toString() == contestDisplayName) {
+                        spinnerContests.setSelection(i)
+                        break
+                    }
+                }
 
                 showToast("Contest data loaded successfully!")
 
@@ -424,6 +453,7 @@ class ContestManager(private val context: Context, private val activity: MainAct
         }
         activity.navigateToPage(4)
     }
+
 
 }
 
