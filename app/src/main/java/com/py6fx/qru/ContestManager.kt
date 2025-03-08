@@ -15,6 +15,7 @@ import java.io.File
 
 class ContestManager(private val context: Context, private val activity: MainActivity){
     fun createContestInstance(page: ConstraintLayout, dbPath: File) {
+        resetLabelNewContests()
         try {
             val userDb = SQLiteDatabase.openOrCreateDatabase(dbPath.path, null)
 
@@ -291,9 +292,9 @@ class ContestManager(private val context: Context, private val activity: MainAct
         val adapter = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, contests)
         spinner.adapter = adapter
     }
-    fun resumeContest(page: View) {
+    fun resumeContest(resumeContest: View) {
         // Obtém referência ao spinner na pag_6
-        val spinner = page.findViewById<Spinner>(R.id.spinner_contests_initialized)
+        val spinner = resumeContest.findViewById<Spinner>(R.id.spinner_contests_initialized)
         val selectedItem = spinner.selectedItem?.toString()
 
         // Verifica se algum contest foi selecionado
@@ -379,8 +380,6 @@ class ContestManager(private val context: Context, private val activity: MainAct
                     val spinner = activity.findViewById<Spinner>(spinnerId)
 
                     if (spinner.adapter == null) {
-                        showToast("Spinner adapter was null! Assigning a default adapter.")
-
                         val defaultAdapter = ArrayAdapter(
                             activity,
                             android.R.layout.simple_spinner_dropdown_item,
@@ -418,7 +417,6 @@ class ContestManager(private val context: Context, private val activity: MainAct
 
                 // Verifica se o Adapter está inicializado e o atribui se necessário
                 if (spinnerContests.adapter == null) {
-                    showToast("Spinner adapter was null! Assigning a default adapter.")
 
                     // Criamos um novo adapter baseado na lista de contests disponíveis
                     val defaultAdapter = ArrayAdapter(
@@ -455,8 +453,15 @@ class ContestManager(private val context: Context, private val activity: MainAct
         } catch (e: SQLiteException) {
             showToast("Error loading contest: ${e.message}")
         }
+        // Atualiza o texto do label para "Edit Contest"
+        activity.findViewById<TextView>(R.id.label_new_contests).text = "Edit Contest"
         activity.navigateToPage(4)
     }
+    fun resetLabelNewContests() {
+        val labelNewContests = activity.findViewById<TextView>(R.id.label_new_contests)
+        labelNewContests.text = "New Contest"
+    }
+
     fun resetSpinnerContests() {
         val spinnerContests = activity.findViewById<Spinner>(R.id.spinner_contests)
 

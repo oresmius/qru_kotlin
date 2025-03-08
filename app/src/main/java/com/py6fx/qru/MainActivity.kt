@@ -69,6 +69,7 @@ class MainActivity : AppCompatActivity() {
         }
         findViewById<Button>(R.id.button_cancel_new_contest).setOnClickListener {
             contestManager.resetSpinnerContests() // Resetar a seleção do spinner
+            contestManager.resetLabelNewContests() // resetar o label da página
             navigateToPage(3)
         }
 
