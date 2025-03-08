@@ -15,8 +15,7 @@ import java.io.File
 
 class ContestManager(private val context: Context, private val activity: MainActivity){
     fun createContestInstance(page: ConstraintLayout, dbPath: File) {
-        resetLabelNewContests()
-        resetEditTextFields()
+        resetContestForm()
         try {
             val userDb = SQLiteDatabase.openOrCreateDatabase(dbPath.path, null)
 
@@ -458,28 +457,22 @@ class ContestManager(private val context: Context, private val activity: MainAct
         activity.findViewById<TextView>(R.id.label_new_contests).text = "Edit Contest"
         activity.navigateToPage(4)
     }
-    fun resetLabelNewContests() {
-        val labelNewContests = activity.findViewById<TextView>(R.id.label_new_contests)
-        labelNewContests.text = "New Contest"
-    }
-    fun resetEditTextFields() {
+    fun resetContestForm() {
+        // Reseta o label
+        activity.findViewById<TextView>(R.id.label_new_contests).text = "New Contest"
+
+        // Reseta os campos de texto
         activity.findViewById<EditText>(R.id.editText_send_exchange).setText("")
         activity.findViewById<EditText>(R.id.editText_operators).setText("")
-    }
 
-    fun resetSpinnerContests() {
-        val spinnerContests = activity.findViewById<Spinner>(R.id.spinner_contests)
-
-        // Força a atualização do Adapter do Spinner
-        loadContests(spinnerContests.rootView)
-
-        // Aguarda o recarregamento e reseta a seleção
-        spinnerContests.post {
-            spinnerContests.setSelection(-1, true)
-        }
+        // Reseta o Spinner de Contests
+        activity.findViewById<Spinner>(R.id.spinner_contests).setSelection(0)
     }
 
 }
+
+
+
 
 
 
