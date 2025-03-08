@@ -16,6 +16,7 @@ import java.io.File
 class ContestManager(private val context: Context, private val activity: MainActivity){
     fun createContestInstance(page: ConstraintLayout, dbPath: File) {
         resetLabelNewContests()
+        resetEditTextFields()
         try {
             val userDb = SQLiteDatabase.openOrCreateDatabase(dbPath.path, null)
 
@@ -460,6 +461,10 @@ class ContestManager(private val context: Context, private val activity: MainAct
     fun resetLabelNewContests() {
         val labelNewContests = activity.findViewById<TextView>(R.id.label_new_contests)
         labelNewContests.text = "New Contest"
+    }
+    fun resetEditTextFields() {
+        activity.findViewById<EditText>(R.id.editText_send_exchange).setText("")
+        activity.findViewById<EditText>(R.id.editText_operators).setText("")
     }
 
     fun resetSpinnerContests() {
