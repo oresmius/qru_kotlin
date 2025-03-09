@@ -465,8 +465,16 @@ class ContestManager(private val context: Context, private val activity: MainAct
         activity.findViewById<EditText>(R.id.editText_send_exchange).setText("")
         activity.findViewById<EditText>(R.id.editText_operators).setText("")
 
-        // Reseta o Spinner de Contests
-        activity.findViewById<Spinner>(R.id.spinner_contests).setSelection(0)
+        val spinnerContests = activity.findViewById<Spinner>(R.id.spinner_contests)
+
+        // Força a atualização do Adapter do Spinner
+        loadContests(spinnerContests.rootView)
+
+        // Aguarda o recarregamento e reseta a seleção
+        spinnerContests.post {
+            spinnerContests.setSelection(-1, true)
+        }
+
     }
 
 }
