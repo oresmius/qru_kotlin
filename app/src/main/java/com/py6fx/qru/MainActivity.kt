@@ -120,6 +120,7 @@ class MainActivity : AppCompatActivity() {
         popup.setOnMenuItemClickListener { item: MenuItem ->
             when (item.itemId) {
                 R.id.menu_new_contest -> {
+                    contestManager.resetContestForm()
                     contestManager.loadContests(findViewById(R.id.pag_5))
                     navigateToPage(4)
                 }

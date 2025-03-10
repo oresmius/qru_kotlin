@@ -15,7 +15,6 @@ import java.io.File
 
 class ContestManager(private val context: Context, private val activity: MainActivity){
     fun createContestInstance(page: ConstraintLayout, dbPath: File) {
-        resetContestForm()
         try {
             val userDb = SQLiteDatabase.openOrCreateDatabase(dbPath.path, null)
 
