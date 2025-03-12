@@ -326,7 +326,7 @@
             app:layout_constraintVertical_bias="0.671" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-        <!--pagina-->
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/pag_4"
             android:layout_width="match_parent"
@@ -365,7 +365,8 @@
                 app:layout_constraintEnd_toStartOf="@+id/contest_indicator"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.057" />
 
             <TextView
                 android:id="@+id/contest_indicator"
@@ -382,7 +383,8 @@
                 app:layout_constraintEnd_toStartOf="@+id/bluetooth_indicator"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/user_indicator"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.057" />
 
             <TextView
                 android:id="@+id/bluetooth_indicator"
@@ -399,7 +401,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/contest_indicator"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.057" />
 
             <Button
                 android:id="@+id/button_about"
@@ -827,9 +830,9 @@
                 android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.185" />
 
             <Spinner
                 android:id="@+id/spinner_bluetooth_seletion"
@@ -858,7 +861,8 @@
                 app:layout_constraintEnd_toStartOf="@+id/button_cancel_bluetooth"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.742" />
 
             <Button
                 android:id="@+id/button_cancel_bluetooth"
@@ -875,7 +879,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/button_select_bluetooth"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.742" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
