@@ -105,6 +105,13 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.button_edit_contest).setOnClickListener {
             contestManager.editContest(findViewById(R.id.pag_6))
         }
+        // chamar as funções de Bluetooth
+        findViewById<Button>(R.id.button_bluetooth).setOnClickListener {
+            navigateToPage(6)
+            val btManager = BtManager(this, this)
+            btManager.loadPairedDevices(findViewById(R.id.spinner_bluetooth_seletion))
+        }
+
     }
 
     // Cria as opções do menu e as faz aparecer
