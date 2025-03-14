@@ -21,7 +21,8 @@ import java.util.UUID
 
 class BtManager(private val context: Context, private val activity: Activity) {
 
-    private val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
+    private val bluetoothAdapter: BluetoothAdapter? =
+        (context.getSystemService(Context.BLUETOOTH_SERVICE) as? android.bluetooth.BluetoothManager)?.adapter
     private val deviceMacAddress = "98:DA:20:07:19:CC" // ⚠️ SUBSTITUA pelo MAC real do FT-817ND!
     private val uuid: UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB") // UUID padrão para SPP
 
