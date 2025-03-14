@@ -1,85 +1,22 @@
 package com.py6fx.qru
 
-import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
-import android.content.Context
-import android.content.pm.PackageManager
-import android.os.Build
-import android.widget.ArrayAdapter
-import android.widget.Spinner
-import android.widget.Toast
-import androidx.core.content.ContextCompat
-import androidx.core.app.ActivityCompat
-import android.app.Activity
 import android.bluetooth.BluetoothSocket
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
-import java.util.UUID
+import java.util.*
 
-class BtManager(private val context: Context, private val activity: Activity) {
+class SimpleBluetooth(private val context: Context) {
 
     private val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
     private val deviceMacAddress = "98:DA:20:07:19:CC" // ⚠️ SUBSTITUA pelo MAC real do FT-817ND!
     private val uuid: UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB") // UUID padrão para SPP
 
-    fun loadPairedDevices(spinner: Spinner) {
-        if (bluetoothAdapter == null) {
-            Toast.makeText(context, "Bluetooth is not available on this device.", Toast.LENGTH_LONG).show()
-            return
-        }
-
-        if (!bluetoothAdapter.isEnabled) {
-            Toast.makeText(context, "Please enable Bluetooth to search for paired devices.", Toast.LENGTH_LONG).show()
-            return
-        }
-
-        // Verifica permissões no Android 12+
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            if (ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(context, "Bluetooth permission is required.", Toast.LENGTH_LONG).show()
-                requestBluetoothPermission()
-                return
-            }
-        }
-
-        val pairedDevices: Set<BluetoothDevice>? = bluetoothAdapter.bondedDevices
-
-        if (pairedDevices.isNullOrEmpty()) {
-            Toast.makeText(context, "No paired Bluetooth devices found.", Toast.LENGTH_LONG).show()
-            return
-        }
-
-        // Filtrar apenas dispositivos com nome
-        val deviceList = pairedDevices
-            .filter { it.name != null }
-            .map { it.name }
-
-        if (deviceList.isEmpty()) {
-            Toast.makeText(context, "No compatible Bluetooth devices found.", Toast.LENGTH_LONG).show()
-            return
-        }
-
-        // Preencher o Spinner com os dispositivos encontrados
-        val adapter = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, deviceList)
-        spinner.adapter = adapter
-    }
-
-    private fun requestBluetoothPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            ActivityCompat.requestPermissions(
-                activity,
-                arrayOf(Manifest.permission.BLUETOOTH_CONNECT),
-                REQUEST_BLUETOOTH_PERMISSION
-            )
-        }
-    }
-
-    companion object {
-        private const val REQUEST_BLUETOOTH_PERMISSION = 1
-    }
     fun connectToDevice() {
         Log.d("BluetoothTest", "🔵 Iniciando conexão Bluetooth...")
 

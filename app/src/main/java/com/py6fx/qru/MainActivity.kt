@@ -25,6 +25,9 @@ class MainActivity : AppCompatActivity() {
     // Instância do UserManager
     private lateinit var userManager: UserManager
 
+    // Instância do Btmanager
+    private lateinit var btManager: BtManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -43,6 +46,9 @@ class MainActivity : AppCompatActivity() {
 
         // Inicializa o UserManager
         userManager = UserManager(this, this)
+
+        // inicia o BtManager
+        btManager = BtManager(this, this)
 
         // Inicializa componentes
         initializeComponents()
@@ -110,6 +116,10 @@ class MainActivity : AppCompatActivity() {
             navigateToPage(6)
             val btManager = BtManager(this, this)
             btManager.loadPairedDevices(findViewById(R.id.spinner_bluetooth_seletion))
+        }
+
+        findViewById<Button>(R.id.button_select_bluetooth).setOnClickListener {
+            btManager.connectToDevice()
         }
 
     }
