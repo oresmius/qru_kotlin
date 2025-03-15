@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.app.ActivityCompat
 import android.app.Activity
 import android.bluetooth.BluetoothSocket
+import android.graphics.Color
 import android.util.Log
 import android.view.View
 import java.io.IOException
@@ -60,13 +61,25 @@ class BtManager(private val context: Context, private val activity: Activity, pr
             deviceTextView.text = "${device.name} - ${device.address}"
             deviceTextView.textSize = 18f
             deviceTextView.setPadding(16, 16, 16, 16)
+            deviceTextView.setBackgroundColor(Color.TRANSPARENT) // Cor padrão
+
             deviceTextView.setOnClickListener {
+                // Resetar a cor de todos os dispositivos antes de selecionar um novo
+                for (i in 0 until deviceContainer.childCount) {
+                    (deviceContainer.getChildAt(i) as TextView).setBackgroundColor(Color.TRANSPARENT)
+                }
+
+                // Definir a nova seleção e destacar o item
                 selectedDevice = device
+                deviceTextView.setBackgroundColor(Color.parseColor("#6200EE"))
                 showToast("Selecionado: ${device.name}")
                 Log.d("BluetoothTest", "📡 Dispositivo selecionado: ${device.name} (${device.address})")
             }
+
             deviceContainer.addView(deviceTextView)
         }
+
+
     }
 
     private fun requestBluetoothPermission() {
