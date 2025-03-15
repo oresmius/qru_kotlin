@@ -834,12 +834,15 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.185" />
 
-            <Spinner
-                android:id="@+id/spinner_bluetooth_seletion"
-                android:layout_width="635dp"
-                android:layout_height="50dp"
-                android:layout_marginTop="131dp"
-                android:layout_marginBottom="303dp"
+            <LinearLayout
+                android:id="@+id/deviceContainer"
+                android:layout_width="703dp"
+                android:layout_height="180dp"
+                android:layout_marginTop="92dp"
+                android:layout_marginBottom="139dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="16dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"

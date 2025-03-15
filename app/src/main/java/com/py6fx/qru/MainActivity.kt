@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import java.io.File
 import android.view.MenuItem
 import android.view.View
+import android.widget.LinearLayout
 import android.widget.PopupMenu
 import android.widget.TextView
 
@@ -48,7 +49,8 @@ class MainActivity : AppCompatActivity() {
         userManager = UserManager(this, this)
 
         // inicia o BtManager
-        btManager = BtManager(this, this)
+        val deviceContainer = findViewById<LinearLayout>(R.id.deviceContainer)
+        btManager = BtManager(this, this, deviceContainer)
 
         // Inicializa componentes
         initializeComponents()
@@ -114,11 +116,12 @@ class MainActivity : AppCompatActivity() {
         // chamar as funções de Bluetooth
         findViewById<Button>(R.id.button_bluetooth).setOnClickListener {
             navigateToPage(6)
-            val btManager = BtManager(this, this)
-            btManager.loadPairedDevices(findViewById(R.id.spinner_bluetooth_seletion))
+            val deviceContainer = findViewById<LinearLayout>(R.id.deviceContainer)
+            btManager = BtManager(this, this, deviceContainer)
+            btManager.loadPairedDevices()
         }
 
-        findViewById<Button>(R.id.button_select_bluetooth).setOnClickListener {
+            findViewById<Button>(R.id.button_select_bluetooth).setOnClickListener {
             btManager.connectToDevice()
         }
 
