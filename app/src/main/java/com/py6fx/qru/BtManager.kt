@@ -118,13 +118,15 @@ class BtManager(private val context: Context, private val activity: Activity, pr
             val comando = byteArrayOf(0x00, 0x00, 0x00, 0x00, 0x03)
             val comandoHex = comando.joinToString(" ") { String.format("%02X", it) }
             Log.d("BluetoothTest", "📨 Enviando CAT: $comandoHex")
-            outputStream.write(comando)
+            outputStream.write(comando) // Enviar o comando
+            outputStream.flush()
+            Thread.sleep(100)
             Log.d("BluetoothTest", "📨 Comando CAT enviado ")
 
             // 🔍 Ler resposta byte a byte com timeout de 3 segundos
             val resposta = ByteArray(5)
             var bytesLidos = 0
-            val tempoLimite = System.currentTimeMillis() + 3000
+            val tempoLimite = System.currentTimeMillis() + 5000
 
             while (bytesLidos < 5 && System.currentTimeMillis() < tempoLimite) {
                 if (inputStream.available() > 0) {
@@ -134,19 +136,22 @@ class BtManager(private val context: Context, private val activity: Activity, pr
             }
 
             // Exibir resposta ou erro
-            if (bytesLidos == 5) {
-                val respostaFormatada = resposta.joinToString(" ") { String.format("%02X", it) }
-                Log.d("BluetoothTest", "📡 Resposta do rádio: $respostaFormatada")
-                showToast("Freq: $respostaFormatada")
-            } else {
+            if (bytesLidos < 5) {
                 Log.w("BluetoothTest", "⚠️ Resposta incompleta. Bytes recebidos: $bytesLidos")
-                showToast("Error: Incomplete response")
+                showToast("Error: Incomplete response. Try again.")
+                return
             }
+
+            // ✅ Formata corretamente a frequência
+            val formattedFreq = interpretarFrequencia(resposta)
+            Log.d("BluetoothTest", "📡 Resposta do rádio: $formattedFreq")
+            showToast("Freq: $formattedFreq MHz")
+
 
             // Fecha a conexão após o teste
             //socket.close()
-            Log.d("BluetoothTest", "🔴 Conexão encerrada com ")
-            showToast("Connection closed")
+            //Log.d("BluetoothTest", "🔴 Conexão encerrada com ")
+            //showToast("Connection closed")
 
         } catch (e: IOException) {
             Log.e("BluetoothTest", "❌ Erro ao conectar: ${e.message}")
@@ -158,4 +163,18 @@ class BtManager(private val context: Context, private val activity: Activity, pr
     private fun showToast(message: String) {
         Toast.makeText(context, message, Toast.LENGTH_LONG).show()
     }
+
+    fun interpretarFrequencia(resposta: ByteArray): String {
+        if (resposta.size != 5) return "Erro na resposta"
+
+        // Extrai os valores BCD corretamente
+        val freqBcd = resposta.joinToString("") { "%02X".format(it) }
+
+        // Reorganiza os blocos para corresponder ao LCD do rádio
+        val formattedFreq = "${freqBcd.substring(0, 2)}.${freqBcd.substring(2, 5)}.${freqBcd.substring(5)}"
+
+        return formattedFreq
+    }
+
+
 }
