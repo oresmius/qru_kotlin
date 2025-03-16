@@ -72,7 +72,7 @@ class BtManager(private val context: Context, private val activity: Activity, pr
                 // Definir a nova seleção e destacar o item
                 selectedDevice = device
                 deviceTextView.setBackgroundColor(Color.parseColor("#6200EE"))
-                showToast("Selecionado: ${device.name}")
+                showToast("Selected: ${device.name}")
                 Log.d("BluetoothTest", "📡 Dispositivo selecionado: ${device.name} (${device.address})")
             }
 
@@ -98,7 +98,7 @@ class BtManager(private val context: Context, private val activity: Activity, pr
 
     fun connectToDevice() {
         if (selectedDevice == null) {
-            showToast("Nenhum dispositivo selecionado!")
+            showToast("No devices selected")
             Log.e("BluetoothTest", "❌ Nenhum dispositivo selecionado")
             return
         }
@@ -109,7 +109,7 @@ class BtManager(private val context: Context, private val activity: Activity, pr
             val socket: BluetoothSocket = selectedDevice!!.createRfcommSocketToServiceRecord(uuid)
             socket.connect()
             Log.d("BluetoothTest", "✅ Conexão Bluetooth estabelecida com ${selectedDevice!!.name}!")
-            showToast("Conectado a ${selectedDevice!!.name}!")
+            showToast(" Connected to ${selectedDevice!!.name}!")
 
             val outputStream: OutputStream = socket.outputStream
             val inputStream: InputStream = socket.inputStream
@@ -140,17 +140,17 @@ class BtManager(private val context: Context, private val activity: Activity, pr
                 showToast("Freq: $respostaFormatada")
             } else {
                 Log.w("BluetoothTest", "⚠️ Resposta incompleta. Bytes recebidos: $bytesLidos")
-                showToast("Erro: resposta incompleta")
+                showToast("Error: Incomplete response")
             }
 
             // Fecha a conexão após o teste
             //socket.close()
             Log.d("BluetoothTest", "🔴 Conexão encerrada com ")
-            showToast("Conexão encerrada.")
+            showToast("Connection closed")
 
         } catch (e: IOException) {
             Log.e("BluetoothTest", "❌ Erro ao conectar: ${e.message}")
-            showToast("Erro ao conectar: ${e.message}")
+            showToast("Error connecting: ${e.message}")
         }
 
     }

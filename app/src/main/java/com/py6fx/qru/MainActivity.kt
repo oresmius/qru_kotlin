@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewFlipper: ViewFlipper
 
     //teste do bluetotth
-    //private lateinit var SimpleBluetooth: SimpleBluetooth
+    private lateinit var SimpleBluetooth: SimpleBluetooth
 
     // Declaração universal do banco de dados em uso
     private lateinit var dbPath: File
@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
         btManager = BtManager(this, this, deviceContainer)
 
         // inicia o teste simplebluetooth
-        //SimpleBluetooth = SimpleBluetooth(this)
+        SimpleBluetooth = SimpleBluetooth(this)
 
         // Inicializa componentes
         initializeComponents()
@@ -130,9 +130,9 @@ class MainActivity : AppCompatActivity() {
             btManager.connectToDevice()
         }
 
-        //findViewById<Button>(R.id.button_cancel_bluetooth).setOnClickListener {
-            //SimpleBluetooth.connectToDevice()
-        //}
+        findViewById<Button>(R.id.button_cancel_bluetooth).setOnClickListener {
+            SimpleBluetooth.connectToDevice()
+        }
 
     }
 
