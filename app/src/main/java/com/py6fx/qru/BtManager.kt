@@ -170,11 +170,14 @@ class BtManager(private val context: Context, private val activity: Activity, pr
         // Extrai os valores BCD corretamente
         val freqBcd = resposta.joinToString("") { "%02X".format(it) }
 
-        // Reorganiza os blocos para corresponder ao LCD do rádio
-        val formattedFreq = "${freqBcd.substring(0, 2)}.${freqBcd.substring(2, 5)}.${freqBcd.substring(5)}"
+        // Corrige a posição dos pontos decimais
+        var formattedFreq = "${freqBcd.substring(0, 2)}${freqBcd.substring(2, 3)}.${freqBcd.substring(3, 6)}.${freqBcd.substring(6, 8)}"
+
+        // Remover zero à esquerda se for menor que 10 MHz
+        if (formattedFreq.startsWith("0")) {
+            formattedFreq = formattedFreq.substring(1) // Remove o primeiro caractere se for "0"
+        }
 
         return formattedFreq
     }
-
-
 }
