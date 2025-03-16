@@ -17,6 +17,9 @@ class MainActivity : AppCompatActivity() {
     // Declaração universal de variável para o ViewFlipper
     private lateinit var viewFlipper: ViewFlipper
 
+    //teste do bluetotth
+    //private lateinit var SimpleBluetooth: SimpleBluetooth
+
     // Declaração universal do banco de dados em uso
     private lateinit var dbPath: File
 
@@ -51,6 +54,9 @@ class MainActivity : AppCompatActivity() {
         // inicia o BtManager
         val deviceContainer = findViewById<LinearLayout>(R.id.deviceContainer)
         btManager = BtManager(this, this, deviceContainer)
+
+        // inicia o teste simplebluetooth
+        //SimpleBluetooth = SimpleBluetooth(this)
 
         // Inicializa componentes
         initializeComponents()
@@ -120,10 +126,13 @@ class MainActivity : AppCompatActivity() {
             btManager = BtManager(this, this, deviceContainer)
             btManager.loadPairedDevices()
         }
-
-            findViewById<Button>(R.id.button_select_bluetooth).setOnClickListener {
+        findViewById<Button>(R.id.button_select_bluetooth).setOnClickListener {
             btManager.connectToDevice()
         }
+
+        //findViewById<Button>(R.id.button_cancel_bluetooth).setOnClickListener {
+            //SimpleBluetooth.connectToDevice()
+        //}
 
     }
 
