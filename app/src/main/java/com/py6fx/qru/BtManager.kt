@@ -27,6 +27,7 @@ class BtManager(private val context: Context, private val activity: Activity, pr
         (context.getSystemService(Context.BLUETOOTH_SERVICE) as? android.bluetooth.BluetoothManager)?.adapter
     private val uuid: UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB") // UUID padrão para SPP
     private var selectedDevice: BluetoothDevice? = null
+    private var bluetoothSocket: BluetoothSocket? = null  // Armazena o socket para manter a conexão
 
     fun loadPairedDevices() {
         if (bluetoothAdapter == null) {
@@ -106,24 +107,26 @@ class BtManager(private val context: Context, private val activity: Activity, pr
         Log.d("BluetoothTest", "🔵 Tentando conectar a ${selectedDevice!!.name} (${selectedDevice!!.address})...")
 
         try {
-            val socket: BluetoothSocket = selectedDevice!!.createRfcommSocketToServiceRecord(uuid)
-            socket.connect()
+            // Se já houver um socket conectado, evita nova conexão
+            if (bluetoothSocket?.isConnected == true) {
+                showToast("Already connected to ${selectedDevice!!.name}")
+                return
+            }
+
+            bluetoothSocket = selectedDevice!!.createRfcommSocketToServiceRecord(uuid)
+            bluetoothSocket!!.connect()
             Log.d("BluetoothTest", "✅ Conexão Bluetooth estabelecida com ${selectedDevice!!.name}!")
-            showToast(" Connected to ${selectedDevice!!.name}!")
+            showToast("Connected to ${selectedDevice!!.name}!")
 
-            val outputStream: OutputStream = socket.outputStream
-            val inputStream: InputStream = socket.inputStream
-
+            val outputStream: OutputStream = bluetoothSocket!!.outputStream
+            val inputStream: InputStream = bluetoothSocket!!.inputStream
 
             val comando = byteArrayOf(0x00, 0x00, 0x00, 0x00, 0x03)
-            val comandoHex = comando.joinToString(" ") { String.format("%02X", it) }
-            Log.d("BluetoothTest", "📨 Enviando CAT: $comandoHex")
-            outputStream.write(comando) // Enviar o comando
+            Log.d("BluetoothTest", "📨 Enviando CAT: ${comando.joinToString(" ") { "%02X".format(it) }}")
+            outputStream.write(comando)
             outputStream.flush()
             Thread.sleep(100)
-            Log.d("BluetoothTest", "📨 Comando CAT enviado ")
 
-            // 🔍 Ler resposta byte a byte com timeout de 3 segundos
             val resposta = ByteArray(5)
             var bytesLidos = 0
             val tempoLimite = System.currentTimeMillis() + 5000
@@ -135,29 +138,20 @@ class BtManager(private val context: Context, private val activity: Activity, pr
                 }
             }
 
-            // Exibir resposta ou erro
             if (bytesLidos < 5) {
                 Log.w("BluetoothTest", "⚠️ Resposta incompleta. Bytes recebidos: $bytesLidos")
                 showToast("Error: Incomplete response. Try again.")
                 return
             }
 
-            // ✅ Formata corretamente a frequência
             val formattedFreq = interpretarFrequencia(resposta)
             Log.d("BluetoothTest", "📡 Resposta do rádio: $formattedFreq")
             showToast("Freq: $formattedFreq MHz")
-
-
-            // Fecha a conexão após o teste
-            //socket.close()
-            //Log.d("BluetoothTest", "🔴 Conexão encerrada com ")
-            //showToast("Connection closed")
 
         } catch (e: IOException) {
             Log.e("BluetoothTest", "❌ Erro ao conectar: ${e.message}")
             showToast("Error connecting: ${e.message}")
         }
-
     }
 
     private fun showToast(message: String) {
