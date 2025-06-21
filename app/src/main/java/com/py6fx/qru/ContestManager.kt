@@ -14,76 +14,77 @@ import androidx.core.view.children
 import java.io.File
 
 class ContestManager(private val context: Context, private val activity: MainActivity){
+    var editingContestId: Int? = null
     fun createContestInstance(page: ConstraintLayout, dbPath: File) {
+
         try {
             val userDb = SQLiteDatabase.openOrCreateDatabase(dbPath.path, null)
-
             val createTableQuery = """
-                CREATE TABLE IF NOT EXISTS Contest (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    StartTime DATETIME DEFAULT CURRENT_TIMESTAMP,
-                    Name TEXT,
-                    DisplayName TEXT,
-                    CabrilloName TEXT,
-                    Operator TEXT,
-                    Band TEXT,
-                    Power TEXT,
-                    Mode TEXT,
-                    Overlay TEXT,
-                    Station TEXT,
-                    Assisted TEXT,
-                    Transmitter TEXT,
-                    TimeCategory TEXT,
-                    SendExchange TEXT,
-                    Operators TEXT
+               CREATE TABLE IF NOT EXISTS Contest (
+                   id INTEGER PRIMARY KEY AUTOINCREMENT,
+                   StartTime DATETIME DEFAULT CURRENT_TIMESTAMP,
+                   Name TEXT,
+                   DisplayName TEXT,
+                   CabrilloName TEXT,
+                   Operator TEXT,
+                   Band TEXT,
+                   Power TEXT,
+                   Mode TEXT,
+                   Overlay TEXT,
+                   Station TEXT,
+                   Assisted TEXT,
+                   Transmitter TEXT,
+                   TimeCategory TEXT,
+                   SendExchange TEXT,
+                   Operators TEXT
                 )
             """.trimIndent()
-            userDb.execSQL(createTableQuery)
+                userDb.execSQL(createTableQuery)
 
-            val spinnerContests = page.findViewById<Spinner>(R.id.spinner_contests)
-            val selectedContest = spinnerContests.selectedItem?.toString() ?: ""
+                val spinnerContests = page.findViewById<Spinner>(R.id.spinner_contests)
+                val selectedContest = spinnerContests.selectedItem?.toString() ?: ""
 
-            if (selectedContest.isEmpty()) {
-                showToast("No contest selected!")
-                return
-            }
+                if (selectedContest.isEmpty()) {
+                    showToast("No contest selected!")
+                    return
+                }
 
-            val mainDbPath = File(context.filesDir, "db/main.qru")
-            if (!mainDbPath.exists()) {
-                showToast("Main contest database not found!")
-                return
-            }
+                val mainDbPath = File(context.filesDir, "db/main.qru")
+                if (!mainDbPath.exists()) {
+                    showToast("Main contest database not found!")
+                    return
+                }
 
-            val mainDb =
-                SQLiteDatabase.openDatabase(mainDbPath.path, null, SQLiteDatabase.OPEN_READONLY)
-            val cursor = mainDb.rawQuery(
-                "SELECT Name, DisplayName, CabrilloName FROM Contest WHERE DisplayName = ?",
-                arrayOf(selectedContest)
-            )
+                val mainDb =
+                    SQLiteDatabase.openDatabase(mainDbPath.path, null, SQLiteDatabase.OPEN_READONLY)
+                val cursor = mainDb.rawQuery(
+                    "SELECT Name, DisplayName, CabrilloName FROM Contest WHERE DisplayName = ?",
+                    arrayOf(selectedContest)
+                )
 
-            if (!cursor.moveToFirst()) {
-                showToast("Contest data not found!")
+                if (!cursor.moveToFirst()) {
+                    showToast("Contest data not found!")
+                    cursor.close()
+                    mainDb.close()
+                    return
+                }
+
+                val name = cursor.getString(0)
+                val displayName = cursor.getString(1)
+                val cabrilloName = cursor.getString(2)
+
                 cursor.close()
                 mainDb.close()
-                return
-            }
 
-            val name = cursor.getString(0)
-            val displayName = cursor.getString(1)
-            val cabrilloName = cursor.getString(2)
+                val spinners = page.children.filterIsInstance<Spinner>().toList()
+                val invalidSelections = spinners
+                    .map { it.selectedItem?.toString() ?: "" }
+                    .filter { it.endsWith("?") || it.isEmpty() }
 
-            cursor.close()
-            mainDb.close()
-
-            val spinners = page.children.filterIsInstance<Spinner>().toList()
-            val invalidSelections = spinners
-                .map { it.selectedItem?.toString() ?: "" }
-                .filter { it.endsWith("?") || it.isEmpty() }
-
-            if (invalidSelections.isNotEmpty()) {
-                showToast("These options are invalid: ${invalidSelections.joinToString(", ")}")
-                return
-            }
+                if (invalidSelections.isNotEmpty()) {
+                    showToast("These options are invalid: ${invalidSelections.joinToString(", ")}")
+                    return
+                }
 
             val editTexts = page.children.filterIsInstance<EditText>().toList()
             val emptyFields = editTexts.filter { it.text.toString().trim().isEmpty() }
@@ -92,32 +93,60 @@ class ContestManager(private val context: Context, private val activity: MainAct
                 showToast("These fields cannot be null: ${emptyFields.joinToString(", ") { it.hint?.toString() ?: "Unnamed" }}")
                 return
             }
-
-            val insertQuery = """
+         if (editingContestId == null) {
+             val insertQuery = """
                 INSERT INTO Contest (Name, DisplayName, CabrilloName, Operator, Band, Power, Mode, Overlay, Station, Assisted, Transmitter, TimeCategory, SendExchange, Operators) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """.trimIndent()
 
-            userDb.execSQL(
-                insertQuery, arrayOf(
-                    name, displayName, cabrilloName,
-                    page.findViewById<Spinner>(R.id.spinner_operator).selectedItem.toString(),
-                    page.findViewById<Spinner>(R.id.spinner_band).selectedItem.toString(),
-                    page.findViewById<Spinner>(R.id.spinner_power).selectedItem.toString(),
-                    page.findViewById<Spinner>(R.id.spinner_mode).selectedItem.toString(),
-                    page.findViewById<Spinner>(R.id.spinner_overlay).selectedItem.toString(),
-                    page.findViewById<Spinner>(R.id.spinner_station).selectedItem.toString(),
-                    page.findViewById<Spinner>(R.id.spinner_assisted).selectedItem.toString(),
-                    page.findViewById<Spinner>(R.id.spinner_transmitter).selectedItem.toString(),
-                    page.findViewById<Spinner>(R.id.spinner_time_category).selectedItem.toString(),
-                    page.findViewById<EditText>(R.id.editText_send_exchange).text.toString().trim(),
-                    page.findViewById<EditText>(R.id.editText_operators).text.toString().trim()
-                )
-            )
+             userDb.execSQL(
+                 insertQuery, arrayOf(
+                     name, displayName, cabrilloName,
+                     page.findViewById<Spinner>(R.id.spinner_operator).selectedItem.toString(),
+                     page.findViewById<Spinner>(R.id.spinner_band).selectedItem.toString(),
+                     page.findViewById<Spinner>(R.id.spinner_power).selectedItem.toString(),
+                     page.findViewById<Spinner>(R.id.spinner_mode).selectedItem.toString(),
+                     page.findViewById<Spinner>(R.id.spinner_overlay).selectedItem.toString(),
+                     page.findViewById<Spinner>(R.id.spinner_station).selectedItem.toString(),
+                     page.findViewById<Spinner>(R.id.spinner_assisted).selectedItem.toString(),
+                     page.findViewById<Spinner>(R.id.spinner_transmitter).selectedItem.toString(),
+                     page.findViewById<Spinner>(R.id.spinner_time_category).selectedItem.toString(),
+                     page.findViewById<EditText>(R.id.editText_send_exchange).text.toString()
+                         .trim(),
+                     page.findViewById<EditText>(R.id.editText_operators).text.toString().trim()
+                 )
+             )
+             showToast("Contest $displayName created successfully!")
+
+         } else {
+             val updateQuery = """
+                    UPDATE Contest SET
+                        Name = ?, DisplayName = ?, CabrilloName = ?, Operator = ?, Band = ?, Power = ?, Mode = ?, Overlay = ?, Station = ?, Assisted = ?, Transmitter = ?, TimeCategory = ?, SendExchange = ?, Operators = ?
+                    WHERE id = ?
+                """.trimIndent()
+
+             userDb.execSQL(
+                 updateQuery, arrayOf(
+                     name, displayName, cabrilloName,
+                     page.findViewById<Spinner>(R.id.spinner_operator).selectedItem.toString(),
+                     page.findViewById<Spinner>(R.id.spinner_band).selectedItem.toString(),
+                     page.findViewById<Spinner>(R.id.spinner_power).selectedItem.toString(),
+                     page.findViewById<Spinner>(R.id.spinner_mode).selectedItem.toString(),
+                     page.findViewById<Spinner>(R.id.spinner_overlay).selectedItem.toString(),
+                     page.findViewById<Spinner>(R.id.spinner_station).selectedItem.toString(),
+                     page.findViewById<Spinner>(R.id.spinner_assisted).selectedItem.toString(),
+                     page.findViewById<Spinner>(R.id.spinner_transmitter).selectedItem.toString(),
+                     page.findViewById<Spinner>(R.id.spinner_time_category).selectedItem.toString(),
+                     page.findViewById<EditText>(R.id.editText_send_exchange).text.toString().trim(),
+                     page.findViewById<EditText>(R.id.editText_operators).text.toString().trim(),
+                     editingContestId!!
+                 )
+             )
+             showToast("Contest $displayName updated successfully!")
+             editingContestId = null
+         }
 
             userDb.close()
-
-            showToast("Contest $displayName created successfully!")
 
             //atualiza a exibição do conteste
             contestIndicator(displayName)
@@ -353,23 +382,24 @@ class ContestManager(private val context: Context, private val activity: MainAct
 
             // Consulta os dados do contest usando apenas o DisplayName extraído
             val cursor = db.rawQuery(
-                "SELECT Operator, Band, Power, Mode, Overlay, Station, Assisted, Transmitter, TimeCategory, SendExchange, Operators " +
+                "SELECT id, Operator, Band, Power, Mode, Overlay, Station, Assisted, Transmitter, TimeCategory, SendExchange, Operators " +
                         "FROM Contest WHERE DisplayName = ?",
                 arrayOf(contestDisplayName)
             )
 
             if (cursor.moveToFirst()) {
-                val operatorValue = cursor.getString(0)
-                val bandValue = cursor.getString(1)
-                val powerValue = cursor.getString(2)
-                val modeValue = cursor.getString(3)
-                val overlayValue = cursor.getString(4)
-                val stationValue = cursor.getString(5)
-                val assistedValue = cursor.getString(6)
-                val transmitterValue = cursor.getString(7)
-                val timeCategoryValue = cursor.getString(8)
-                val sendExchangeValue = cursor.getString(9)
-                val operatorsValue = cursor.getString(10)
+                editingContestId = cursor.getInt(0)
+                val operatorValue = cursor.getString(1)
+                val bandValue = cursor.getString(2)
+                val powerValue = cursor.getString(3)
+                val modeValue = cursor.getString(4)
+                val overlayValue = cursor.getString(5)
+                val stationValue = cursor.getString(6)
+                val assistedValue = cursor.getString(7)
+                val transmitterValue = cursor.getString(8)
+                val timeCategoryValue = cursor.getString(9)
+                val sendExchangeValue = cursor.getString(10)
+                val operatorsValue = cursor.getString(11)
 
                 cursor.close()
                 db.close()

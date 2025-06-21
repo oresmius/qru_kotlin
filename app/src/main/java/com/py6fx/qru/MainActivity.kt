@@ -128,6 +128,7 @@ class MainActivity : AppCompatActivity() {
         }
         findViewById<Button>(R.id.button_select_bluetooth).setOnClickListener {
             btManager.connectToDevice()
+            navigateToPage(3)
         }
 
         findViewById<Button>(R.id.button_cancel_bluetooth).setOnClickListener {
