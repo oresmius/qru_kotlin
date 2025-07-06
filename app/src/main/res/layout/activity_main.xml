@@ -17,7 +17,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <!--<androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/pag_1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -903,10 +903,9 @@
                 android:textSize="20sp"
                 app:layout_constraintBottom_toTopOf="@+id/editText_TX_Nr"
                 app:layout_constraintEnd_toStartOf="@+id/mode_indicator"
-                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/qrg_indicator"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.5" />
+                app:layout_constraintVertical_bias="0.21" />
 
             <TextView
                 android:id="@+id/qrg_indicator"

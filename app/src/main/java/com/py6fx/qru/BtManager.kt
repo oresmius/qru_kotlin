@@ -15,19 +15,20 @@ import android.app.Activity
 import android.bluetooth.BluetoothSocket
 import android.graphics.Color
 import android.util.Log
-import android.view.View
-import java.io.IOException
-import java.io.InputStream
-import java.io.OutputStream
 import java.util.UUID
 
-class BtManager(private val context: Context, private val activity: Activity, private val deviceContainer: LinearLayout) {
-
+class BtManager(
+    private val context: Context,
+    private val activity: Activity,
+    private val deviceContainer: LinearLayout
+) {
     private val bluetoothAdapter: BluetoothAdapter? =
         (context.getSystemService(Context.BLUETOOTH_SERVICE) as? android.bluetooth.BluetoothManager)?.adapter
     private val uuid: UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB") // UUID padrão para SPP
     private var selectedDevice: BluetoothDevice? = null
     private var bluetoothSocket: BluetoothSocket? = null  // Armazena o socket para manter a conexão
+    private var pollingThread: Thread? = null
+    private var pollingActive: Boolean = false
 
     fun loadPairedDevices() {
         if (bluetoothAdapter == null) {
@@ -53,24 +54,19 @@ class BtManager(private val context: Context, private val activity: Activity, pr
             return
         }
 
-        // Limpar o layout antes de adicionar os dispositivos
         deviceContainer.removeAllViews()
 
-        // Criar um TextView para cada dispositivo pareado
         for (device in pairedDevices) {
             val deviceTextView = TextView(context)
             deviceTextView.text = "${device.name} - ${device.address}"
             deviceTextView.textSize = 18f
             deviceTextView.setPadding(16, 16, 16, 16)
-            deviceTextView.setBackgroundColor(Color.TRANSPARENT) // Cor padrão
+            deviceTextView.setBackgroundColor(Color.TRANSPARENT)
 
             deviceTextView.setOnClickListener {
-                // Resetar a cor de todos os dispositivos antes de selecionar um novo
                 for (i in 0 until deviceContainer.childCount) {
                     (deviceContainer.getChildAt(i) as TextView).setBackgroundColor(Color.TRANSPARENT)
                 }
-
-                // Definir a nova seleção e destacar o item
                 selectedDevice = device
                 deviceTextView.setBackgroundColor(Color.parseColor("#6200EE"))
                 showToast("Selected: ${device.name}")
@@ -79,8 +75,6 @@ class BtManager(private val context: Context, private val activity: Activity, pr
 
             deviceContainer.addView(deviceTextView)
         }
-
-
     }
 
     private fun requestBluetoothPermission() {
@@ -118,39 +112,49 @@ class BtManager(private val context: Context, private val activity: Activity, pr
             Log.d("BluetoothTest", "✅ Conexão Bluetooth estabelecida com ${selectedDevice!!.name}!")
             showToast("Connected to ${selectedDevice!!.name}!")
 
-            val outputStream: OutputStream = bluetoothSocket!!.outputStream
-            val inputStream: InputStream = bluetoothSocket!!.inputStream
+            // Inicia o polling automático, se ainda não estiver rodando
+            if (!pollingActive) {
+                pollingActive = true
+                pollingThread = Thread {
+                    try {
+                        while (pollingActive) {
+                            // Envie o comando CAT para o rádio
+                            val comando = byteArrayOf(0x00, 0x00, 0x00, 0x00, 0x03)
+                            val outputStream = bluetoothSocket!!.outputStream
+                            val inputStream = bluetoothSocket!!.inputStream
+                            outputStream.write(comando)
 
-            val comando = byteArrayOf(0x00, 0x00, 0x00, 0x00, 0x03)
-            Log.d("BluetoothTest", "📨 Enviando CAT: ${comando.joinToString(" ") { "%02X".format(it) }}")
-            outputStream.write(comando)
-            outputStream.flush()
-            Thread.sleep(100)
+                            // Recebe resposta
+                            val resposta = ByteArray(5)
+                            var bytesLidos = 0
+                            val tempoLimite = System.currentTimeMillis() + 2000 // 2 segundos de timeout por polling
 
-            val resposta = ByteArray(5)
-            var bytesLidos = 0
-            val tempoLimite = System.currentTimeMillis() + 5000
+                            while (bytesLidos < 5 && System.currentTimeMillis() < tempoLimite) {
+                                if (inputStream.available() > 0) {
+                                    resposta[bytesLidos] = inputStream.read().toByte()
+                                    bytesLidos++
+                                }
+                            }
 
-            while (bytesLidos < 5 && System.currentTimeMillis() < tempoLimite) {
-                if (inputStream.available() > 0) {
-                    resposta[bytesLidos] = inputStream.read().toByte()
-                    bytesLidos++
-                }
+                            if (bytesLidos == 5) {
+                                val respostaFormatada = resposta.joinToString(" ") { String.format("%02X", it) }
+                                Log.d("BluetoothTest", "📡 Resposta do rádio (polling): $respostaFormatada")
+                                // Aqui, em vez de Toast, depois você irá comunicar ao LoggerManager
+                            } else {
+                                Log.w("BluetoothTest", "⚠️ Resposta incompleta no polling. Bytes recebidos: $bytesLidos")
+                            }
+
+                            // Aguarda 1 segundo antes do próximo polling
+                            Thread.sleep(1000)
+                        }
+                    } catch (e: Exception) {
+                        Log.e("BluetoothTest", "Erro no polling: ${e.message}")
+                    }
+                }.also { it.start() }
             }
-
-            if (bytesLidos < 5) {
-                Log.w("BluetoothTest", "⚠️ Resposta incompleta. Bytes recebidos: $bytesLidos")
-                showToast("Error: Incomplete response. Try again.")
-                return
-            }
-
-            val formattedFreq = interpretarFrequencia(resposta)
-            Log.d("BluetoothTest", "📡 Resposta do rádio: $formattedFreq")
-            showToast("Freq: $formattedFreq MHz")
-
-        } catch (e: IOException) {
-            Log.e("BluetoothTest", "❌ Erro ao conectar: ${e.message}")
-            showToast("Error connecting: ${e.message}")
+        } catch (e: Exception) {
+            Log.e("BluetoothTest", "Erro ao conectar: ${e.message}")
+            showToast("Erro ao conectar: ${e.message}")
         }
     }
 
