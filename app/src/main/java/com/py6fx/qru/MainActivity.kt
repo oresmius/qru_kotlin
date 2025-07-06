@@ -135,6 +135,10 @@ class MainActivity : AppCompatActivity() {
             SimpleBluetooth.connectToDevice()
         }
 
+        findViewById<Button>(R.id.button_Logger).setOnClickListener {
+            navigateToPage(7)
+        }
+
     }
 
     // Cria as opções do menu e as faz aparecer
