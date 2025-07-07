@@ -53,7 +53,11 @@ class MainActivity : AppCompatActivity() {
 
         // inicia o BtManager
         val deviceContainer = findViewById<LinearLayout>(R.id.deviceContainer)
-        btManager = BtManager(this, this, deviceContainer)
+        btManager = BtManager(this, this, deviceContainer) { qrg ->
+            // atualiza o TextView qrg_indicator na theard principal
+            val qrgIndicator = findViewById<TextView>(R.id.qrg_indicator)
+            qrgIndicator.text = qrg
+        }
 
         // inicia o teste simplebluetooth
         SimpleBluetooth = SimpleBluetooth(this)
@@ -123,7 +127,9 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.button_bluetooth).setOnClickListener {
             navigateToPage(6)
             val deviceContainer = findViewById<LinearLayout>(R.id.deviceContainer)
-            btManager = BtManager(this, this, deviceContainer)
+            btManager = BtManager(this, this, deviceContainer) { qrg ->
+                findViewById<TextView>(R.id.qrg_indicator).text = qrg
+            }
             btManager.loadPairedDevices()
         }
         findViewById<Button>(R.id.button_select_bluetooth).setOnClickListener {

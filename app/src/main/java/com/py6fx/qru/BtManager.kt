@@ -20,8 +20,9 @@ import java.util.UUID
 class BtManager(
     private val context: Context,
     private val activity: Activity,
-    private val deviceContainer: LinearLayout
-) {
+    private val deviceContainer: LinearLayout,
+    private val onQrgUpdate: ((String) -> Unit)? = null
+    ) {
     private val bluetoothAdapter: BluetoothAdapter? =
         (context.getSystemService(Context.BLUETOOTH_SERVICE) as? android.bluetooth.BluetoothManager)?.adapter
     private val uuid: UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB") // UUID padrão para SPP
@@ -137,11 +138,18 @@ class BtManager(
                             }
 
                             if (bytesLidos == 5) {
-                                val respostaFormatada = resposta.joinToString(" ") { String.format("%02X", it) }
-                                Log.d("BluetoothTest", "📡 Resposta do rádio (polling): $respostaFormatada")
-                                // Aqui, em vez de Toast, depois você irá comunicar ao LoggerManager
+                                val qrg = interpretarFrequencia(resposta)
+                                Log.d("BluetoothTest", "📡 Resposta do rádio (polling): $qrg")
+                                // Chama o callback se existir
+                                onQrgUpdate?.let { callback ->
+                                    //Atualização deve ocorrer na thread principal:
+                                    activity.runOnUiThread {
+                                        callback(qrg)
+                                    }
+                                }
                             } else {
                                 Log.w("BluetoothTest", "⚠️ Resposta incompleta no polling. Bytes recebidos: $bytesLidos")
+
                             }
 
                             // Aguarda 1 segundo antes do próximo polling
