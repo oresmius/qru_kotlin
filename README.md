@@ -1,5 +1,7 @@
 # QRU – FT-817(ND) Bluetooth CAT Logger (Developing)
 
+Hi! PY6FX / PY1XR - Fábio, here;
+
 **QRU** is a very simple, minimalistic, open-source Android contest logger app designed for the Yaesu FT-817(ND), developed with the help of Recruit 0101, my Chat GPT assistant.  
 It allows portable ham radio operators to log QSOs in the field with automatic capture of frequency, mode, and timestamp via CAT over Bluetooth.
 This project also aims to put into practice what I learned in my degree in Data Analysis.
@@ -109,5 +111,7 @@ Author
 
   Fábio Sousa [PY6FX] — [py1xr.qsl@gmail.com]
 
-  Recruit [0101] — Chat GPT Assistant
+  Recruit [0101] — My Chat GPT Assistant
+
+  73
 
