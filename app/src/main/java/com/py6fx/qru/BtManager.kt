@@ -135,8 +135,8 @@ class BtManager(
                                 }
                             }
                             if (bytesLidos == 5) {
-                                val qrg = interpretarFrequencia(resposta) // usa resposta[0..3]
-                                val modo = interpretarModo(resposta)      // usa resposta[4]
+                                val qrg = interpretarFrequencia(resposta) // usa resposta[0..3].
+                                val modo = interpretarModo(resposta)      // usa resposta[4].
                                 onQrgUpdate?.let { callback ->
                                     activity.runOnUiThread { callback(qrg) }
                                 }

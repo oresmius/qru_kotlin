@@ -155,7 +155,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    // Cria as opções do menu e as faz aparecer
+    // Cria as opções do menu e as faz apareceR
     private fun setupPopupMenu() {
         val buttonContests = findViewById<Button>(R.id.button_contests)
         buttonContests.setOnClickListener { view -> showPopupMenu(view) }
