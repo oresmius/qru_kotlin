@@ -53,11 +53,18 @@ class MainActivity : AppCompatActivity() {
 
         // inicia o BtManager
         val deviceContainer = findViewById<LinearLayout>(R.id.deviceContainer)
-        btManager = BtManager(this, this, deviceContainer) { qrg ->
-            // atualiza o TextView qrg_indicator na theard principal
-            val qrgIndicator = findViewById<TextView>(R.id.qrg_indicator)
-            qrgIndicator.text = qrg
-        }
+        btManager = BtManager(
+            this,
+            this,
+            deviceContainer,
+            onQrgUpdate = { qrg ->
+                findViewById<TextView>(R.id.qrg_indicator).text = qrg
+            },
+            onModeUpdate = { modo ->
+                findViewById<TextView>(R.id.mode_indicator).text = modo
+            }
+        )
+
 
         // inicia o teste simplebluetooth
         SimpleBluetooth = SimpleBluetooth(this)
@@ -116,22 +123,23 @@ class MainActivity : AppCompatActivity() {
         }
 
         // chamar a função resumeContest
-        findViewById<Button>(R.id.button_resume_contest).setOnClickListener{
-            contestManager.resumeContest(findViewById(R.id.pag_6))
-        }
-        // chamar a funcao editcontest
-        findViewById<Button>(R.id.button_edit_contest).setOnClickListener {
-            contestManager.editContest(findViewById(R.id.pag_6))
-        }
-        // chamar as funções de Bluetooth
         findViewById<Button>(R.id.button_bluetooth).setOnClickListener {
             navigateToPage(6)
             val deviceContainer = findViewById<LinearLayout>(R.id.deviceContainer)
-            btManager = BtManager(this, this, deviceContainer) { qrg ->
-                findViewById<TextView>(R.id.qrg_indicator).text = qrg
-            }
+            btManager = BtManager(
+                this,
+                this,
+                deviceContainer,
+                onQrgUpdate = { qrg ->
+                    findViewById<TextView>(R.id.qrg_indicator).text = qrg
+                },
+                onModeUpdate = { modo ->
+                    findViewById<TextView>(R.id.mode_indicator).text = modo
+                }
+            )
             btManager.loadPairedDevices()
         }
+
         findViewById<Button>(R.id.button_select_bluetooth).setOnClickListener {
             btManager.connectToDevice()
             navigateToPage(3)

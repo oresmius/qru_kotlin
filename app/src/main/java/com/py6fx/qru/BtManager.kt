@@ -21,8 +21,10 @@ class BtManager(
     private val context: Context,
     private val activity: Activity,
     private val deviceContainer: LinearLayout,
-    private val onQrgUpdate: ((String) -> Unit)? = null
-    ) {
+    private val onQrgUpdate: ((String) -> Unit)? = null,
+    private val onModeUpdate: ((String) -> Unit)? = null
+) {
+
     private val bluetoothAdapter: BluetoothAdapter? =
         (context.getSystemService(Context.BLUETOOTH_SERVICE) as? android.bluetooth.BluetoothManager)?.adapter
     private val uuid: UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB") // UUID padrão para SPP
@@ -118,43 +120,33 @@ class BtManager(
                 pollingActive = true
                 pollingThread = Thread {
                     try {
+                        val outputStream = bluetoothSocket!!.outputStream
+                        val inputStream = bluetoothSocket!!.inputStream
                         while (pollingActive) {
-                            // Envie o comando CAT para o rádio
                             val comando = byteArrayOf(0x00, 0x00, 0x00, 0x00, 0x03)
-                            val outputStream = bluetoothSocket!!.outputStream
-                            val inputStream = bluetoothSocket!!.inputStream
                             outputStream.write(comando)
-
-                            // Recebe resposta
                             val resposta = ByteArray(5)
                             var bytesLidos = 0
-                            val tempoLimite = System.currentTimeMillis() + 2000 // 2 segundos de timeout por polling
-
-                            while (bytesLidos < 5 && System.currentTimeMillis() < tempoLimite) {
+                            val timeout = System.currentTimeMillis() + 2000
+                            while (bytesLidos < 5 && System.currentTimeMillis() < timeout) {
                                 if (inputStream.available() > 0) {
                                     resposta[bytesLidos] = inputStream.read().toByte()
                                     bytesLidos++
                                 }
                             }
-
                             if (bytesLidos == 5) {
-                                val qrg = interpretarFrequencia(resposta)
-                                Log.d("BluetoothTest", "📡 Resposta do rádio (polling): $qrg")
-                                // Chama o callback se existir
+                                val qrg = interpretarFrequencia(resposta) // usa resposta[0..3]
+                                val modo = interpretarModo(resposta)      // usa resposta[4]
                                 onQrgUpdate?.let { callback ->
-                                    //Atualização deve ocorrer na thread principal:
-                                    activity.runOnUiThread {
-                                        callback(qrg)
-                                    }
+                                    activity.runOnUiThread { callback(qrg) }
                                 }
-                            } else {
-                                Log.w("BluetoothTest", "⚠️ Resposta incompleta no polling. Bytes recebidos: $bytesLidos")
-
+                                onModeUpdate?.let { callback ->
+                                    activity.runOnUiThread { callback(modo) }
+                                }
                             }
-
-                            // Aguarda 1 segundo antes do próximo polling
                             Thread.sleep(1000)
                         }
+
                     } catch (e: Exception) {
                         Log.e("BluetoothTest", "Erro no polling: ${e.message}")
                     }
@@ -185,5 +177,21 @@ class BtManager(
         }
 
         return formattedFreq
+    }
+
+    fun interpretarModo(resposta: ByteArray): String {
+        if (resposta.size != 5) return "Unknown"
+        val modoByte = resposta[4].toInt() and 0xFF
+        return when (modoByte) {
+            0x00 -> "LSB"
+            0x01 -> "USB"
+            0x02 -> "CW"
+            0x03 -> "CWR"
+            0x04 -> "AM"
+            0x08 -> "FM"
+            0x0A -> "DIG"
+            0x0C -> "PKT"
+            else -> "Unknown"
+        }
     }
 }
