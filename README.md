@@ -35,7 +35,7 @@ This project also aims to put into practice what I learned in my degree in Data 
 - The QRU is exclusively a logger, so you can't control the FT-817(ND) with it, as CAT communication is used only for reading the QRG and radio mode.
 - The application is being developed exclusively for portable operations in contests. You can use a "general log" for POTA, SOTA, and other portable operations that are not contests, but that is not the purpose.
 - The FT 818, FT 857 and FT 897 radios have practically the same CAT protocol as the FT 817(ND); it is very likely that QRU will work with them, but I have never tested it.
-- This logger is designed for fun and DX practice in contests during portable operations rather than fierce competition. If you need lightning-fast operation, with CW keyers and SSB voice recording like the N1MM, the QRU certainly won't do.
+- This logger is designed for fun and DX practice in contests during portable operations no fierce competition. If you need lightning-fast operation, with CW keyers and SSB voice recording like the N1MM, the QRU certainly won't do.
 
 ---
 
