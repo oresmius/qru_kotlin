@@ -153,6 +153,13 @@ class MainActivity : AppCompatActivity() {
             navigateToPage(7)
         }
 
+        findViewById<Button>(R.id.button_resume_contest).setOnClickListener {
+            contestManager.resumeContest(findViewById(R.id.pag_6))
+        }
+        findViewById<Button>(R.id.button_edit_contest).setOnClickListener {
+            contestManager.editContest(findViewById(R.id.pag_6))
+        }
+        
     }
 
     // Cria as opções do menu e as faz aparecer

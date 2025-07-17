@@ -40,6 +40,24 @@ class ContestManager(private val context: Context, private val activity: MainAct
                 )
             """.trimIndent()
                 userDb.execSQL(createTableQuery)
+            val createQsosTableQuery = """
+               CREATE TABLE IF NOT EXISTS QSOS (
+                   id INTEGER PRIMARY KEY AUTOINCREMENT,
+                   contest_id INTEGER,
+                   timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+                   call TEXT,
+                   freq REAL,
+                   mode TEXT,
+                   sent_rst TEXT,
+                   rcvd_rst TEXT,
+                   sent_serial INTEGER,
+                   rcvd_serial INTEGER,
+                   sent_exchange TEXT,
+                   rcvd_exchange TEXT,
+                   FOREIGN KEY (contest_id) REFERENCES Contest(id)
+               )
+            """.trimIndent()
+            userDb.execSQL(createQsosTableQuery)
 
                 val spinnerContests = page.findViewById<Spinner>(R.id.spinner_contests)
                 val selectedContest = spinnerContests.selectedItem?.toString() ?: ""
