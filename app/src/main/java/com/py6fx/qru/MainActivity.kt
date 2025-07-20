@@ -10,7 +10,7 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.PopupMenu
 import android.widget.TextView
-
+import android.widget.EditText
 
 class MainActivity : AppCompatActivity() {
 
@@ -62,9 +62,16 @@ class MainActivity : AppCompatActivity() {
             },
             onModeUpdate = { modo ->
                 findViewById<TextView>(R.id.mode_indicator).text = modo
-            }
-        )
 
+                // Só atualiza o RST se estiver na tela de logger (pag_8, index 7)
+                if (viewFlipper.displayedChild == 7) {
+                    val editTextTX = findViewById<EditText>(R.id.editText_TX_RST)
+                    val editTextRX = findViewById<EditText>(R.id.editText_RX_RST)
+                    LoggerManager().RSTAutomatico(modo, editTextTX, editTextRX)
+                }
+            }
+
+        )
 
         // inicia o teste simplebluetooth
         SimpleBluetooth = SimpleBluetooth(this)
@@ -135,8 +142,14 @@ class MainActivity : AppCompatActivity() {
                 },
                 onModeUpdate = { modo ->
                     findViewById<TextView>(R.id.mode_indicator).text = modo
+                    if (viewFlipper.displayedChild == 7) {
+                        val editTextTX = findViewById<EditText>(R.id.editText_TX_RST)
+                        val editTextRX = findViewById<EditText>(R.id.editText_RX_RST)
+                        LoggerManager().RSTAutomatico(modo, editTextTX, editTextRX)
+                    }
                 }
             )
+
             btManager.loadPairedDevices()
         }
 
@@ -151,6 +164,13 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.button_Logger).setOnClickListener {
             navigateToPage(7)
+            // Aguarda a interface ser atualizada antes de acessar os campos
+            findViewById<ViewFlipper>(R.id.viewFlipper).post {
+                val modo = findViewById<TextView>(R.id.mode_indicator).text.toString().trim()
+                val editTextTX = findViewById<EditText>(R.id.editText_TX_RST)
+                val editTextRX = findViewById<EditText>(R.id.editText_RX_RST)
+                LoggerManager().RSTAutomatico(modo, editTextTX, editTextRX)
+            }
         }
 
         findViewById<Button>(R.id.button_resume_contest).setOnClickListener {
