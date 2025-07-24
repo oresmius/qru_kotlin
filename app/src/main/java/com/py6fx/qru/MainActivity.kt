@@ -166,6 +166,9 @@ class MainActivity : AppCompatActivity() {
             navigateToPage(7)
             // Aguarda a interface ser atualizada antes de acessar os campos
             findViewById<ViewFlipper>(R.id.viewFlipper).post {
+                //preenche o TX Exch automaticamante
+                LoggerManager().preencherTXExch(this)
+                // preenche o RST dinamicamante
                 val modo = findViewById<TextView>(R.id.mode_indicator).text.toString().trim()
                 val editTextTX = findViewById<EditText>(R.id.editText_TX_RST)
                 val editTextRX = findViewById<EditText>(R.id.editText_RX_RST)
