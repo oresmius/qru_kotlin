@@ -182,7 +182,11 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.button_edit_contest).setOnClickListener {
             contestManager.editContest(findViewById(R.id.pag_6))
         }
-        
+
+        //chamada função de log
+        findViewById<Button>(R.id.button_log_QSO).setOnClickListener {
+            LoggerManager().logQSO(this)
+        }
     }
 
     // Cria as opções do menu e as faz aparecer

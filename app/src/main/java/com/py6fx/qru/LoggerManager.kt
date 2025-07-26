@@ -4,6 +4,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.widget.EditText
 import android.widget.TextView
 import java.io.File
+import android.widget.Toast
 
 class LoggerManager {
     fun RSTAutomatico(modo: String, editTextTX: EditText, editTextRX: EditText) {
@@ -70,6 +71,93 @@ class LoggerManager {
             db.close()
         } catch (_: Exception) {
             // falha silenciosa
+        }
+    }
+    fun logQSO(activity: MainActivity) {
+        val userCall = activity.findViewById<TextView>(R.id.user_indicator).text.toString().trim()
+        val contestName = activity.findViewById<TextView>(R.id.contest_indicator).text.toString().trim()
+
+        if (userCall.isEmpty() || userCall == "USER?") {
+            Toast.makeText(activity, "No active user selected.", Toast.LENGTH_LONG).show()
+            return
+        }
+        if (contestName.isEmpty() || contestName == "CONTEST?") {
+            Toast.makeText(activity, "No contest selected.", Toast.LENGTH_LONG).show()
+            return
+        }
+
+        val dbPath = File(activity.filesDir, "db/$userCall.db")
+        if (!dbPath.exists()) {
+            Toast.makeText(activity, "Database not found for user $userCall", Toast.LENGTH_LONG).show()
+            return
+        }
+
+        try {
+            val db = SQLiteDatabase.openDatabase(dbPath.path, null, SQLiteDatabase.OPEN_READWRITE)
+
+            // Buscar contest_id
+            val contestCursor = db.rawQuery(
+                "SELECT id FROM Contest WHERE DisplayName = ? ORDER BY datetime(StartTime) DESC LIMIT 1",
+                arrayOf(contestName)
+            )
+            if (!contestCursor.moveToFirst()) {
+                Toast.makeText(activity, "Contest ID not found.", Toast.LENGTH_LONG).show()
+                contestCursor.close()
+                db.close()
+                return
+            }
+            val contestId = contestCursor.getInt(0)
+            contestCursor.close()
+
+            // Captura de campos do logger
+            val rxCall = activity.findViewById<EditText>(R.id.editText_RX_Call).text.toString().trim()
+            val qrg = activity.findViewById<TextView>(R.id.qrg_indicator).text.toString().trim()
+            val modo = activity.findViewById<TextView>(R.id.mode_indicator).text.toString().trim()
+            val rxRST = activity.findViewById<EditText>(R.id.editText_RX_RST).text.toString().trim()
+            val txRST = activity.findViewById<EditText>(R.id.editText_TX_RST).text.toString().trim()
+            val rxNr = activity.findViewById<EditText>(R.id.editText_RX_Nr).text.toString().trim()
+            val rxExch = activity.findViewById<EditText>(R.id.editText_RX_Exch).text.toString().trim()
+            val txNr = activity.findViewById<EditText>(R.id.editText_TX_Nr).text.toString().trim()
+            val txExch = activity.findViewById<EditText>(R.id.editText_TX_Exch).text.toString().trim()
+
+            // Validação mínima
+            if (rxCall.isEmpty() || qrg.isEmpty() || modo.isEmpty() || rxRST.isEmpty() || txRST.isEmpty()) {
+                Toast.makeText(activity, "Missing required fields (Call, QRG, Mode, RSTs)", Toast.LENGTH_LONG).show()
+                db.close()
+                return
+            }
+
+            // Conversão segura da QRG para float (remover pontos opcionais)
+            val qrgNumerica = qrg.replace(".", "").toFloatOrNull()?.div(100f) ?: 0f
+
+            val insertQuery = """
+            INSERT INTO QSOS (
+                contest_id, call, freq, mode, sent_rst, rcvd_rst,
+                sent_serial, rcvd_serial, sent_exchange, rcvd_exchange
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """.trimIndent()
+
+            db.execSQL(
+                insertQuery,
+                arrayOf(
+                    contestId,
+                    rxCall,
+                    qrgNumerica,
+                    modo,
+                    txRST,
+                    rxRST,
+                    txNr.toIntOrNull(),
+                    rxNr.toIntOrNull(),
+                    txExch.ifEmpty { null },
+                    rxExch.ifEmpty { null }
+                )
+            )
+
+            db.close()
+            Toast.makeText(activity, "QSO logged successfully!", Toast.LENGTH_LONG).show()
+
+        } catch (e: Exception) {
+            Toast.makeText(activity, "Error logging QSO: ${e.message}", Toast.LENGTH_LONG).show()
         }
     }
 }
