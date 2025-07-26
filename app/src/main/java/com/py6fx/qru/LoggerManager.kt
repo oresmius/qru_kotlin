@@ -2,6 +2,8 @@ package com.py6fx.qru
 
 import android.database.sqlite.SQLiteDatabase
 import android.widget.EditText
+import android.widget.TextView
+import java.io.File
 
 class LoggerManager {
     fun RSTAutomatico(modo: String, editTextTX: EditText, editTextRX: EditText) {
@@ -11,35 +13,64 @@ class LoggerManager {
         editTextRX.setText(rst)
     }
 
-    fun preencherTXExch(
-        activity: MainActivity
-    ) {
-        // Obtém usuário ativo e contest ativo da interface
-        val userCall = activity.findViewById<android.widget.TextView>(R.id.user_indicator).text.toString().trim()
-        val contestName = activity.findViewById<android.widget.TextView>(R.id.contest_indicator).text.toString().trim()
+    fun preencherTXExch(activity: MainActivity) {
+        val userCall = activity.findViewById<TextView>(R.id.user_indicator).text.toString().trim()
+        val contestName =
+            activity.findViewById<TextView>(R.id.contest_indicator).text.toString().trim()
+
+        val editTextTxNr = activity.findViewById<EditText>(R.id.editText_TX_Nr)
+        val editTextTxExch = activity.findViewById<EditText>(R.id.editText_TX_Exch)
 
         if (userCall.isEmpty() || userCall == "USER?") return
         if (contestName.isEmpty() || contestName == "CONTEST?") return
 
-        // Caminho do banco do usuário ativo
-        val dbPath = java.io.File(activity.filesDir, "db/$userCall.db")
+        val dbPath = File(activity.filesDir, "db/$userCall.db")
         if (!dbPath.exists()) return
 
         try {
             val db = SQLiteDatabase.openDatabase(dbPath.path, null, SQLiteDatabase.OPEN_READONLY)
+
+            // Consulta o SendExchange e o contest_id
             val cursor = db.rawQuery(
-                "SELECT SendExchange FROM Contest WHERE DisplayName = ? ORDER BY datetime(StartTime) DESC LIMIT 1",
+                "SELECT id, SendExchange FROM Contest WHERE DisplayName = ? ORDER BY datetime(StartTime) DESC LIMIT 1",
                 arrayOf(contestName)
             )
+
             if (cursor.moveToFirst()) {
-                val sendExch = cursor.getString(0)
-                // Preenche o campo TX Exch do logger
-                activity.findViewById<EditText>(R.id.editText_TX_Exch).setText(sendExch)
+                val contestId = cursor.getInt(0)
+                val sendExch = cursor.getString(1).trim()
+
+                if (sendExch == "#") {
+                    // Modo serial automático
+                    val qsoCursor = db.rawQuery(
+                        "SELECT COUNT(*) FROM QSOS WHERE contest_id = ?",
+                        arrayOf(contestId.toString())
+                    )
+                    val count = if (qsoCursor.moveToFirst()) qsoCursor.getInt(0) else 0
+                    val nextSerial = count + 1
+
+                    editTextTxNr.setText(nextSerial.toString())
+                    editTextTxNr.isEnabled = false // bloqueia edição
+
+                    editTextTxExch.setText("")
+                    editTextTxExch.isEnabled = true // libera caso tenha sido bloqueado antes
+
+                    qsoCursor.close()
+                } else {
+                    // Exchange fixo
+                    editTextTxExch.setText(sendExch)
+                    editTextTxExch.isEnabled = true
+
+                    editTextTxNr.setText("")
+                    editTextTxNr.isEnabled = false // previne edição incorreta em modo fixo
+                }
             }
+
             cursor.close()
             db.close()
-        } catch (e: Exception) {
-            // Silencioso, para não travar a UI
+        } catch (_: Exception) {
+            // falha silenciosa
         }
     }
 }
+
