@@ -186,6 +186,12 @@ class MainActivity : AppCompatActivity() {
         //chamada função de log
         findViewById<Button>(R.id.button_log_QSO).setOnClickListener {
             LoggerManager().logQSO(this)
+            LoggerManager().limparCamposQSO(this)
+            LoggerManager().preencherTXExch(this)
+
+        }
+        findViewById<Button>(R.id.button_wipe_QSO).setOnClickListener {
+            LoggerManager().limparCamposQSO(this)
         }
     }
 

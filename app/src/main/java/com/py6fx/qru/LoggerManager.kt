@@ -110,7 +110,7 @@ class LoggerManager {
             contestCursor.close()
 
             // Captura de campos do logger
-            val rxCall = activity.findViewById<EditText>(R.id.editText_RX_Call).text.toString().trim()
+            val rxCall = activity.findViewById<EditText>(R.id.editText_RX_Call).text.toString().trim().uppercase()
             val qrg = activity.findViewById<TextView>(R.id.qrg_indicator).text.toString().trim()
             val modo = activity.findViewById<TextView>(R.id.mode_indicator).text.toString().trim()
             val rxRST = activity.findViewById<EditText>(R.id.editText_RX_RST).text.toString().trim()
@@ -160,5 +160,12 @@ class LoggerManager {
             Toast.makeText(activity, "Error logging QSO: ${e.message}", Toast.LENGTH_LONG).show()
         }
     }
+    fun limparCamposQSO(activity: MainActivity) {
+        activity.findViewById<EditText>(R.id.editText_RX_Call).setText("")
+        activity.findViewById<EditText>(R.id.editText_RX_Nr).setText("")
+        activity.findViewById<EditText>(R.id.editText_RX_Exch).setText("")
+        activity.findViewById<EditText>(R.id.editText_TX_Exch).setText("")
+    }
+
 }
 
