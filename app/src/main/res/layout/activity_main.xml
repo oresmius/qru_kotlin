@@ -952,7 +952,7 @@
                 android:layout_marginStart="60dp"
                 android:layout_marginTop="117dp"
                 android:layout_marginEnd="600dp"
-                android:layout_marginBottom="228dp"
+                android:layout_marginBottom="250dp"
                 android:background="@drawable/campo_rx"
                 android:ems="10"
                 android:hint="RX Call"
@@ -970,11 +970,11 @@
                 android:layout_marginStart="140dp"
                 android:layout_marginTop="117dp"
                 android:layout_marginEnd="500dp"
-                android:layout_marginBottom="228dp"
+                android:layout_marginBottom="250dp"
                 android:background="@drawable/campo_rx"
                 android:ems="10"
                 android:hint="RX RST"
-                android:inputType="text"
+                android:inputType="number"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -988,11 +988,11 @@
                 android:layout_marginStart="210dp"
                 android:layout_marginTop="117dp"
                 android:layout_marginEnd="400dp"
-                android:layout_marginBottom="228dp"
+                android:layout_marginBottom="250dp"
                 android:background="@drawable/campo_rx"
                 android:ems="10"
                 android:hint="RX Nr"
-                android:inputType="text"
+                android:inputType="number"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -1006,7 +1006,7 @@
                 android:layout_marginStart="305dp"
                 android:layout_marginTop="117dp"
                 android:layout_marginEnd="305dp"
-                android:layout_marginBottom="228dp"
+                android:layout_marginBottom="250dp"
                 android:background="@drawable/campo_rx"
                 android:ems="10"
                 android:hint="RX Exch"
@@ -1024,11 +1024,11 @@
                 android:layout_marginStart="405dp"
                 android:layout_marginTop="117dp"
                 android:layout_marginEnd="228dp"
-                android:layout_marginBottom="228dp"
+                android:layout_marginBottom="250dp"
                 android:background="@drawable/campo_tx"
                 android:ems="10"
                 android:hint="TX RST"
-                android:inputType="text"
+                android:inputType="number"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -1042,11 +1042,11 @@
                 android:layout_marginStart="480dp"
                 android:layout_marginTop="117dp"
                 android:layout_marginEnd="125dp"
-                android:layout_marginBottom="228dp"
+                android:layout_marginBottom="250dp"
                 android:background="@drawable/campo_tx"
                 android:ems="10"
                 android:hint="TX Nr"
-                android:inputType="text"
+                android:inputType="number"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -1060,7 +1060,7 @@
                 android:layout_marginStart="605dp"
                 android:layout_marginTop="117dp"
                 android:layout_marginEnd="60dp"
-                android:layout_marginBottom="228dp"
+                android:layout_marginBottom="250dp"
                 android:background="@drawable/campo_tx"
                 android:ems="10"
                 android:hint="TX Exch"
@@ -1141,6 +1141,117 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                android:id="@+id/header_qso_table"
+                android:layout_width="650dp"
+                android:layout_height="wrap_content"
+                android:background="#FFF4F4"
+                android:orientation="horizontal"
+                android:padding="4dp"
+                app:layout_constraintBottom_toTopOf="@+id/recyclerView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editText_RX_Call"
+                app:layout_constraintVertical_bias="0.5">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.5"
+                    android:gravity="center"
+                    android:text="Timestamp"
+                    android:textColor="#D32F2F"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="QRG"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="RX Call"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.8"
+                    android:gravity="center"
+                    android:text="RX RST"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.8"
+                    android:gravity="center"
+                    android:text="RX Nr"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="RX Exch"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.8"
+                    android:gravity="center"
+                    android:text="TX RST"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.8"
+                    android:gravity="center"
+                    android:text="TX Nr"
+                    android:textColor="#D32F2F"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="TX Exch"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="650dp"
+                android:layout_height="120dp"
+                app:layout_constraintBottom_toTopOf="@+id/button_wipe_QSO"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.567"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/header_qso_table"
+                app:layout_constraintVertical_bias="0.5" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
