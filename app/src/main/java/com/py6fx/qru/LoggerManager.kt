@@ -192,7 +192,7 @@ class LoggerManager {
             // Busca todos os QSOs desse contest, ordenando por timestamp
             val qsoCursor = db.rawQuery(
                 "SELECT timestamp, freq, call, rcvd_rst, rcvd_serial, rcvd_exchange, sent_rst, sent_serial, sent_exchange " +
-                        "FROM QSOS WHERE contest_id = ? ORDER BY datetime(timestamp) ASC",
+                        "FROM QSOS WHERE contest_id = ? ORDER BY datetime(timestamp) DESC",
                 arrayOf(contestId.toString())
             )
             if (qsoCursor.moveToFirst()) {
