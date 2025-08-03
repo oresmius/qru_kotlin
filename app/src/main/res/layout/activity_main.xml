@@ -1149,7 +1149,7 @@
                 android:background="#FFF4F4"
                 android:orientation="horizontal"
                 android:padding="4dp"
-                app:layout_constraintBottom_toTopOf="@+id/recyclerView"
+                app:layout_constraintBottom_toTopOf="@+id/recyclerViewQSOs"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
@@ -1243,7 +1243,7 @@
 
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView"
+                android:id="@+id/recyclerViewQSOs"
                 android:layout_width="650dp"
                 android:layout_height="120dp"
                 app:layout_constraintBottom_toTopOf="@+id/button_wipe_QSO"

@@ -11,6 +11,8 @@ import android.widget.LinearLayout
 import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.EditText
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 class MainActivity : AppCompatActivity() {
 
@@ -164,15 +166,26 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.button_Logger).setOnClickListener {
             navigateToPage(7)
-            // Aguarda a interface ser atualizada antes de acessar os campos
             findViewById<ViewFlipper>(R.id.viewFlipper).post {
-                //preenche o TX Exch automaticamante
+                // --- Seu código antigo
                 LoggerManager().preencherTXExch(this)
-                // preenche o RST dinamicamante
                 val modo = findViewById<TextView>(R.id.mode_indicator).text.toString().trim()
                 val editTextTX = findViewById<EditText>(R.id.editText_TX_RST)
                 val editTextRX = findViewById<EditText>(R.id.editText_RX_RST)
                 LoggerManager().RSTAutomatico(modo, editTextTX, editTextRX)
+
+                // --- Código para exibir o RecyclerView com a lista fake
+                val recyclerView = findViewById<RecyclerView>(R.id.recyclerViewQSOs)
+                recyclerView.layoutManager = LinearLayoutManager(this)
+
+                val listaFake = listOf(
+                    QsoLogItem("2024-07-30 12:12", "7.074,00", "PY2AAA", "59", "001", "BA", "59", "001", "BA"),
+                    QsoLogItem("2024-07-30 12:15", "14.100,00", "PY1BBB", "59", "002", "RJ", "59", "002", "RJ"),
+                    QsoLogItem("2024-07-30 12:20", "21.200,00", "PY3CCC", "59", "003", "SP", "59", "003", "SP")
+                )
+
+                val adapter = QsoLogAdapter(listaFake)
+                recyclerView.adapter = adapter
             }
         }
 
