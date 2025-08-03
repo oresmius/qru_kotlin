@@ -199,6 +199,13 @@ class MainActivity : AppCompatActivity() {
             LoggerManager().limparCamposQSO(this)
             LoggerManager().preencherTXExch(this)
 
+            // Recarrega a lista de QSOs no RecyclerView
+            val recyclerView = findViewById<RecyclerView>(R.id.recyclerViewQSOs)
+            val listaAtualizada = LoggerManager().obterQsosDoContestAtual(this)
+            val adapter = QsoLogAdapter(listaAtualizada)
+            recyclerView.adapter = adapter
+
+
         }
         findViewById<Button>(R.id.button_wipe_QSO).setOnClickListener {
             LoggerManager().limparCamposQSO(this)
