@@ -60,4 +60,5 @@ class QsoLogAdapter(
         items = newItems
         notifyDataSetChanged()
     }
+
 }

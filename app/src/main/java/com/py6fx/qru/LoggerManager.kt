@@ -128,7 +128,7 @@ class LoggerManager {
             }
 
             // Conversão segura da QRG para float (remover pontos opcionais)
-            val qrgNumerica = qrg.replace(".", "").toFloatOrNull()?.div(100f) ?: 0f
+            //val qrgNumerica = qrg.replace(".", "").toFloatOrNull()?.div(100f) ?: 0f
 
             val insertQuery = """
             INSERT INTO QSOS (
@@ -142,7 +142,7 @@ class LoggerManager {
                 arrayOf(
                     contestId,
                     rxCall,
-                    qrgNumerica,
+                    qrg,
                     modo,
                     txRST,
                     rxRST,
@@ -198,7 +198,7 @@ class LoggerManager {
             if (qsoCursor.moveToFirst()) {
                 do {
                     val timestamp = qsoCursor.getString(0) ?: ""
-                    val qrg = qsoCursor.getDouble(1).toString()      // pode formatar depois!
+                    val qrg = qsoCursor.getString(1) ?: ""
                     val rxCall = qsoCursor.getString(2) ?: ""
                     val rxRst = qsoCursor.getString(3) ?: ""
                     val rxNr = qsoCursor.getInt(4).toString()
