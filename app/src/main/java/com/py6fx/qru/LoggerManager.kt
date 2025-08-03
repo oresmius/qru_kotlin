@@ -166,6 +166,59 @@ class LoggerManager {
         activity.findViewById<EditText>(R.id.editText_RX_Exch).setText("")
         activity.findViewById<EditText>(R.id.editText_TX_Exch).setText("")
     }
+    fun obterQsosDoContestAtual(activity: MainActivity): List<QsoLogItem> {
+        val lista = mutableListOf<QsoLogItem>()
+
+        val userCall = activity.findViewById<TextView>(R.id.user_indicator).text.toString().trim()
+        val contestName = activity.findViewById<TextView>(R.id.contest_indicator).text.toString().trim()
+        val dbPath = File(activity.filesDir, "db/$userCall.db")
+        if (!dbPath.exists() || userCall.isEmpty() || contestName.isEmpty()) return lista
+
+        try {
+            val db = SQLiteDatabase.openDatabase(dbPath.path, null, SQLiteDatabase.OPEN_READONLY)
+            // Pega o contest_id do contest ativo
+            val contestCursor = db.rawQuery(
+                "SELECT id FROM Contest WHERE DisplayName = ? ORDER BY datetime(StartTime) DESC LIMIT 1",
+                arrayOf(contestName)
+            )
+            if (!contestCursor.moveToFirst()) {
+                contestCursor.close()
+                db.close()
+                return lista
+            }
+            val contestId = contestCursor.getInt(0)
+            contestCursor.close()
+
+            // Busca todos os QSOs desse contest, ordenando por timestamp
+            val qsoCursor = db.rawQuery(
+                "SELECT timestamp, freq, call, rcvd_rst, rcvd_serial, rcvd_exchange, sent_rst, sent_serial, sent_exchange " +
+                        "FROM QSOS WHERE contest_id = ? ORDER BY datetime(timestamp) ASC",
+                arrayOf(contestId.toString())
+            )
+            if (qsoCursor.moveToFirst()) {
+                do {
+                    val timestamp = qsoCursor.getString(0) ?: ""
+                    val qrg = qsoCursor.getDouble(1).toString()      // pode formatar depois!
+                    val rxCall = qsoCursor.getString(2) ?: ""
+                    val rxRst = qsoCursor.getString(3) ?: ""
+                    val rxNr = qsoCursor.getInt(4).toString()
+                    val rxExch = qsoCursor.getString(5) ?: ""
+                    val txRst = qsoCursor.getString(6) ?: ""
+                    val txNr = qsoCursor.getInt(7).toString()
+                    val txExch = qsoCursor.getString(8) ?: ""
+
+                    lista.add(
+                        QsoLogItem(
+                            timestamp, qrg, rxCall, rxRst, rxNr, rxExch, txRst, txNr, txExch
+                        )
+                    )
+                } while (qsoCursor.moveToNext())
+            }
+            qsoCursor.close()
+            db.close()
+        } catch (_: Exception) { }
+        return lista
+    }
 
 }
 

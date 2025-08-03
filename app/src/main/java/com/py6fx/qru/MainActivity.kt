@@ -174,18 +174,15 @@ class MainActivity : AppCompatActivity() {
                 val editTextRX = findViewById<EditText>(R.id.editText_RX_RST)
                 LoggerManager().RSTAutomatico(modo, editTextTX, editTextRX)
 
-                // --- Código para exibir o RecyclerView com a lista fake
                 val recyclerView = findViewById<RecyclerView>(R.id.recyclerViewQSOs)
                 recyclerView.layoutManager = LinearLayoutManager(this)
 
-                val listaFake = listOf(
-                    QsoLogItem("2024-07-30 12:12", "7.074,00", "PY2AAA", "59", "001", "BA", "59", "001", "BA"),
-                    QsoLogItem("2024-07-30 12:15", "14.100,00", "PY1BBB", "59", "002", "RJ", "59", "002", "RJ"),
-                    QsoLogItem("2024-07-30 12:20", "21.200,00", "PY3CCC", "59", "003", "SP", "59", "003", "SP")
-                )
+                // Busca os QSOs
+                val listaQsos = LoggerManager().obterQsosDoContestAtual(this)
 
-                val adapter = QsoLogAdapter(listaFake)
+                val adapter = QsoLogAdapter(listaQsos)
                 recyclerView.adapter = adapter
+
             }
         }
 
