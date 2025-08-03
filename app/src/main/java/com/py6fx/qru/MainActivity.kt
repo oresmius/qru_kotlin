@@ -13,8 +13,12 @@ import android.widget.TextView
 import android.widget.EditText
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import android.widget.Spinner
+import android.widget.Toast
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var exportador: ExportCabrilloManager
 
     // Declaração universal de variável para o ViewFlipper
     private lateinit var viewFlipper: ViewFlipper
@@ -86,6 +90,19 @@ class MainActivity : AppCompatActivity() {
 
         // Inicializa menus popup
         setupPopupMenu()
+
+        //exportador do Cabrillo
+
+        exportador = ExportCabrilloManager(this)
+        exportador.registrarExportador { uri ->
+            if (uri != null) {
+                val conteudo = exportador.gerarConteudoCabrillo("NomeDoContest")
+                if (conteudo.isNotEmpty()) {
+                    exportador.salvarCabrillo(uri, conteudo)
+                }
+            }
+        }
+
     }
 
     // Inicializa os componentes
@@ -210,6 +227,30 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.button_wipe_QSO).setOnClickListener {
             LoggerManager().limparCamposQSO(this)
         }
+
+        findViewById<Button>(R.id.button_export_contest).setOnClickListener {
+            // Obtém o spinner da tela de exportação
+            val spinner = findViewById<Spinner>(R.id.spinner_contests_initialized)
+            val selectedItem = spinner.selectedItem?.toString()
+
+            // Verifica se algo foi selecionado
+            if (selectedItem.isNullOrEmpty()) {
+                Toast.makeText(this, "No contest selected!", Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+
+            // Extrai apenas o DisplayName (remove data e hora)
+            val contestDisplayName = selectedItem.substringAfter(" - ").trim()
+
+            // Gera o nome sugerido do arquivo
+            val nomeArquivo = "contest_${contestDisplayName.replace(" ", "_")}.log"
+
+            // Chama o exportador
+            exportador.iniciarExportacaoCabrillo(nomeArquivo)
+
+            // O callback já registrado com exportador.registrarExportador cuidará do restante
+        }
+
     }
 
     // Cria as opções do menu e as faz aparecer
