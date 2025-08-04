@@ -191,7 +191,7 @@ class LoggerManager {
 
             // Busca todos os QSOs desse contest, ordenando por timestamp
             val qsoCursor = db.rawQuery(
-                "SELECT timestamp, freq, call, rcvd_rst, rcvd_serial, rcvd_exchange, sent_rst, sent_serial, sent_exchange " +
+                "SELECT timestamp, freq, mode, call, rcvd_rst, rcvd_serial, rcvd_exchange, sent_rst, sent_serial, sent_exchange " +
                         "FROM QSOS WHERE contest_id = ? ORDER BY datetime(timestamp) DESC",
                 arrayOf(contestId.toString())
             )
@@ -199,17 +199,18 @@ class LoggerManager {
                 do {
                     val timestamp = qsoCursor.getString(0) ?: ""
                     val qrg = qsoCursor.getString(1) ?: ""
-                    val rxCall = qsoCursor.getString(2) ?: ""
-                    val rxRst = qsoCursor.getString(3) ?: ""
-                    val rxNr = qsoCursor.getInt(4).toString()
-                    val rxExch = qsoCursor.getString(5) ?: ""
-                    val txRst = qsoCursor.getString(6) ?: ""
-                    val txNr = qsoCursor.getInt(7).toString()
-                    val txExch = qsoCursor.getString(8) ?: ""
+                    val mode = qsoCursor.getString(2) ?: ""
+                    val rxCall = qsoCursor.getString(3) ?: ""
+                    val rxRst = qsoCursor.getString(4) ?: ""
+                    val rxNr = qsoCursor.getInt(5).toString()
+                    val rxExch = qsoCursor.getString(6) ?: ""
+                    val txRst = qsoCursor.getString(7) ?: ""
+                    val txNr = qsoCursor.getInt(8).toString()
+                    val txExch = qsoCursor.getString(9) ?: ""
 
                     lista.add(
                         QsoLogItem(
-                            timestamp, qrg, rxCall, rxRst, rxNr, rxExch, txRst, txNr, txExch
+                            timestamp, qrg, mode, rxCall, rxRst, rxNr, rxExch, txRst, txNr, txExch
                         )
                     )
                 } while (qsoCursor.moveToNext())

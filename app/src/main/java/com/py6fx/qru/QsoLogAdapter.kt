@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 data class QsoLogItem(
     val timestamp: String,
     val qrg: String,
+    val mode: String,
     val rxCall: String,
     val rxRst: String,
     val rxNr: String,
@@ -25,6 +26,7 @@ class QsoLogAdapter(
     class QsoLogViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val timestamp: TextView = itemView.findViewById(R.id.text_timestamp)
         val qrg: TextView = itemView.findViewById(R.id.text_qrg)
+        val mode: TextView = itemView.findViewById(R.id.text_mode)
         val rxCall: TextView = itemView.findViewById(R.id.text_rx_call)
         val rxRst: TextView = itemView.findViewById(R.id.text_rx_rst)
         val rxNr: TextView = itemView.findViewById(R.id.text_rx_nr)
@@ -44,6 +46,7 @@ class QsoLogAdapter(
         val item = items[position]
         holder.timestamp.text = item.timestamp
         holder.qrg.text = item.qrg
+        holder.mode.text = item.mode
         holder.rxCall.text = item.rxCall
         holder.rxRst.text = item.rxRst
         holder.rxNr.text = item.rxNr

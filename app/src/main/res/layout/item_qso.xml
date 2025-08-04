@@ -25,6 +25,14 @@
         android:textSize="12sp"
         android:gravity="center"/>
     <TextView
+        android:id="@+id/text_mode"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="CW"
+        android:textSize="12sp"
+        android:gravity="center"/>
+    <TextView
         android:id="@+id/text_rx_call"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
