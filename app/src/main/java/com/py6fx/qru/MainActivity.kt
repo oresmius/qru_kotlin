@@ -228,7 +228,7 @@ class MainActivity : AppCompatActivity() {
             LoggerManager().limparCamposQSO(this)
         }
 
-        findViewById<Button>(R.id.button_export_contest).setOnClickListener {
+        findViewById<Button>(R.id.button_export_cabrillo_contest).setOnClickListener {
             val spinner = findViewById<Spinner>(R.id.spinner_contests_initialized)
             val selectedItem = spinner.selectedItem?.toString()
 
