@@ -229,27 +229,19 @@ class MainActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.button_export_contest).setOnClickListener {
-            // Obtém o spinner da tela de exportação
             val spinner = findViewById<Spinner>(R.id.spinner_contests_initialized)
             val selectedItem = spinner.selectedItem?.toString()
 
-            // Verifica se algo foi selecionado
             if (selectedItem.isNullOrEmpty()) {
                 Toast.makeText(this, "No contest selected!", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
 
-            // Extrai apenas o DisplayName (remove data e hora)
-            val contestDisplayName = selectedItem.substringAfter(" - ").trim()
+            val startTime = selectedItem.substringBefore(" - ").trim()
 
-            // Gera o nome sugerido do arquivo
-            val nomeArquivo = "contest_${contestDisplayName.replace(" ", "_")}.log"
-
-            // Chama o exportador
-            exportador.iniciarExportacaoCabrillo(nomeArquivo)
-
-            // O callback já registrado com exportador.registrarExportador cuidará do restante
+            exportador.iniciarExportacaoCabrillo(startTime)
         }
+
 
     }
 

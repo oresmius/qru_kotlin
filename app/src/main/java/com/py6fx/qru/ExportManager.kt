@@ -9,12 +9,13 @@ import androidx.activity.result.contract.ActivityResultContracts
 import java.io.OutputStream
 import android.database.sqlite.SQLiteDatabase
 import android.widget.TextView
+import android.widget.Toast
 import java.io.File
 
 class ExportCabrilloManager(private val activity: MainActivity) {
 
     private lateinit var createFileLauncher: ActivityResultLauncher<Intent>
-    private var contestParaExportar: String = ""
+    private var contestStartTime: String = ""
 
     fun registrarExportador(callback: (Uri?) -> Unit) {
         createFileLauncher = activity.registerForActivityResult(
@@ -22,8 +23,8 @@ class ExportCabrilloManager(private val activity: MainActivity) {
         ) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 val uri: Uri? = result.data?.data
-                if (uri != null && contestParaExportar.isNotEmpty()) {
-                    val conteudo = gerarConteudoCabrillo(contestParaExportar)
+                if (uri != null && contestStartTime.isNotEmpty()) {
+                    val conteudo = gerarConteudoCabrillo(contestStartTime)
                     if (conteudo.isNotEmpty()) {
                         salvarCabrillo(uri, conteudo)
                     }
@@ -32,13 +33,16 @@ class ExportCabrilloManager(private val activity: MainActivity) {
         }
     }
 
-    fun iniciarExportacaoCabrillo(contestDisplayName: String, nomeSugerido: String = "contest.log") {
-        this.contestParaExportar = contestDisplayName
+    fun iniciarExportacaoCabrillo(startTime: String) {
+        this.contestStartTime = startTime
+
+        // Nome de arquivo temporário — será substituído corretamente dentro de gerarConteudoCabrillo
+        val nomeTemporario = "contest_export.log"
 
         val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
             addCategory(Intent.CATEGORY_OPENABLE)
             type = "application/octet-stream"
-            putExtra(Intent.EXTRA_TITLE, nomeSugerido)
+            putExtra(Intent.EXTRA_TITLE, nomeTemporario)
         }
         createFileLauncher.launch(intent)
     }
@@ -54,9 +58,9 @@ class ExportCabrilloManager(private val activity: MainActivity) {
         }
     }
 
-    fun gerarConteudoCabrillo(contestDisplayName: String): String {
+    fun gerarConteudoCabrillo(startTime: String): String {
         val userCall = activity.findViewById<TextView>(R.id.user_indicator).text.toString().trim()
-        if (userCall.isEmpty() || contestDisplayName.isEmpty()) return ""
+        if (userCall.isEmpty() || startTime.isEmpty()) return ""
 
         val dbPath = File(activity.filesDir, "db/$userCall.db")
         if (!dbPath.exists()) return ""
@@ -66,40 +70,92 @@ class ExportCabrilloManager(private val activity: MainActivity) {
         try {
             val db = SQLiteDatabase.openDatabase(dbPath.path, null, SQLiteDatabase.OPEN_READONLY)
 
-            val contestCursor = db.rawQuery("SELECT * FROM Contest WHERE DisplayName = ? ORDER BY datetime(StartTime) DESC LIMIT 1", arrayOf(contestDisplayName))
+            val contestCursor = db.rawQuery(
+                "SELECT * FROM Contest WHERE StartTime = ? LIMIT 1",
+                arrayOf(startTime)
+            )
+
             if (!contestCursor.moveToFirst()) {
+                Toast.makeText(activity, "Contest with StartTime '$startTime' not found!", Toast.LENGTH_LONG).show()
                 contestCursor.close()
                 db.close()
                 return ""
             }
 
             val contestId = contestCursor.getInt(contestCursor.getColumnIndexOrThrow("id"))
+            val displayName = contestCursor.getString(contestCursor.getColumnIndexOrThrow("DisplayName"))
             val modeRaw = contestCursor.getString(contestCursor.getColumnIndexOrThrow("Mode"))
             val cabrilloMode = mapearModoParaCabrillo(modeRaw)
             val sendExchange = contestCursor.getString(contestCursor.getColumnIndexOrThrow("SendExchange"))
             val category = contestCursor.getString(contestCursor.getColumnIndexOrThrow("Operator"))
             val band = contestCursor.getString(contestCursor.getColumnIndexOrThrow("Band"))
 
+            contestCursor.close()
+
+            // Dados do usuário
+            val userCursor = db.rawQuery("SELECT * FROM user WHERE Call = ?", arrayOf(userCall))
+            var name = ""
+            var address1 = ""
+            var address2 = ""
+            var address3 = ""
+            var email = ""
+            var club = ""
+            if (userCursor.moveToFirst()) {
+                name = userCursor.getString(userCursor.getColumnIndexOrThrow("Name"))
+                address1 = userCursor.getString(userCursor.getColumnIndexOrThrow("Address"))
+                address2 = "${userCursor.getString(userCursor.getColumnIndexOrThrow("City"))}, ${userCursor.getString(userCursor.getColumnIndexOrThrow("State"))}"
+                address3 = userCursor.getString(userCursor.getColumnIndexOrThrow("Country"))
+                email = userCursor.getString(userCursor.getColumnIndexOrThrow("Email"))
+                club = userCursor.getString(userCursor.getColumnIndexOrThrow("Club"))
+            }
+            userCursor.close()
+
+            // Cabeçalho Cabrillo
             builder.appendLine("START-OF-LOG: 3.0")
             builder.appendLine("CALLSIGN: $userCall")
-            builder.appendLine("CONTEST: $contestDisplayName")
+            builder.appendLine("CONTEST: $displayName")
             builder.appendLine("CATEGORY-OPERATOR: $category")
             builder.appendLine("CATEGORY-BAND: $band")
             builder.appendLine("CATEGORY-MODE: $cabrilloMode")
             builder.appendLine("CATEGORY-TRANSMITTER: ONE")
             builder.appendLine("CATEGORY-POWER: LOW")
             builder.appendLine("CATEGORY-ASSISTED: NON-ASSISTED")
-            builder.appendLine("OPERATORS: $userCall")
-            builder.appendLine("CLUB: UNKNOWN")
+            builder.appendLine("CLUB: ${club.ifEmpty { "UNKNOWN" }}")
             builder.appendLine("CREATED-BY: QRU v1.0")
+            builder.appendLine("EMAIL: ${email.ifEmpty { "unknown@qru.app" }}")
+            builder.appendLine("NAME: $name")
+            builder.appendLine("ADDRESS: $address1")
+            builder.appendLine("ADDRESS: $address2")
+            builder.appendLine("ADDRESS: $address3")
+            builder.appendLine("OPERATORS: $userCall")
+            builder.appendLine("SOAPBOX: Exported automatically by QRU")
             builder.appendLine()
 
-            contestCursor.close()
+            val qsoCursor = db.rawQuery(
+                "SELECT timestamp, freq, mode, call, sent_rst, sent_serial, sent_exchange, rcvd_rst, rcvd_serial, rcvd_exchange FROM QSOS WHERE contest_id = ? ORDER BY datetime(timestamp) ASC",
+                arrayOf(contestId.toString())
+            )
 
-            val qsoCursor = db.rawQuery("SELECT timestamp, freq, mode, call, sent_rst, sent_serial, sent_exchange, rcvd_rst, rcvd_serial, rcvd_exchange FROM QSOS WHERE contest_id = ? ORDER BY datetime(timestamp) ASC", arrayOf(contestId.toString()))
-            while (qsoCursor.moveToNext()) {
-                val ts = qsoCursor.getString(0).replace(":", "")
-                val freq = qsoCursor.getString(1)
+            if (!qsoCursor.moveToFirst()) {
+                Toast.makeText(activity, "No QSOs found for contest ID $contestId", Toast.LENGTH_LONG).show()
+                qsoCursor.close()
+                db.close()
+                return ""
+            }
+
+            do {
+                val timestampRaw = qsoCursor.getString(0)
+                val date = timestampRaw.substring(0, 10)
+                val time = timestampRaw.substring(11, 16).replace(":", "")
+
+                // Frequência: transforma 14.157.72 em 14157
+                val freqRaw = qsoCursor.getString(1)
+                val freq = try {
+                    (freqRaw.replace(".", "").take(5).toInt()).toString()
+                } catch (_: Exception) {
+                    "00000"
+                }
+
                 val modo = mapearModoParaCabrillo(qsoCursor.getString(2))
                 val call = qsoCursor.getString(3)
                 val srst = qsoCursor.getString(4).padEnd(3)
@@ -109,13 +165,17 @@ class ExportCabrilloManager(private val activity: MainActivity) {
                 val rnum = qsoCursor.getInt(8).toString().padStart(3, '0')
                 val rexch = (qsoCursor.getString(9) ?: "").padEnd(6)
 
-                builder.appendLine("QSO: $freq $modo ${ts.substring(0,10)} ${ts.substring(11,15)} $userCall $srst $snum $sexch $call $rrst $rnum $rexch")
-            }
+                builder.appendLine("QSO: $freq $modo $date $time $userCall $srst $snum $sexch $call $rrst $rnum $rexch")
+
+            } while (qsoCursor.moveToNext())
+
             qsoCursor.close()
             db.close()
 
             builder.appendLine("END-OF-LOG:")
+
         } catch (e: Exception) {
+            Toast.makeText(activity, "Export error: ${e.message}", Toast.LENGTH_LONG).show()
             e.printStackTrace()
             return ""
         }
