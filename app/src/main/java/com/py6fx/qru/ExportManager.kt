@@ -151,21 +151,22 @@ class ExportCabrilloManager(private val activity: MainActivity) {
                 // Frequência: transforma 14.157.72 em 14157
                 val freqRaw = qsoCursor.getString(1)
                 val freq = try {
-                    (freqRaw.replace(".", "").take(5).toInt()).toString()
+                    (freqRaw.replace(".", "").take(5).toInt()).toString().padStart(5)
                 } catch (_: Exception) {
                     "00000"
                 }
 
                 val modo = mapearModoParaCabrillo(qsoCursor.getString(2))
-                val call = qsoCursor.getString(3)
+                val callRx = qsoCursor.getString(3).padEnd(10)
+                val callTx = userCall.padEnd(10)
                 val srst = qsoCursor.getString(4).padEnd(3)
-                val snum = qsoCursor.getInt(5).toString().padStart(3, '0')
+                val snum = qsoCursor.getInt(5).toString().padStart(4, '0')
                 val sexch = (qsoCursor.getString(6) ?: "").padEnd(6)
                 val rrst = qsoCursor.getString(7).padEnd(3)
-                val rnum = qsoCursor.getInt(8).toString().padStart(3, '0')
+                val rnum = qsoCursor.getInt(8).toString().padStart(4, '0')
                 val rexch = (qsoCursor.getString(9) ?: "").padEnd(6)
 
-                builder.appendLine("QSO: $freq $modo $date $time $userCall $srst $snum $sexch $call $rrst $rnum $rexch")
+                builder.appendLine("QSO: $freq $modo $date $time $callTx $srst $snum $sexch $callRx $rrst $rnum $rexch")
 
             } while (qsoCursor.moveToNext())
 
