@@ -242,6 +242,19 @@ class MainActivity : AppCompatActivity() {
             exportador.iniciarExportacaoCabrillo(startTime)
         }
 
+        findViewById<Button>(R.id.button_export_adif_contest).setOnClickListener {
+            val spinner = findViewById<Spinner>(R.id.spinner_contests_initialized)
+            val selectedItem = spinner.selectedItem?.toString()
+
+            if (selectedItem.isNullOrEmpty()) {
+                Toast.makeText(this, "No contest selected!", Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+
+            val startTime = selectedItem.substringBefore(" - ").trim()
+
+            exportador.iniciarExportacaoAdif(startTime)
+        }
 
     }
 
