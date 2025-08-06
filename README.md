@@ -75,7 +75,7 @@ This project also aims to put into practice what I learned in my degree in Data 
 
     Logger: Log QSOs with automatic frequency, mode, and time capture.
 
-    Export: Export logs in Cabrillo or ADIF (coming soon).
+    Export: Export logs in Cabrillo or ADIF.
 
 ----------------------
 
