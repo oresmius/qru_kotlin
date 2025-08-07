@@ -95,7 +95,7 @@ class ExportCabrilloManager(private val activity: MainActivity) {
 
             // ATENÇÃO: Carregue Operator (singular) e Operators (plural)
             val contestCursor = db.rawQuery(
-                "SELECT id, DisplayName, Operator, Operators FROM Contest WHERE StartTime = ? LIMIT 1",
+                "SELECT id, DisplayName, CabrilloName, Operator, Operators FROM Contest WHERE StartTime = ? LIMIT 1",
                 arrayOf(startTime)
             )
 
@@ -108,6 +108,7 @@ class ExportCabrilloManager(private val activity: MainActivity) {
 
             val contestId = contestCursor.getInt(contestCursor.getColumnIndexOrThrow("id"))
             val displayName = contestCursor.getString(contestCursor.getColumnIndexOrThrow("DisplayName"))
+            val cabrilloName = contestCursor.getString(contestCursor.getColumnIndexOrThrow("CabrilloName"))
             //val stationCallsignField = contestCursor.getString(contestCursor.getColumnIndexOrThrow("Operator"))?.trim()
             val operatorsField = contestCursor.getString(contestCursor.getColumnIndexOrThrow("Operators"))?.trim()
             contestCursor.close()
@@ -156,6 +157,7 @@ class ExportCabrilloManager(private val activity: MainActivity) {
                 builder.append("<TIME_ON:4>$time ")
                 builder.append("<STATION_CALLSIGN:${stationCallsign.length}>$stationCallsign ")
                 builder.append("<FREQ:${freqFormatada.length}>$freqFormatada ")
+                builder.append("<CONTEST_ID:${cabrilloName.length}>$cabrilloName ")
                 builder.append("<MODE:${mode.length}>$mode ")
                 builder.append("<RST_SENT:${rstSent.length}>$rstSent ")
                 builder.append("<RST_RCVD:${rstRcvd.length}>$rstRcvd ")
