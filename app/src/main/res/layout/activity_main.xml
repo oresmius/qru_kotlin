@@ -691,7 +691,6 @@
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-        <!--pagina-->
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/pag_6"
@@ -899,6 +898,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.742" />
         </androidx.constraintlayout.widget.ConstraintLayout>
+        <!--pagina-->
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/pag_8"
@@ -909,20 +909,18 @@
             <TextView
                 android:id="@+id/label_logger"
                 android:layout_width="213dp"
-                android:layout_height="36dp"
-                android:layout_marginStart="259dp"
-                android:layout_marginTop="49dp"
-                android:layout_marginEnd="259dp"
-                android:layout_marginBottom="326dp"
+                android:layout_height="25dp"
                 android:background="@drawable/rouded_button"
                 android:gravity="center"
                 android:text="Logger"
                 android:textColor="#FFFFFF"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:textSize="18sp"
+                app:layout_constraintBottom_toTopOf="@+id/logger_status"
+                app:layout_constraintEnd_toStartOf="@+id/mode_indicator"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/qrg_indicator"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.5" />
 
             <TextView
                 android:id="@+id/qrg_indicator"
@@ -957,6 +955,23 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/logger_status"
+                android:layout_width="197dp"
+                android:layout_height="40dp"
+                android:background="@android:drawable/dialog_holo_light_frame"
+                android:backgroundTint="#03FB37"
+                android:gravity="center"
+                android:text="LOG MODE"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toTopOf="@+id/editText_RX_Nr"
+                app:layout_constraintEnd_toStartOf="@+id/mode_indicator"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/qrg_indicator"
+                app:layout_constraintTop_toBottomOf="@+id/label_logger"
+                app:layout_constraintVertical_bias="0.5" />
 
             <EditText
                 android:id="@+id/editText_RX_Call"
