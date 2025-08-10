@@ -256,6 +256,10 @@ class MainActivity : AppCompatActivity() {
             exportador.iniciarExportacaoAdif(startTime)
         }
 
+        findViewById<Button>(R.id.button_log_cancel).setOnClickListener {
+            navigateToPage(3)
+        }
+
     }
 
     // Cria as opções do menu e as faz aparecer
