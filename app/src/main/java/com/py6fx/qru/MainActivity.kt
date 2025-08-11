@@ -67,6 +67,16 @@ class MainActivity : AppCompatActivity() {
             dbFolder.mkdirs()
         }
 
+        val targetFile = File(dbFolder, "main.qru")
+        if (!targetFile.exists()) {
+            assets.open("main.qru").use { input ->
+                targetFile.outputStream().use { output ->
+                    input.copyTo(output)
+                }
+            }
+        }
+
+
         // Inicializa o caminho do banco de dados
         dbPath = File(applicationContext.filesDir, "db")
 
