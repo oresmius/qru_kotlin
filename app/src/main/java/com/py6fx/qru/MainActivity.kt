@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import android.widget.Spinner
 import android.widget.Toast
 
+
 class MainActivity : AppCompatActivity() {
 
     private lateinit var exportador: ExportCabrilloManager
@@ -197,7 +198,21 @@ class MainActivity : AppCompatActivity() {
                 // Busca os QSOs
                 val listaQsos = LoggerManager().obterQsosDoContestAtual(this)
 
-                val adapter = QsoLogAdapter(listaQsos)
+                val adapter = QsoLogAdapter(
+                    listaQsos
+                ) { item ->
+                    // Long-press → Edit Mode
+                    LoggerManager().entrarEditMode(
+                        activity = this,
+                        qsoId = item.id,              // requer que a lista traga o id
+                        rxCall = item.rxCall,
+                        rxRst = item.rxRst,
+                        rxNr = item.rxNr,
+                        rxExch = item.rxExch,
+                        txRst = item.txRst,
+                        txExch = item.txExch
+                    )
+                }
                 recyclerView.adapter = adapter
 
             }
@@ -212,17 +227,36 @@ class MainActivity : AppCompatActivity() {
 
         //chamada função de log
         findViewById<Button>(R.id.button_log_QSO).setOnClickListener {
-            LoggerManager().logQSO(this)
-            LoggerManager().limparCamposQSO(this)
-            LoggerManager().preencherTXExch(this)
+            if (LoggerManager.isEditing) {
+                val ok = LoggerManager().atualizarQSO(this)
+                if (ok) {
+                    // Recarrega a lista imediatamente e volta ao fluxo normal (Log Mode)
+                    val recyclerView = findViewById<RecyclerView>(R.id.recyclerViewQSOs)
+                    val listaAtualizada = LoggerManager().obterQsosDoContestAtual(this)
+                    val adapter = QsoLogAdapter(listaAtualizada) { item ->
+                        LoggerManager().entrarEditMode(
+                            this, item.id, item.rxCall, item.rxRst, item.rxNr,
+                            item.rxExch, item.txRst, item.txExch
+                        )
+                    }
+                    recyclerView.adapter = adapter
+                }
+            } else {
+                // Comportamento já existente de Log Mode
+                LoggerManager().logQSO(this)
+                LoggerManager().limparCamposQSO(this)
+                LoggerManager().preencherTXExch(this)
 
-            // Recarrega a lista de QSOs no RecyclerView
-            val recyclerView = findViewById<RecyclerView>(R.id.recyclerViewQSOs)
-            val listaAtualizada = LoggerManager().obterQsosDoContestAtual(this)
-            val adapter = QsoLogAdapter(listaAtualizada)
-            recyclerView.adapter = adapter
-
-
+                val recyclerView = findViewById<RecyclerView>(R.id.recyclerViewQSOs)
+                val listaAtualizada = LoggerManager().obterQsosDoContestAtual(this)
+                val adapter = QsoLogAdapter(listaAtualizada) { item ->
+                    LoggerManager().entrarEditMode(
+                        this, item.id, item.rxCall, item.rxRst, item.rxNr,
+                        item.rxExch, item.txRst, item.txExch
+                    )
+                }
+                recyclerView.adapter = adapter
+            }
         }
         findViewById<Button>(R.id.button_wipe_QSO).setOnClickListener {
             LoggerManager().limparCamposQSO(this)
@@ -257,9 +291,25 @@ class MainActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.button_log_cancel).setOnClickListener {
-            navigateToPage(3)
-        }
+            if (LoggerManager.isEditing) {
+                // Cancelar edição: ignora mudanças e volta ao Log Mode
+                LoggerManager().cancelarEdicao(this)
+            } else {
+                // Função primária: sair do logger para o Main Menu
+                navigateToPage(3)
+            }
 
+        }
+        // Label do Main Menu atuando como "Cancel Ed." durante o Edit Mode
+        findViewById<TextView>(R.id.label_main_menu).setOnClickListener {
+            if (LoggerManager.isEditing) {
+                LoggerManager().cancelarEdicao(this)
+            } else {
+                // opcional: manter só como label fora do Edit Mode, ou navegar:
+                // navigateToPage(3)
+            }
+
+        }
     }
 
     // Cria as opções do menu e as faz aparecer

@@ -6,23 +6,26 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
+// Representa um item de QSO para o RecyclerView
 data class QsoLogItem(
-    val timestamp: String,
-    val qrg: String,
-    val mode: String,
-    val rxCall: String,
-    val rxRst: String,
-    val rxNr: String,
-    val rxExch: String,
-    val txRst: String,
-    val txNr: String,
-    val txExch: String
+    val id: Int,             // ID do QSO no banco de dados
+    val timestamp: String,   // Data/hora do QSO
+    val qrg: String,         // Frequência
+    val mode: String,        // Modo (LSB, USB, CW, etc.)
+    val rxCall: String,      // Indicativo da estação RX
+    val rxRst: String,       // RST recebido
+    val rxNr: String,        // Número recebido
+    val rxExch: String,      // Exchange recebido
+    val txRst: String,       // RST transmitido
+    val txNr: String,        // Número transmitido
+    val txExch: String       // Exchange transmitido
 )
+
 class QsoLogAdapter(
-    private var items: List<QsoLogItem>
+    private var items: List<QsoLogItem>,
+    private val onItemLongPress: ((QsoLogItem) -> Unit)? = null
 ) : RecyclerView.Adapter<QsoLogAdapter.QsoLogViewHolder>() {
 
-    // ViewHolder: liga os campos do XML aos dados
     class QsoLogViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val timestamp: TextView = itemView.findViewById(R.id.text_timestamp)
         val qrg: TextView = itemView.findViewById(R.id.text_qrg)
@@ -54,14 +57,17 @@ class QsoLogAdapter(
         holder.txRst.text = item.txRst
         holder.txNr.text = item.txNr
         holder.txExch.text = item.txExch
+
+        holder.itemView.setOnLongClickListener {
+            onItemLongPress?.invoke(item)
+            true
+        }
     }
 
     override fun getItemCount() = items.size
 
-    // Para atualizar os dados depois
     fun updateList(newItems: List<QsoLogItem>) {
         items = newItems
         notifyDataSetChanged()
     }
-
 }
