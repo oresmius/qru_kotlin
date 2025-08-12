@@ -46,7 +46,7 @@ This project also aims to put into practice what I learned in my degree in Data 
    ```bash
   git clone https://github.com/oresmius/qru_kotlin
 
-2. Open in Android Studio (Kotlin, minSdk 21).
+2. Open in Android Studio (Kotlin, minSdk 25).
 
 3. Build and install on your device.
 
@@ -54,10 +54,14 @@ This project also aims to put into practice what I learned in my degree in Data 
 
 5. Select the device in the app and start logging.
 
+## How to simply install
+
+1. Download the .apk in releases
+2. Install on your Android (>= 7.1) phone. Remember, by default, Android can refuse to install third-party .apks; you need to grant permission.
 
 ## Requirements
 
-  Android device with Bluetooth.
+  Android (>= 7.1) device with Bluetooth.
 
   Yaesu FT-817(ND) radio.
 
