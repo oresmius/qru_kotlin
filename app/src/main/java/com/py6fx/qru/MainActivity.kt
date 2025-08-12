@@ -336,7 +336,12 @@ class MainActivity : AppCompatActivity() {
                 // opcional: manter só como label fora do Edit Mode, ou navegar:
                 // navigateToPage(3)
             }
-
+        }
+        findViewById<Button>(R.id.button_about).setOnClickListener {
+            navigateToPage(8)
+        }
+        findViewById<Button>(R.id.button_about_back).setOnClickListener {
+            navigateToPage(3)
         }
     }
 

@@ -278,8 +278,10 @@
                 android:id="@+id/label_load_user"
                 android:layout_width="115dp"
                 android:layout_height="33dp"
-                android:layout_marginTop="29dp"
-                android:layout_marginBottom="349dp"
+                android:layout_marginStart="308dp"
+                android:layout_marginTop="51dp"
+                android:layout_marginEnd="308dp"
+                android:layout_marginBottom="327dp"
                 android:background="@drawable/rouded_button"
                 android:gravity="center"
                 android:text="Load User"
@@ -287,7 +289,6 @@
                 android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -1298,7 +1299,83 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/pag_9"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#CCC2C2">
 
+            <TextView
+                android:id="@+id/label_about"
+                android:layout_width="213dp"
+                android:layout_height="25dp"
+                android:layout_marginTop="41dp"
+                android:layout_marginBottom="345dp"
+                android:background="@drawable/rouded_button"
+                android:gravity="center"
+                android:text="ABOUT"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/label_developed"
+                android:layout_width="335dp"
+                android:layout_height="85dp"
+                android:layout_marginTop="216dp"
+                android:layout_marginBottom="110dp"
+                android:background="@android:drawable/alert_light_frame"
+                android:gravity="center"
+                android:text="py1xr.qsl@gmail.com\n github.com/oresmius/qru_kotlin"
+                android:textColor="#020202"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/label_contact"
+                android:layout_width="247dp"
+                android:layout_height="127dp"
+                android:layout_marginTop="89dp"
+                android:layout_marginBottom="195dp"
+                android:background="@android:drawable/alert_light_frame"
+                android:gravity="center"
+                android:text="QRU - V0.3 - Developed by:\
+                PY6FX / PY1XR - Fábio\
+                Recruit 0101 (Chat GPT)"
+                android:textColor="#0B0B0B"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/button_about_back"
+                android:layout_width="167dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="308dp"
+                android:layout_marginBottom="53dp"
+                android:background="@drawable/rouded_button"
+                android:gravity="center"
+                android:text="BACK"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ViewFlipper>
 </androidx.constraintlayout.widget.ConstraintLayout>
