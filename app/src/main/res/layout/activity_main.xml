@@ -29,262 +29,270 @@
             android:layout_height="match_parent"
             android:background="#CCC2C2">
 
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineTop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.08" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineImgBottom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.42" />
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/cat2"
+                app:layout_constraintTop_toTopOf="@id/guidelineTop"
+                app:layout_constraintBottom_toTopOf="@id/guidelineImgBottom"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintDimensionRatio="4:3" />
+
             <Button
                 android:id="@+id/button_new_user"
-                android:layout_width="136dp"
-                android:layout_height="78dp"
-                android:layout_marginStart="440dp"
-                android:layout_marginTop="79dp"
-                android:layout_marginEnd="155dp"
-                android:layout_marginBottom="254dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:background="@drawable/rouded_button"
                 android:text="New User"
                 android:textAllCaps="false"
                 android:textColor="#FFFFFF"
                 android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/guidelineImgBottom"
+                app:layout_constraintBottom_toTopOf="@id/button_load_user"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintWidth_percent="0.55"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="16dp"
+                />
 
             <Button
                 android:id="@+id/button_load_user"
-                android:layout_width="136dp"
-                android:layout_height="78dp"
-                android:layout_marginStart="440dp"
-                android:layout_marginTop="245dp"
-                android:layout_marginEnd="155dp"
-                android:layout_marginBottom="88dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:background="@drawable/rouded_button"
                 android:text="Load User"
                 android:textAllCaps="false"
                 android:textColor="#FFFFFF"
                 android:textSize="20sp"
+                app:layout_constraintTop_toBottomOf="@id/button_new_user"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="310dp"
-                android:layout_height="252dp"
-                android:layout_marginStart="65dp"
-                android:layout_marginTop="79dp"
-                android:layout_marginEnd="356dp"
-                android:layout_marginBottom="80dp"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/cat2" />
-
+                app:layout_constraintWidth_percent="0.55"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="0dp"
+                />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
+        <!--pagina-->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/pag_2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#CCC2C2">
 
+            <!-- Título -->
             <TextView
                 android:id="@+id/label_new_user"
-                android:layout_width="115dp"
-                android:layout_height="33dp"
-                android:layout_marginStart="308dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="308dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:background="@drawable/rouded_button"
                 android:gravity="center"
-                android:text="New User"
+                android:text="NEW USER"
                 android:textColor="#FFFFFF"
-                android:textSize="20sp"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:textSize="16sp"
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"/>
 
+            <!-- SCROLLVIEW: Campos de entrada -->
             <ScrollView
                 android:id="@+id/scrollView4"
-                android:layout_width="671dp"
-                android:layout_height="250dp"
-                android:layout_marginStart="30dp"
-                android:layout_marginTop="32dp"
-                android:layout_marginEnd="30dp"
-                android:layout_marginBottom="21dp"
-                app:layout_constraintBottom_toTopOf="@+id/button_save_user"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:fillViewport="true"
+                app:layout_constraintTop_toBottomOf="@id/label_new_user"
+                app:layout_constraintBottom_toTopOf="@id/buttons_row"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/label_new_user">
-
+                app:layout_constraintEnd_toEndOf="parent">
 
                 <LinearLayout
-                    android:layout_width="600dp"
-                    android:layout_height="100dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="50dp">
+                    android:padding="24dp">
 
                     <EditText
                         android:id="@+id/editText_new_user_call"
                         style="@style/text_new_user"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:ems="10"
                         android:hint="Call"
-                        android:imeOptions="flagNoExtractUi"
-                        android:inputType="text" />
+                        android:inputType="text"
+                        android:imeOptions="flagNoExtractUi|actionNext" />
 
                     <EditText
                         android:id="@+id/editText_new_user_name"
                         style="@style/text_new_user"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:ems="10"
                         android:hint="Name"
-                        android:imeOptions="flagNoExtractUi"
-                        android:inputType="text" />
+                        android:inputType="textPersonName"
+                        android:imeOptions="flagNoExtractUi|actionNext" />
 
                     <EditText
                         android:id="@+id/editText_new_user_address"
                         style="@style/text_new_user"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:ems="10"
                         android:hint="Address"
-                        android:imeOptions="flagNoExtractUi"
-                        android:inputType="text" />
+                        android:inputType="textPostalAddress"
+                        android:imeOptions="flagNoExtractUi|actionNext" />
 
                     <EditText
                         android:id="@+id/editText_new_user_city"
                         style="@style/text_new_user"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:ems="10"
                         android:hint="City"
                         android:inputType="text"
-                        android:imeOptions="flagNoExtractUi"
-                        android:textColor="#FFFEFE" />
+                        android:imeOptions="flagNoExtractUi|actionNext" />
 
                     <EditText
                         android:id="@+id/editText_new_user_state"
                         style="@style/text_new_user"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:ems="10"
                         android:hint="State"
-                        android:imeOptions="flagNoExtractUi"
-                        android:inputType="text" />
+                        android:inputType="text"
+                        android:imeOptions="flagNoExtractUi|actionNext" />
 
                     <EditText
                         android:id="@+id/editText_new_user_zip"
                         style="@style/text_new_user"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:ems="10"
                         android:hint="ZIP"
-                        android:imeOptions="flagNoExtractUi"
-                        android:inputType="text" />
+                        android:inputType="textPostalAddress"
+                        android:imeOptions="flagNoExtractUi|actionNext" />
 
                     <EditText
                         android:id="@+id/editText_new_user_country"
                         style="@style/text_new_user"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:ems="10"
                         android:hint="Country"
-                        android:imeOptions="flagNoExtractUi"
-                        android:inputType="text" />
+                        android:inputType="text"
+                        android:imeOptions="flagNoExtractUi|actionNext" />
 
                     <EditText
                         android:id="@+id/editText_new_user_grid_square"
                         style="@style/text_new_user"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:ems="10"
                         android:hint="Grid Square"
-                        android:imeOptions="flagNoExtractUi"
-                        android:inputType="text" />
+                        android:inputType="text"
+                        android:imeOptions="flagNoExtractUi|actionNext" />
 
                     <EditText
                         android:id="@+id/editText_new_user_arrl_section"
                         style="@style/text_new_user"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:ems="10"
                         android:hint="ARRL Section"
-                        android:imeOptions="flagNoExtractUi"
-                        android:inputType="text" />
+                        android:inputType="text"
+                        android:imeOptions="flagNoExtractUi|actionNext" />
 
                     <EditText
                         android:id="@+id/editText_new_user_club"
                         style="@style/text_new_user"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:ems="10"
                         android:hint="Club"
-                        android:imeOptions="flagNoExtractUi"
-                        android:inputType="text" />
+                        android:inputType="text"
+                        android:imeOptions="flagNoExtractUi|actionNext" />
 
                     <EditText
                         android:id="@+id/editText_new_user_cq_zone"
                         style="@style/text_new_user"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:ems="10"
                         android:hint="CQ Zone"
-                        android:imeOptions="flagNoExtractUi"
-                        android:inputType="text" />
+                        android:inputType="text"
+                        android:imeOptions="flagNoExtractUi|actionNext" />
 
                     <EditText
                         android:id="@+id/editText_new_user_itu_zone"
                         style="@style/text_new_user"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:ems="10"
                         android:hint="ITU Zone"
-                        android:imeOptions="flagNoExtractUi"
-                        android:inputType="text" />
+                        android:inputType="text"
+                        android:imeOptions="flagNoExtractUi|actionNext" />
 
                     <EditText
                         android:id="@+id/editText_new_user_email"
                         style="@style/text_new_user"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:ems="10"
                         android:hint="E-Mail"
-                        android:imeOptions="flagNoExtractUi"
-                        android:inputType="textEmailAddress" />
+                        android:inputType="textEmailAddress"
+                        android:imeOptions="flagNoExtractUi|actionDone" />
+
                 </LinearLayout>
             </ScrollView>
 
-            <Button
-                android:id="@+id/button_save_user"
-                android:layout_width="wrap_content"
+            <!-- Linha dos botões: Fixos no rodapé, lado a lado -->
+            <LinearLayout
+                android:id="@+id/buttons_row"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="373dp"
-                android:layout_marginEnd="102dp"
-                android:layout_marginBottom="11dp"
-                android:background="@drawable/rouded_button"
-                android:text="Save User"
-                android:textColor="#FFFFFF"
+                android:orientation="horizontal"
+                android:padding="6dp"
+                android:gravity="center"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/button_cancel_new_user" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
 
-            <Button
-                android:id="@+id/button_cancel_new_user"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="80dp"
-                android:layout_marginBottom="11dp"
-                android:background="@drawable/rouded_button"
-                android:text="Cancel"
-                android:textColor="#FFFFFF"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                <Button
+                    android:id="@+id/button_cancel_new_user"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/rouded_button"
+                    android:text="Cancel"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp" />
 
+                <Space
+                    android:layout_width="16dp"
+                    android:layout_height="wrap_content" />
+
+                <Button
+                    android:id="@+id/button_save_user"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/rouded_button"
+                    android:text="Save User"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp" />
+            </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/pag_3"
