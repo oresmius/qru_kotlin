@@ -23,7 +23,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+       <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/pag_1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -92,14 +92,13 @@
                 />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-        <!--pagina-->
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/pag_2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#CCC2C2">
 
-            <!-- Título -->
             <TextView
                 android:id="@+id/label_new_user"
                 android:layout_width="wrap_content"
@@ -117,7 +116,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
-            <!-- SCROLLVIEW: Campos de entrada -->
             <ScrollView
                 android:id="@+id/scrollView4"
                 android:layout_width="0dp"
@@ -254,7 +252,6 @@
                 </LinearLayout>
             </ScrollView>
 
-            <!-- Linha dos botões: Fixos no rodapé, lado a lado -->
             <LinearLayout
                 android:id="@+id/buttons_row"
                 android:layout_width="0dp"
@@ -293,7 +290,6 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/pag_3"
             android:layout_width="match_parent"
@@ -302,60 +298,67 @@
 
             <TextView
                 android:id="@+id/label_load_user"
-                android:layout_width="115dp"
-                android:layout_height="33dp"
-                android:layout_marginStart="308dp"
-                android:layout_marginTop="51dp"
-                android:layout_marginEnd="308dp"
-                android:layout_marginBottom="327dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:background="@drawable/rouded_button"
                 android:gravity="center"
                 android:text="Load User"
                 android:textColor="#FFFFFF"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:textSize="16sp"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="24dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"/>
 
             <Spinner
                 android:id="@+id/spinner_users"
-                android:layout_width="491dp"
-                android:layout_height="67dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.498"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/label_load_user"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/label_load_user"
-                app:layout_constraintVertical_bias="0.155" />
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="24dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"/>
 
             <Button
                 android:id="@+id/button_cancel_load_user"
-                android:layout_width="118dp"
-                android:layout_height="51dp"
-                android:background="@drawable/rouded_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:minHeight="0dp"
                 android:text="Cancel"
                 android:textColor="#FFFFFF"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/button_select_user"
-                app:layout_constraintHorizontal_bias="0.5"
+                android:textSize="14sp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:background="@drawable/rouded_button"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/spinner_users"
-                app:layout_constraintVertical_bias="0.671" />
+                app:layout_constraintEnd_toStartOf="@id/button_select_user"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/spinner_users"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                android:layout_marginBottom="32dp"/>
 
             <Button
                 android:id="@+id/button_select_user"
-                android:layout_width="118dp"
-                android:layout_height="51dp"
-                android:background="@drawable/rouded_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:minHeight="0dp"
                 android:text="Select"
                 android:textColor="#FFFFFF"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:textSize="14sp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:background="@drawable/rouded_button"
+                app:layout_constraintStart_toEndOf="@id/button_cancel_load_user"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/button_cancel_load_user"
-                app:layout_constraintTop_toBottomOf="@+id/spinner_users"
-                app:layout_constraintVertical_bias="0.671" />
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/spinner_users"
+                android:layout_marginBottom="32dp"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -365,361 +368,385 @@
             android:layout_height="match_parent"
             android:background="#CCC2C2">
 
-
             <TextView
                 android:id="@+id/label_main_menu"
-                android:layout_width="115dp"
-                android:layout_height="33dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:background="@drawable/rouded_button"
                 android:gravity="center"
                 android:text="Main Menu"
                 android:textColor="#FFFFFF"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toTopOf="@+id/button_Edit_User"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.498"
-                app:layout_constraintStart_toStartOf="parent"
+                android:textSize="16sp"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.126" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
             <TextView
                 android:id="@+id/user_indicator"
-                android:layout_width="197dp"
-                android:layout_height="65dp"
-                android:layout_marginTop="78dp"
-                android:layout_marginBottom="338dp"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
                 android:background="@android:drawable/dialog_holo_light_frame"
                 android:gravity="center"
                 android:text="USER?"
                 android:textColor="@color/design_default_color_primary"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/contest_indicator"
-                app:layout_constraintHorizontal_bias="0.5"
+                android:textSize="14sp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintTop_toBottomOf="@id/label_main_menu"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.057" />
+                app:layout_constraintEnd_toStartOf="@id/contest_indicator" />
 
             <TextView
                 android:id="@+id/contest_indicator"
-                android:layout_width="197dp"
-                android:layout_height="65dp"
-                android:layout_marginTop="78dp"
-                android:layout_marginBottom="338dp"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
                 android:background="@android:drawable/dialog_holo_light_frame"
                 android:gravity="center"
                 android:text="CONTEST?"
                 android:textColor="@color/design_default_color_primary"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/bluetooth_indicator"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/user_indicator"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.057" />
+                android:textSize="14sp"
+                app:layout_constraintTop_toBottomOf="@id/label_main_menu"
+                app:layout_constraintStart_toEndOf="@id/user_indicator"
+                app:layout_constraintEnd_toStartOf="@id/bluetooth_indicator" />
 
             <TextView
                 android:id="@+id/bluetooth_indicator"
-                android:layout_width="197dp"
-                android:layout_height="65dp"
-                android:layout_marginTop="78dp"
-                android:layout_marginBottom="338dp"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="16dp"
                 android:background="@android:drawable/dialog_holo_light_frame"
                 android:gravity="center"
                 android:text="BT?"
                 android:textColor="@color/design_default_color_primary"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/contest_indicator"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.057" />
-
-            <Button
-                android:id="@+id/button_about"
-                android:layout_width="118dp"
-                android:layout_height="51dp"
-                android:background="@drawable/rouded_button"
-                android:text="About"
-                android:textColor="#FFFFFF"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/button_Logger"
-                app:layout_constraintTop_toBottomOf="@+id/button_bluetooth"
-                app:layout_constraintVertical_bias="0.5" />
-
-            <Button
-                android:id="@+id/button_Logger"
-                android:layout_width="118dp"
-                android:layout_height="51dp"
-                android:background="@drawable/rouded_button"
-                android:text="Logger"
-                android:textColor="#FFFFFF"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/button_about"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/button_contests"
-                app:layout_constraintVertical_bias="0.5" />
+                android:textSize="14sp"
+                app:layout_constraintTop_toBottomOf="@id/label_main_menu"
+                app:layout_constraintStart_toEndOf="@id/contest_indicator"
+                app:layout_constraintEnd_toEndOf="parent" />
 
             <Button
                 android:id="@+id/button_contests"
-                android:layout_width="118dp"
-                android:layout_height="51dp"
-                android:background="@drawable/rouded_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
                 android:text="CONTESTS"
                 android:textColor="#FFFFFF"
-                app:layout_constraintBottom_toTopOf="@+id/button_Logger"
-                app:layout_constraintEnd_toStartOf="@+id/button_Change_User"
-                app:layout_constraintHorizontal_bias="0.5"
+                android:textSize="14sp"
+                android:layout_marginTop="24dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/rouded_button"
+                app:layout_constraintTop_toBottomOf="@id/user_indicator"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/user_indicator"
-                app:layout_constraintVertical_bias="0.5" />
+                app:layout_constraintEnd_toStartOf="@id/button_Change_User"
+                app:layout_constraintWidth_percent="0.3" />
 
             <Button
                 android:id="@+id/button_Change_User"
-                android:layout_width="118dp"
-                android:layout_height="51dp"
-                android:background="@drawable/rouded_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
                 android:text="Change User"
                 android:textColor="#FFFFFF"
-                app:layout_constraintBottom_toTopOf="@+id/button_Logger"
-                app:layout_constraintEnd_toStartOf="@+id/button_Edit_User"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/button_contests"
-                app:layout_constraintTop_toBottomOf="@+id/user_indicator"
-                app:layout_constraintVertical_bias="0.5" />
-
-            <Button
-                android:id="@+id/button_bluetooth"
-                android:layout_width="118dp"
-                android:layout_height="51dp"
+                android:textSize="14sp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
                 android:background="@drawable/rouded_button"
-                android:text="Bluetooth"
-                android:textColor="#FFFFFF"
-                app:layout_constraintBottom_toTopOf="@+id/button_about"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/button_Edit_User"
-                app:layout_constraintTop_toBottomOf="@+id/contest_indicator"
-                app:layout_constraintVertical_bias="0.5" />
+                app:layout_constraintTop_toBottomOf="@id/user_indicator"
+                app:layout_constraintStart_toEndOf="@id/button_contests"
+                app:layout_constraintEnd_toStartOf="@id/button_Edit_User"
+                app:layout_constraintWidth_percent="0.3" />
 
             <Button
                 android:id="@+id/button_Edit_User"
-                android:layout_width="118dp"
-                android:layout_height="51dp"
-                android:background="@drawable/rouded_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
                 android:text="Edit User"
                 android:textColor="#FFFFFF"
-                app:layout_constraintBottom_toTopOf="@+id/button_about"
-                app:layout_constraintEnd_toStartOf="@+id/button_bluetooth"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/button_Change_User"
-                app:layout_constraintTop_toBottomOf="@+id/contest_indicator"
-                app:layout_constraintVertical_bias="0.5" />
+                android:textSize="14sp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/rouded_button"
+                app:layout_constraintTop_toBottomOf="@id/user_indicator"
+                app:layout_constraintStart_toEndOf="@id/button_Change_User"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintWidth_percent="0.3" />
+
+            <Button
+                android:id="@+id/button_Logger"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:text="Logger"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:layout_marginTop="24dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/rouded_button"
+                app:layout_constraintTop_toBottomOf="@id/button_contests"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/button_bluetooth"
+                app:layout_constraintWidth_percent="0.3" />
+
+            <Button
+                android:id="@+id/button_bluetooth"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:text="Bluetooth"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/rouded_button"
+                app:layout_constraintTop_toBottomOf="@id/button_contests"
+                app:layout_constraintStart_toEndOf="@id/button_Logger"
+                app:layout_constraintEnd_toStartOf="@id/button_about"
+                app:layout_constraintWidth_percent="0.3" />
+
+            <Button
+                android:id="@+id/button_about"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:text="About"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/rouded_button"
+                app:layout_constraintTop_toBottomOf="@id/button_contests"
+                app:layout_constraintStart_toEndOf="@id/button_bluetooth"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintWidth_percent="0.3" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
         <!--pagina-->
+        <ScrollView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/pag_5"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:background="#CCC2C2">
 
-            <Spinner
-                android:id="@+id/spinner_contests"
-                android:layout_width="450dp"
-                android:layout_height="45dp"
-                android:layout_marginStart="231dp"
-                android:layout_marginTop="29dp"
-                android:layout_marginEnd="50dp"
-                android:layout_marginBottom="334dp"
-                android:hint="Club"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
+            <!-- Label -->
             <TextView
                 android:id="@+id/label_new_contests"
-                android:layout_width="130dp"
-                android:layout_height="33dp"
-                android:layout_marginStart="75dp"
-                android:layout_marginTop="37dp"
-                android:layout_marginEnd="526dp"
-                android:layout_marginBottom="341dp"
-                android:background="@drawable/rouded_button"
-                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:text="New Contest"
-                android:textColor="#FFFFFF"
                 android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:gravity="center"
+                android:textColor="#FFFFFF"
+                android:background="@drawable/rouded_button"
+                android:layout_marginTop="24dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <!-- Spinner Contest -->
+            <Spinner
+                android:id="@+id/spinner_contests"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toBottomOf="@id/label_new_contests"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"/>
+
+            <!-- LINHA 1 -->
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_vertical50"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.5" />
 
             <Spinner
                 android:id="@+id/spinner_operator"
-                android:layout_width="290dp"
-                android:layout_height="45dp"
-                app:layout_constraintBottom_toTopOf="@+id/spinner_band"
-                app:layout_constraintEnd_toStartOf="@+id/spinner_assisted"
-                app:layout_constraintHorizontal_bias="0.5"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintTop_toBottomOf="@id/spinner_contests"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/spinner_contests"
-                app:layout_constraintVertical_bias="0.5" />
-
-            <Spinner
-                android:id="@+id/spinner_band"
-                android:layout_width="290dp"
-                android:layout_height="45dp"
-                app:layout_constraintBottom_toTopOf="@+id/spinner_power"
-                app:layout_constraintEnd_toStartOf="@+id/spinner_transmitter"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/spinner_operator"
-                app:layout_constraintVertical_bias="0.5" />
-
-            <Spinner
-                android:id="@+id/spinner_power"
-                android:layout_width="290dp"
-                android:layout_height="45dp"
-                app:layout_constraintBottom_toTopOf="@+id/spinner_mode"
-                app:layout_constraintEnd_toStartOf="@+id/spinner_time_category"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/spinner_band"
-                app:layout_constraintVertical_bias="0.5" />
-
-            <Spinner
-                android:id="@+id/spinner_mode"
-                android:layout_width="290dp"
-                android:layout_height="45dp"
-                app:layout_constraintBottom_toTopOf="@+id/spinner_overlay"
-                app:layout_constraintEnd_toStartOf="@+id/editText_send_exchange"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/spinner_power"
-                app:layout_constraintVertical_bias="0.5" />
-
-            <Spinner
-                android:id="@+id/spinner_overlay"
-                android:layout_width="290dp"
-                android:layout_height="45dp"
-                app:layout_constraintBottom_toTopOf="@+id/spinner_station"
-                app:layout_constraintEnd_toStartOf="@+id/editText_operators"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/spinner_mode"
-                app:layout_constraintVertical_bias="0.5" />
-
-            <Spinner
-                android:id="@+id/spinner_station"
-                android:layout_width="290dp"
-                android:layout_height="45dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/button_new_contests_ok"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/spinner_overlay"
-                app:layout_constraintVertical_bias="0.5" />
+                app:layout_constraintEnd_toStartOf="@id/guideline_vertical50" />
 
             <Spinner
                 android:id="@+id/spinner_assisted"
-                android:layout_width="290dp"
-                android:layout_height="45dp"
-                app:layout_constraintBottom_toTopOf="@+id/spinner_transmitter"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/spinner_operator"
-                app:layout_constraintTop_toBottomOf="@+id/spinner_contests"
-                app:layout_constraintVertical_bias="0.5" />
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintTop_toBottomOf="@id/spinner_contests"
+                app:layout_constraintStart_toStartOf="@id/guideline_vertical50"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <!-- LINHA 2 -->
+            <Spinner
+                android:id="@+id/spinner_band"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintTop_toBottomOf="@id/spinner_operator"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/guideline_vertical50" />
 
             <Spinner
                 android:id="@+id/spinner_transmitter"
-                android:layout_width="290dp"
-                android:layout_height="45dp"
-                app:layout_constraintBottom_toTopOf="@+id/spinner_time_category"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/spinner_band"
-                app:layout_constraintTop_toBottomOf="@+id/spinner_assisted"
-                app:layout_constraintVertical_bias="0.5" />
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintTop_toBottomOf="@id/spinner_assisted"
+                app:layout_constraintStart_toStartOf="@id/guideline_vertical50"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <!-- LINHA 3 -->
+            <Spinner
+                android:id="@+id/spinner_power"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@id/spinner_band"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/spinner_time_category"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="16dp" />
 
             <Spinner
                 android:id="@+id/spinner_time_category"
-                android:layout_width="290dp"
-                android:layout_height="45dp"
-                app:layout_constraintBottom_toTopOf="@+id/editText_send_exchange"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@id/spinner_transmitter"
+                app:layout_constraintStart_toEndOf="@id/spinner_power"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/spinner_power"
-                app:layout_constraintTop_toBottomOf="@+id/spinner_transmitter"
-                app:layout_constraintVertical_bias="0.5" />
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="16dp" />
+
+            <!-- LINHA 4 -->
+            <Spinner
+                android:id="@+id/spinner_mode"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@id/spinner_power"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/editText_send_exchange"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="16dp" />
 
             <EditText
                 android:id="@+id/editText_send_exchange"
-                android:layout_width="290dp"
-                android:layout_height="40dp"
-                android:ems="10"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:hint="Exchange or # to Serial"
-                app:layout_constraintBottom_toTopOf="@+id/editText_operators"
+                app:layout_constraintTop_toBottomOf="@id/spinner_time_category"
+                app:layout_constraintStart_toEndOf="@id/spinner_mode"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/spinner_mode"
-                app:layout_constraintTop_toBottomOf="@+id/spinner_time_category"
-                app:layout_constraintVertical_bias="0.5" />
+                android:layout_marginStart="8dp"
+                android:imeOptions="flagNoExtractUi"
+                android:nextFocusDown="@+id/editText_operators"
+                android:layout_marginEnd="16dp"/>
+
+            <!-- LINHA 5 -->
+            <Spinner
+                android:id="@+id/spinner_overlay"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@id/spinner_mode"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/editText_operators"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="16dp" />
 
             <EditText
                 android:id="@+id/editText_operators"
-                android:layout_width="290dp"
-                android:layout_height="40dp"
-                android:ems="10"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:hint="Operators Callsigns"
                 android:inputType="text"
-                app:layout_constraintBottom_toTopOf="@+id/button_cancel_new_contest"
+                app:layout_constraintTop_toBottomOf="@id/editText_send_exchange"
+                app:layout_constraintStart_toEndOf="@id/spinner_overlay"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/spinner_overlay"
-                app:layout_constraintTop_toBottomOf="@+id/editText_send_exchange"
-                app:layout_constraintVertical_bias="0.5" />
+                android:imeOptions="flagNoExtractUi|actionDone"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="16dp"/>
 
-            <Button
-                android:id="@+id/button_cancel_new_contest"
-                android:layout_width="130dp"
-                android:layout_height="33dp"
-                android:background="@drawable/rouded_button"
-                android:gravity="center"
-                android:text="Cancel"
-                android:textColor="#FFFFFF"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/button_new_contests_ok"
-                app:layout_constraintTop_toBottomOf="@+id/editText_operators"
-                app:layout_constraintVertical_bias="0.5" />
+            <!-- LINHA 6 -->
+            <Spinner
+                android:id="@+id/spinner_station"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@id/spinner_overlay"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/button_new_contests_ok"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="16dp" />
 
             <Button
                 android:id="@+id/button_new_contests_ok"
-                android:layout_width="130dp"
-                android:layout_height="33dp"
-                android:background="@drawable/rouded_button"
-                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:text="OK"
                 android:textColor="#FFFFFF"
                 android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/button_cancel_new_contest"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/spinner_station"
-                app:layout_constraintTop_toBottomOf="@+id/editText_operators"
-                app:layout_constraintVertical_bias="0.5" />
+                android:background="@drawable/rouded_button"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@id/editText_operators"
+                app:layout_constraintStart_toEndOf="@id/spinner_station"
+                app:layout_constraintEnd_toStartOf="@id/button_cancel_new_contest"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp" />
 
+            <Button
+                android:id="@+id/button_cancel_new_contest"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Cancel"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:background="@drawable/rouded_button"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@id/editText_operators"
+                app:layout_constraintStart_toEndOf="@id/button_new_contests_ok"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="8dp"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/pag_6"
