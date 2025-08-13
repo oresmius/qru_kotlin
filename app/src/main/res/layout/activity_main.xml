@@ -31,23 +31,30 @@
 
             <Button
                 android:id="@+id/button_new_user"
-                android:layout_width="0dp"
-                android:layout_height="87dp"
+                android:layout_width="136dp"
+                android:layout_height="78dp"
+                android:layout_marginStart="440dp"
+                android:layout_marginTop="79dp"
+                android:layout_marginEnd="155dp"
+                android:layout_marginBottom="254dp"
                 android:background="@drawable/rouded_button"
                 android:text="New User"
                 android:textAllCaps="false"
                 android:textColor="#FFFFFF"
                 android:textSize="20sp"
-                app:layout_constraintBottom_toTopOf="@+id/button_load_user"
-                app:layout_constraintEnd_toEndOf="@+id/button_load_user"
-                app:layout_constraintStart_toStartOf="@+id/button_load_user"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <Button
                 android:id="@+id/button_load_user"
-                android:layout_width="184dp"
-                android:layout_height="87dp"
-                android:layout_marginEnd="107dp"
+                android:layout_width="136dp"
+                android:layout_height="78dp"
+                android:layout_marginStart="440dp"
+                android:layout_marginTop="245dp"
+                android:layout_marginEnd="155dp"
+                android:layout_marginBottom="88dp"
                 android:background="@drawable/rouded_button"
                 android:text="Load User"
                 android:textAllCaps="false"
@@ -55,27 +62,25 @@
                 android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/imageView"
-                app:layout_constraintTop_toBottomOf="@+id/button_new_user" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="0dp"
+                android:layout_width="310dp"
                 android:layout_height="252dp"
                 android:layout_marginStart="65dp"
-                android:layout_marginEnd="65dp"
+                android:layout_marginTop="79dp"
+                android:layout_marginEnd="356dp"
+                android:layout_marginBottom="80dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/button_load_user"
-                app:layout_constraintHorizontal_bias="0.169"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.496"
                 app:srcCompat="@drawable/cat2" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/pag_2"
@@ -114,10 +119,10 @@
 
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="600dp"
+                    android:layout_height="100dp"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="50dp">
 
                     <EditText
                         android:id="@+id/editText_new_user_call"
@@ -126,6 +131,7 @@
                         android:layout_height="wrap_content"
                         android:ems="10"
                         android:hint="Call"
+                        android:imeOptions="flagNoExtractUi"
                         android:inputType="text" />
 
                     <EditText
@@ -135,6 +141,7 @@
                         android:layout_height="wrap_content"
                         android:ems="10"
                         android:hint="Name"
+                        android:imeOptions="flagNoExtractUi"
                         android:inputType="text" />
 
                     <EditText
@@ -144,6 +151,7 @@
                         android:layout_height="wrap_content"
                         android:ems="10"
                         android:hint="Address"
+                        android:imeOptions="flagNoExtractUi"
                         android:inputType="text" />
 
                     <EditText
@@ -154,6 +162,7 @@
                         android:ems="10"
                         android:hint="City"
                         android:inputType="text"
+                        android:imeOptions="flagNoExtractUi"
                         android:textColor="#FFFEFE" />
 
                     <EditText
@@ -163,6 +172,7 @@
                         android:layout_height="wrap_content"
                         android:ems="10"
                         android:hint="State"
+                        android:imeOptions="flagNoExtractUi"
                         android:inputType="text" />
 
                     <EditText
@@ -172,6 +182,7 @@
                         android:layout_height="wrap_content"
                         android:ems="10"
                         android:hint="ZIP"
+                        android:imeOptions="flagNoExtractUi"
                         android:inputType="text" />
 
                     <EditText
@@ -181,6 +192,7 @@
                         android:layout_height="wrap_content"
                         android:ems="10"
                         android:hint="Country"
+                        android:imeOptions="flagNoExtractUi"
                         android:inputType="text" />
 
                     <EditText
@@ -190,6 +202,7 @@
                         android:layout_height="wrap_content"
                         android:ems="10"
                         android:hint="Grid Square"
+                        android:imeOptions="flagNoExtractUi"
                         android:inputType="text" />
 
                     <EditText
@@ -199,6 +212,7 @@
                         android:layout_height="wrap_content"
                         android:ems="10"
                         android:hint="ARRL Section"
+                        android:imeOptions="flagNoExtractUi"
                         android:inputType="text" />
 
                     <EditText
@@ -208,6 +222,7 @@
                         android:layout_height="wrap_content"
                         android:ems="10"
                         android:hint="Club"
+                        android:imeOptions="flagNoExtractUi"
                         android:inputType="text" />
 
                     <EditText
@@ -217,6 +232,7 @@
                         android:layout_height="wrap_content"
                         android:ems="10"
                         android:hint="CQ Zone"
+                        android:imeOptions="flagNoExtractUi"
                         android:inputType="text" />
 
                     <EditText
@@ -226,6 +242,7 @@
                         android:layout_height="wrap_content"
                         android:ems="10"
                         android:hint="ITU Zone"
+                        android:imeOptions="flagNoExtractUi"
                         android:inputType="text" />
 
                     <EditText
@@ -235,6 +252,7 @@
                         android:layout_height="wrap_content"
                         android:ems="10"
                         android:hint="E-Mail"
+                        android:imeOptions="flagNoExtractUi"
                         android:inputType="textEmailAddress" />
                 </LinearLayout>
             </ScrollView>
@@ -267,7 +285,7 @@
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-        <!--pagina-->
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/pag_3"
             android:layout_width="match_parent"
@@ -495,7 +513,7 @@
                 app:layout_constraintVertical_bias="0.5" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
+        <!--pagina-->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/pag_5"
             android:layout_width="match_parent"
@@ -635,12 +653,10 @@
 
             <EditText
                 android:id="@+id/editText_send_exchange"
-                style="@style/text_new_user"
                 android:layout_width="290dp"
-                android:layout_height="42dp"
+                android:layout_height="40dp"
                 android:ems="10"
-                android:hint="Send Exchange"
-                android:inputType="text"
+                android:hint="Exchange or # to Serial"
                 app:layout_constraintBottom_toTopOf="@+id/editText_operators"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -650,11 +666,10 @@
 
             <EditText
                 android:id="@+id/editText_operators"
-                style="@style/text_new_user"
                 android:layout_width="290dp"
-                android:layout_height="34dp"
+                android:layout_height="40dp"
                 android:ems="10"
-                android:hint="Operators"
+                android:hint="Operators Callsigns"
                 android:inputType="text"
                 app:layout_constraintBottom_toTopOf="@+id/button_cancel_new_contest"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -917,7 +932,7 @@
                 android:layout_height="25dp"
                 android:background="@drawable/rouded_button"
                 android:gravity="center"
-                android:text="Logger"
+                android:text="LOGGER"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toTopOf="@+id/logger_status"
@@ -990,6 +1005,8 @@
                 android:background="@drawable/campo_rx"
                 android:ems="10"
                 android:hint="RX Call"
+                android:textStyle="bold"
+                android:imeOptions="flagNoExtractUi"
                 android:inputType="text"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -1008,6 +1025,8 @@
                 android:background="@drawable/campo_rx"
                 android:ems="10"
                 android:hint="RX RST"
+                android:textStyle="bold"
+                android:imeOptions="flagNoExtractUi"
                 android:inputType="number"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -1026,7 +1045,9 @@
                 android:background="@drawable/campo_rx"
                 android:ems="10"
                 android:hint="RX Nr"
+                android:imeOptions="flagNoExtractUi"
                 android:inputType="number"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -1044,6 +1065,8 @@
                 android:background="@drawable/campo_rx"
                 android:ems="10"
                 android:hint="RX Exch"
+                android:textStyle="bold"
+                android:imeOptions="flagNoExtractUi"
                 android:inputType="text"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -1062,6 +1085,8 @@
                 android:background="@drawable/campo_tx"
                 android:ems="10"
                 android:hint="TX RST"
+                android:textStyle="bold"
+                android:imeOptions="flagNoExtractUi"
                 android:inputType="number"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -1080,6 +1105,8 @@
                 android:background="@drawable/campo_tx"
                 android:ems="10"
                 android:hint="TX Nr"
+                android:textStyle="bold"
+                android:imeOptions="flagNoExtractUi"
                 android:inputType="number"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -1098,6 +1125,8 @@
                 android:background="@drawable/campo_tx"
                 android:ems="10"
                 android:hint="TX Exch"
+                android:textStyle="bold"
+                android:imeOptions="flagNoExtractUi"
                 android:inputType="text"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
