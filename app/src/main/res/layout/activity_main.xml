@@ -1179,7 +1179,6 @@
                 android:ems="10"
                 android:hint="TX Nr"
                 android:textStyle="bold"
-                android:imeOptions="flagNoExtractUi|actionNext"
                 android:inputType="number"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@id/guideline_75"
