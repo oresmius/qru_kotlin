@@ -282,6 +282,7 @@ class LoggerManager {
 
             db.close()
             sairDoEditMode(activity)
+            limparCamposQSO(activity)
             Toast.makeText(activity, "QSO updated successfully!", Toast.LENGTH_LONG).show()
             return true
         } catch (e: Exception) {
