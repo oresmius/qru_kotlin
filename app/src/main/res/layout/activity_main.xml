@@ -533,7 +533,6 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!--pagina-->
         <ScrollView
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
@@ -546,7 +545,6 @@
             android:layout_height="wrap_content"
             android:background="#CCC2C2">
 
-            <!-- Label -->
             <TextView
                 android:id="@+id/label_new_contests"
                 android:layout_width="0dp"
@@ -563,7 +561,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
-            <!-- Spinner Contest -->
             <Spinner
                 android:id="@+id/spinner_contests"
                 android:layout_width="0dp"
@@ -575,7 +572,6 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"/>
 
-            <!-- LINHA 1 -->
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline_vertical50"
                 android:layout_width="wrap_content"
@@ -605,7 +601,6 @@
                 app:layout_constraintStart_toStartOf="@id/guideline_vertical50"
                 app:layout_constraintEnd_toEndOf="parent" />
 
-            <!-- LINHA 2 -->
             <Spinner
                 android:id="@+id/spinner_band"
                 android:layout_width="0dp"
@@ -628,7 +623,6 @@
                 app:layout_constraintStart_toStartOf="@id/guideline_vertical50"
                 app:layout_constraintEnd_toEndOf="parent" />
 
-            <!-- LINHA 3 -->
             <Spinner
                 android:id="@+id/spinner_power"
                 android:layout_width="0dp"
@@ -651,7 +645,6 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="16dp" />
 
-            <!-- LINHA 4 -->
             <Spinner
                 android:id="@+id/spinner_mode"
                 android:layout_width="0dp"
@@ -677,7 +670,6 @@
                 android:nextFocusDown="@+id/editText_operators"
                 android:layout_marginEnd="16dp"/>
 
-            <!-- LINHA 5 -->
             <Spinner
                 android:id="@+id/spinner_overlay"
                 android:layout_width="0dp"
@@ -703,7 +695,6 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="16dp"/>
 
-            <!-- LINHA 6 -->
             <Spinner
                 android:id="@+id/spinner_station"
                 android:layout_width="0dp"
@@ -747,269 +738,319 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/pag_6"
+        <ScrollView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#CCC2C2">
+            android:fillViewport="true">
 
-            <TextView
-                android:id="@+id/label_resume_export_delete_contest"
-                android:layout_width="474dp"
-                android:layout_height="43dp"
-                android:background="@drawable/rouded_button"
-                android:gravity="center"
-                android:text="Contest General Options"
-                android:textColor="#FFFFFF"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toTopOf="@+id/spinner_contests_initialized"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.5" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/pag_6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#CCC2C2"
+                android:padding="16dp">
 
-            <Spinner
-                android:id="@+id/spinner_contests_initialized"
-                android:layout_width="635dp"
-                android:layout_height="47dp"
-                android:layout_marginTop="90dp"
-                android:layout_marginBottom="274dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideline_33"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.33" />
 
-            <Button
-                android:id="@+id/button_resume_contest"
-                android:layout_width="130dp"
-                android:layout_height="50dp"
-                android:background="@drawable/rouded_button"
-                android:gravity="center"
-                android:text="Resume"
-                android:textColor="#FFFFFF"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toTopOf="@+id/button_delete_contest"
-                app:layout_constraintEnd_toStartOf="@+id/button_edit_contest"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/spinner_contests_initialized"
-                app:layout_constraintVertical_bias="0.5" />
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideline_66"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.66" />
 
-            <Button
-                android:id="@+id/button_export_cabrillo_contest"
-                android:layout_width="130dp"
-                android:layout_height="50dp"
-                android:background="@drawable/rouded_button"
-                android:gravity="center"
-                android:text="Cabrillo"
-                android:textColor="#FFFFFF"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toTopOf="@+id/button_contest_general_cancel"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/button_edit_contest"
-                app:layout_constraintTop_toBottomOf="@+id/spinner_contests_initialized"
-                app:layout_constraintVertical_bias="0.5" />
+                <TextView
+                    android:id="@+id/label_resume_export_delete_contest"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Contest General Options"
+                    android:textSize="20sp"
+                    android:textColor="#FFFFFF"
+                    android:background="@drawable/rouded_button"
+                    android:gravity="center"
+                    android:layout_marginBottom="16dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
 
-            <Button
-                android:id="@+id/button_contest_general_cancel"
-                android:layout_width="130dp"
-                android:layout_height="50dp"
-                android:background="@drawable/rouded_button"
-                android:gravity="center"
-                android:text="Cancel"
-                android:textColor="#FFFFFF"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/button_export_adif_contest"
-                app:layout_constraintTop_toBottomOf="@+id/button_export_cabrillo_contest"
-                app:layout_constraintVertical_bias="0.5" />
+                <Spinner
+                    android:id="@+id/spinner_contests_initialized"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="24dp"
+                    app:layout_constraintTop_toBottomOf="@id/label_resume_export_delete_contest"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
 
-            <Button
-                android:id="@+id/button_export_adif_contest"
-                android:layout_width="130dp"
-                android:layout_height="50dp"
-                android:background="@drawable/rouded_button"
-                android:gravity="center"
-                android:text="ADIF"
-                android:textColor="#FFFFFF"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/button_contest_general_cancel"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/button_delete_contest"
-                app:layout_constraintTop_toBottomOf="@+id/button_edit_contest"
-                app:layout_constraintVertical_bias="0.5" />
+                <Button
+                    android:id="@+id/button_resume_contest"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:text="Resume"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginTop="50dp"
+                    android:background="@drawable/rouded_button"
+                    app:layout_constraintTop_toBottomOf="@id/spinner_contests_initialized"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/guideline_33"
+                    android:layout_marginEnd="8dp" />
 
-            <Button
-                android:id="@+id/button_delete_contest"
-                android:layout_width="130dp"
-                android:layout_height="50dp"
-                android:background="@drawable/rouded_button"
-                android:gravity="center"
-                android:text="Delete"
-                android:textColor="#FFFFFF"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/button_export_adif_contest"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/button_resume_contest"
-                app:layout_constraintVertical_bias="0.5" />
+                <Button
+                    android:id="@+id/button_edit_contest"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:text="Edit"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginTop="50dp"
+                    android:background="@drawable/rouded_button"
+                    app:layout_constraintTop_toBottomOf="@id/spinner_contests_initialized"
+                    app:layout_constraintStart_toStartOf="@id/guideline_33"
+                    app:layout_constraintEnd_toStartOf="@id/guideline_66"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp" />
 
-            <Button
-                android:id="@+id/button_edit_contest"
-                android:layout_width="130dp"
-                android:layout_height="50dp"
-                android:background="@drawable/rouded_button"
-                android:gravity="center"
-                android:text="Edit"
-                android:textColor="#FFFFFF"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toTopOf="@+id/button_export_adif_contest"
-                app:layout_constraintEnd_toStartOf="@+id/button_export_cabrillo_contest"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/button_resume_contest"
-                app:layout_constraintTop_toBottomOf="@+id/spinner_contests_initialized"
-                app:layout_constraintVertical_bias="0.5" />
+                <Button
+                    android:id="@+id/button_delete_contest"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:text="Delete"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginTop="50dp"
+                    android:background="@drawable/rouded_button"
+                    app:layout_constraintTop_toBottomOf="@id/spinner_contests_initialized"
+                    app:layout_constraintStart_toStartOf="@id/guideline_66"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginStart="8dp" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <Button
+                    android:id="@+id/button_export_adif_contest"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:text="ADIF"
+                    android:textColor="#FFFFFF"
+                    android:background="@drawable/rouded_button"
+                    app:layout_constraintTop_toBottomOf="@id/button_resume_contest"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/guideline_33"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="8dp" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/pag_7"
+                <Button
+                    android:id="@+id/button_export_cabrillo_contest"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:text="Cabrillo"
+                    android:textColor="#FFFFFF"
+                    android:background="@drawable/rouded_button"
+                    app:layout_constraintTop_toBottomOf="@id/button_edit_contest"
+                    app:layout_constraintStart_toStartOf="@id/guideline_33"
+                    app:layout_constraintEnd_toStartOf="@id/guideline_66"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp" />
+
+                <Button
+                    android:id="@+id/button_contest_general_cancel"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:text="Cancel"
+                    android:textColor="#FFFFFF"
+                    android:background="@drawable/rouded_button"
+                    app:layout_constraintTop_toBottomOf="@id/button_delete_contest"
+                    app:layout_constraintStart_toStartOf="@id/guideline_66"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginStart="8dp" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+
+        <ScrollView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#CCC2C2">
+            android:fillViewport="true">
 
-            <TextView
-                android:id="@+id/label_bluetooth"
-                android:layout_width="213dp"
-                android:layout_height="36dp"
-                android:layout_marginTop="48dp"
-                android:layout_marginBottom="397dp"
-                android:background="@drawable/rouded_button"
-                android:gravity="center"
-                android:text="Bluetooth Selection"
-                android:textColor="#FFFFFF"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.185" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/pag_7"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#CCC2C2"
+                android:padding="16dp">
 
-            <LinearLayout
-                android:id="@+id/deviceContainer"
-                android:layout_width="600dp"
-                android:layout_height="180dp"
-                android:layout_marginTop="92dp"
-                android:layout_marginBottom="139dp"
-                android:gravity="center_horizontal"
-                android:orientation="vertical"
-                android:padding="16dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                <TextView
+                    android:id="@+id/label_bluetooth"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rouded_button"
+                    android:gravity="center"
+                    android:text="Bluetooth Selection"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp"
+                    android:layout_marginBottom="16dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
 
-            <Button
-                android:id="@+id/button_select_bluetooth"
-                android:layout_width="130dp"
-                android:layout_height="50dp"
-                android:layout_marginTop="362dp"
-                android:layout_marginBottom="69dp"
-                android:background="@drawable/rouded_button"
-                android:gravity="center"
-                android:text="Select"
-                android:textColor="#FFFFFF"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/button_cancel_bluetooth"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.742" />
+                <LinearLayout
+                    android:id="@+id/deviceContainer"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="50dp"
+                    android:layout_marginTop="40dp"
+                    android:gravity="center_horizontal"
+                    app:layout_constraintTop_toBottomOf="@id/label_bluetooth"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginBottom="32dp" />
 
-            <Button
-                android:id="@+id/button_cancel_bluetooth"
-                android:layout_width="130dp"
-                android:layout_height="50dp"
-                android:layout_marginTop="362dp"
-                android:layout_marginBottom="69dp"
-                android:background="@drawable/rouded_button"
-                android:gravity="center"
-                android:text="Cancel"
-                android:textColor="#FFFFFF"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/button_select_bluetooth"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.742" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <Button
+                    android:id="@+id/button_select_bluetooth"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:text="Select"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginTop="40dp"
+                    android:background="@drawable/rouded_button"
+                    app:layout_constraintTop_toBottomOf="@id/deviceContainer"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/button_cancel_bluetooth"
+                    android:layout_marginEnd="8dp" />
 
+                <Button
+                    android:id="@+id/button_cancel_bluetooth"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:text="Cancel"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginTop="40dp"
+                    android:background="@drawable/rouded_button"
+                    app:layout_constraintTop_toBottomOf="@id/deviceContainer"
+                    app:layout_constraintStart_toEndOf="@id/button_select_bluetooth"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginStart="8dp" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+          <!--pagina-->
+        <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/pag_8"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#CCC2C2">
+            android:background="#CCC2C2"
+            tools:ignore="ExtraText">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.0" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_125"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.125" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_25"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.25" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_375"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.375" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.5" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_625"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.625" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_75"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.75" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_875"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.875" />
 
             <TextView
                 android:id="@+id/label_logger"
-                android:layout_width="213dp"
-                android:layout_height="25dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:background="@drawable/rouded_button"
-                android:gravity="center"
                 android:text="LOGGER"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp"
-                app:layout_constraintBottom_toTopOf="@+id/logger_status"
-                app:layout_constraintEnd_toStartOf="@+id/mode_indicator"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/qrg_indicator"
+                android:gravity="center"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.5" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
             <TextView
                 android:id="@+id/qrg_indicator"
-                android:layout_width="197dp"
-                android:layout_height="65dp"
-                android:layout_marginStart="42dp"
-                android:layout_marginTop="39dp"
-                android:layout_marginEnd="492dp"
-                android:layout_marginBottom="307dp"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
                 android:background="@android:drawable/dialog_holo_light_frame"
                 android:gravity="center"
+                android:textSize="18sp"
                 android:textColor="@color/design_default_color_primary"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@id/label_logger"
+                app:layout_constraintStart_toStartOf="@id/guideline_0"
+                app:layout_constraintEnd_toStartOf="@id/guideline_25"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="0dp"
+                android:layout_marginEnd="0dp" />
 
             <TextView
                 android:id="@+id/mode_indicator"
-                android:layout_width="197dp"
-                android:layout_height="65dp"
-                android:layout_marginStart="492dp"
-                android:layout_marginTop="39dp"
-                android:layout_marginEnd="42dp"
-                android:layout_marginBottom="307dp"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
                 android:background="@android:drawable/dialog_holo_light_frame"
                 android:gravity="center"
+                android:textSize="18sp"
                 android:textColor="@color/design_default_color_primary"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/label_logger"
+                app:layout_constraintStart_toEndOf="@id/guideline_75"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="0dp" />
 
             <TextView
                 android:id="@+id/logger_status"
@@ -1026,36 +1067,31 @@
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/qrg_indicator"
                 app:layout_constraintTop_toBottomOf="@+id/label_logger"
-                app:layout_constraintVertical_bias="0.5" />
+                app:layout_constraintVertical_bias="1" />
 
             <EditText
                 android:id="@+id/editText_RX_Call"
                 style="@style/text_new_user"
-                android:layout_width="100dp"
+                android:layout_width="0dp"
                 android:layout_height="66dp"
-                android:layout_marginStart="60dp"
-                android:layout_marginTop="117dp"
-                android:layout_marginEnd="600dp"
-                android:layout_marginBottom="250dp"
-                android:background="@drawable/campo_rx"
-                android:ems="10"
                 android:hint="RX Call"
-                android:textStyle="bold"
-                android:imeOptions="flagNoExtractUi"
                 android:inputType="text"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:background="@drawable/campo_rx"
+                android:gravity="center"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@id/logger_status"
+                app:layout_constraintStart_toStartOf="@id/guideline_0"
+                app:layout_constraintEnd_toStartOf="@id/guideline_125"
+                android:layout_marginTop="0dp" />
 
             <EditText
                 android:id="@+id/editText_RX_RST"
                 style="@style/text_new_user"
-                android:layout_width="73dp"
+                android:layout_width="0dp"
                 android:layout_height="66dp"
-                android:layout_marginStart="140dp"
+                android:layout_marginStart="0dp"
                 android:layout_marginTop="117dp"
-                android:layout_marginEnd="500dp"
+                android:layout_marginEnd="0dp"
                 android:layout_marginBottom="250dp"
                 android:background="@drawable/campo_rx"
                 android:ems="10"
@@ -1064,18 +1100,18 @@
                 android:imeOptions="flagNoExtractUi"
                 android:inputType="number"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/guideline_25"
+                app:layout_constraintStart_toStartOf="@id/guideline_125"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <EditText
                 android:id="@+id/editText_RX_Nr"
                 style="@style/text_new_user"
-                android:layout_width="90dp"
+                android:layout_width="0dp"
                 android:layout_height="66dp"
-                android:layout_marginStart="210dp"
+                android:layout_marginStart="0dp"
                 android:layout_marginTop="117dp"
-                android:layout_marginEnd="400dp"
+                android:layout_marginEnd="0dp"
                 android:layout_marginBottom="250dp"
                 android:background="@drawable/campo_rx"
                 android:ems="10"
@@ -1084,18 +1120,18 @@
                 android:inputType="number"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf= "@id/guideline_375"
+                app:layout_constraintStart_toStartOf="@id/guideline_25"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <EditText
                 android:id="@+id/editText_RX_Exch"
                 style="@style/text_new_user"
-                android:layout_width="90dp"
+                android:layout_width="0dp"
                 android:layout_height="66dp"
-                android:layout_marginStart="305dp"
+                android:layout_marginStart="0dp"
                 android:layout_marginTop="117dp"
-                android:layout_marginEnd="305dp"
+                android:layout_marginEnd="0dp"
                 android:layout_marginBottom="250dp"
                 android:background="@drawable/campo_rx"
                 android:ems="10"
@@ -1104,18 +1140,18 @@
                 android:imeOptions="flagNoExtractUi"
                 android:inputType="text"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/guideline_5"
+                app:layout_constraintStart_toStartOf="@id/guideline_375"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <EditText
                 android:id="@+id/editText_TX_RST"
                 style="@style/text_new_user"
-                android:layout_width="73dp"
+                android:layout_width="0dp"
                 android:layout_height="66dp"
-                android:layout_marginStart="405dp"
+                android:layout_marginStart="0dp"
                 android:layout_marginTop="117dp"
-                android:layout_marginEnd="228dp"
+                android:layout_marginEnd="0dp"
                 android:layout_marginBottom="250dp"
                 android:background="@drawable/campo_tx"
                 android:ems="10"
@@ -1124,18 +1160,18 @@
                 android:imeOptions="flagNoExtractUi"
                 android:inputType="number"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/guideline_625"
+                app:layout_constraintStart_toStartOf="@id/guideline_5"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <EditText
                 android:id="@+id/editText_TX_Nr"
                 style="@style/text_new_user"
-                android:layout_width="90dp"
+                android:layout_width="0dp"
                 android:layout_height="66dp"
-                android:layout_marginStart="480dp"
+                android:layout_marginStart="0dp"
                 android:layout_marginTop="117dp"
-                android:layout_marginEnd="125dp"
+                android:layout_marginEnd="0dp"
                 android:layout_marginBottom="250dp"
                 android:background="@drawable/campo_tx"
                 android:ems="10"
@@ -1144,18 +1180,18 @@
                 android:imeOptions="flagNoExtractUi"
                 android:inputType="number"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/guideline_75"
+                app:layout_constraintStart_toStartOf="@id/guideline_625"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <EditText
                 android:id="@+id/editText_TX_Exch"
                 style="@style/text_new_user"
-                android:layout_width="90dp"
+                android:layout_width="0dp"
                 android:layout_height="66dp"
-                android:layout_marginStart="605dp"
+                android:layout_marginStart="0dp"
                 android:layout_marginTop="117dp"
-                android:layout_marginEnd="60dp"
+                android:layout_marginEnd="0dp"
                 android:layout_marginBottom="250dp"
                 android:background="@drawable/campo_tx"
                 android:ems="10"
@@ -1164,8 +1200,8 @@
                 android:imeOptions="flagNoExtractUi"
                 android:inputType="text"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/guideline_875"
+                app:layout_constraintStart_toStartOf="@id/guideline_75"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <Button
@@ -1362,7 +1398,7 @@
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
+        </ScrollView>
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/pag_9"
             android:layout_width="match_parent"
