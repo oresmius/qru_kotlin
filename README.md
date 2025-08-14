@@ -37,6 +37,7 @@ This project also aims to put into practice what I learned in my degree in Data 
 - The FT 818, FT 857 and FT 897 radios have practically the same CAT protocol as the FT 817(ND); it is very likely that QRU will work with them, but I have never tested it.
 - This logger is designed for fun and DX practice in contests during portable operations, no fierce competition. If you need lightning-fast operation, with CW keyers and SSB voice recording like the N1MM, the QRU certainly won't do.
 - I really recommend that in the field, you use a cell phone just for the logger, it can be an old one that is still compatible, that you no longer use.
+- QRU is designed for phones with at least a 5-inch screen. Anything smaller may not work. It's also not designed for tablets; it may not look good.
 
 ---
 
