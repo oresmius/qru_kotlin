@@ -44,23 +44,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val baseWidth = 1280f
-        val baseHeight = 720f
-
-        val metrics = resources.displayMetrics
-        val screenWidth = maxOf(metrics.widthPixels, metrics.heightPixels).toFloat()
-        val screenHeight = minOf(metrics.widthPixels, metrics.heightPixels).toFloat()
-
-
-
-        val scaleX = screenWidth / baseWidth
-        val scaleY = screenHeight / baseHeight
-        val scale = minOf(scaleX, scaleY)
-
-        val layoutRoot = findViewById<View>(R.id.layout_root)
-        layoutRoot.scaleX = scale
-        layoutRoot.scaleY = scale
-
         // Verifica e cria a pasta "db" se não existir
         val dbFolder = File(applicationContext.filesDir, "db")
         if (!dbFolder.exists()) {
