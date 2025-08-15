@@ -326,6 +326,9 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.button_about_back).setOnClickListener {
             navigateToPage(3)
         }
+        findViewById<Button>(R.id.button_Change_User).setOnClickListener {
+            navigateToPage(2)
+        }
     }
 
     // Cria as opções do menu e as faz aparecer
