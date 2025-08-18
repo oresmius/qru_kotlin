@@ -165,28 +165,30 @@ class BtManager(
     fun interpretarFrequencia(resposta: ByteArray): String {
         if (resposta.size != 5) return "Erro na resposta"
 
-        // Extrai os valores BCD corretamente
-        val freqBcd = resposta.joinToString("") { "%02X".format(it) }
+        // Use SOMENTE os 4 primeiros bytes (freq BCD). Ignora o 5º (modo).
+        val freqHex = resposta.copyOfRange(0, 4).joinToString("") { "%02X".format(it) }
+        if (freqHex.length != 8) return "Erro na resposta"
 
-        // Corrige a posição dos pontos decimais
-        var formattedFreq = "${freqBcd.substring(0, 2)}${freqBcd.substring(2, 3)}.${freqBcd.substring(3, 6)}.${freqBcd.substring(6, 8)}"
+        // Primeiros 3 dígitos BCD = centenas, dezenas e unidades de MHz
+        // "007" -> 7 MHz, "028" -> 28 MHz, "110" -> 110 MHz
+        val mhz = freqHex.substring(0, 3).toInt()      // remove zeros à esquerda automaticamente
+        val khz = freqHex.substring(3, 6)              // kHz
+        val hhz = freqHex.substring(6, 8)              // centenas de Hz (duas casas)
 
-        // Remover zero à esquerda se for menor que 10 MHz
-        if (formattedFreq.startsWith("0")) {
-            formattedFreq = formattedFreq.substring(1) // Remove o primeiro caractere se for "0"
-        }
-
-        return formattedFreq
+        return "$mhz.$khz.$hhz"
     }
 
     fun interpretarModo(resposta: ByteArray): String {
         if (resposta.size != 5) return "Unknown"
-        val modoByte = resposta[4].toInt() and 0xFF
-        return when (modoByte) {
+
+        // Byte de modo pode vir com flags (ex.: Narrow). Ignore os bits altos.
+        val modoByteBase = (resposta[4].toInt() and 0xFF) and 0x0F
+
+        return when (modoByteBase) {
             0x00 -> "LSB"
             0x01 -> "USB"
             0x02 -> "CW"
-            0x03 -> "CWR"
+            0x03 -> "CW-R"   // normaliza CWR -> CW-R
             0x04 -> "AM"
             0x08 -> "FM"
             0x0A -> "DIG"
@@ -194,4 +196,5 @@ class BtManager(
             else -> "Unknown"
         }
     }
+    
 }

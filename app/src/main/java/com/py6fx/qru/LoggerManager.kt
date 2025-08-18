@@ -253,9 +253,9 @@ class LoggerManager {
         val rxCall = activity.findViewById<EditText>(R.id.editText_RX_Call).text.toString().trim().uppercase()
         val rxRST = activity.findViewById<EditText>(R.id.editText_RX_RST).text.toString().trim()
         val rxNr = activity.findViewById<EditText>(R.id.editText_RX_Nr).text.toString().trim()
-        val rxExch = activity.findViewById<EditText>(R.id.editText_RX_Exch).text.toString().trim()
+        val rxExch = activity.findViewById<EditText>(R.id.editText_RX_Exch).text.toString().trim().uppercase()
         val txRST = activity.findViewById<EditText>(R.id.editText_TX_RST).text.toString().trim()
-        val txExch = activity.findViewById<EditText>(R.id.editText_TX_Exch).text.toString().trim()
+        val txExch = activity.findViewById<EditText>(R.id.editText_TX_Exch).text.toString().trim().uppercase()
 
         if (rxCall.isEmpty() || rxRST.isEmpty() || txRST.isEmpty()) {
             Toast.makeText(activity, "Missing required fields (Call, RSTs).", Toast.LENGTH_LONG).show()

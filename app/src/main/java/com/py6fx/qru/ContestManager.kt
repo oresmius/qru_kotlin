@@ -130,7 +130,7 @@ class ContestManager(private val context: Context, private val activity: MainAct
                      page.findViewById<Spinner>(R.id.spinner_transmitter).selectedItem.toString(),
                      page.findViewById<Spinner>(R.id.spinner_time_category).selectedItem.toString(),
                      page.findViewById<EditText>(R.id.editText_send_exchange).text.toString()
-                         .trim(),
+                         .trim().uppercase(),
                      page.findViewById<EditText>(R.id.editText_operators).text.toString().trim().uppercase()
                  )
              )
