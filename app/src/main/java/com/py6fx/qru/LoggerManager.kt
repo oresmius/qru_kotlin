@@ -57,11 +57,11 @@ class LoggerManager {
                     editTextTxNr.setText(nextSerial.toString())
                     editTextTxNr.isEnabled = false
                     editTextTxExch.setText("")
-                    editTextTxExch.isEnabled = true
+                    editTextTxExch.isEnabled = false
                     qsoCursor.close()
                 } else {
                     editTextTxExch.setText(sendExch)
-                    editTextTxExch.isEnabled = true
+                    editTextTxExch.isEnabled = false
                     editTextTxNr.setText("")
                     editTextTxNr.isEnabled = false
                 }
@@ -146,7 +146,6 @@ class LoggerManager {
         activity.findViewById<EditText>(R.id.editText_RX_Call).setText("")
         activity.findViewById<EditText>(R.id.editText_RX_Nr).setText("")
         activity.findViewById<EditText>(R.id.editText_RX_Exch).setText("")
-        activity.findViewById<EditText>(R.id.editText_TX_Exch).setText("")
     }
 
     fun obterQsosDoContestAtual(activity: MainActivity): List<QsoLogItem> {
@@ -213,7 +212,7 @@ class LoggerManager {
         activity.findViewById<EditText>(R.id.editText_RX_Nr).setText(rxNr ?: "")
         activity.findViewById<EditText>(R.id.editText_RX_Exch).setText(rxExch ?: "")
         activity.findViewById<EditText>(R.id.editText_TX_RST).setText(txRst)
-        activity.findViewById<EditText>(R.id.editText_TX_Exch).setText(txExch ?: "")
+        activity.findViewById<EditText>(R.id.editText_TX_Exch).isEnabled = false
         activity.findViewById<EditText>(R.id.editText_TX_Nr).isEnabled = false
 
         isEditing = true

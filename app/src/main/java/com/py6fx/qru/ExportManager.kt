@@ -280,11 +280,13 @@ class ExportCabrilloManager(private val activity: MainActivity) {
                 val callRx = qsoCursor.getString(3).padEnd(10)
                 val callTx = userCall.padEnd(10)
                 val srst = qsoCursor.getString(4).padEnd(3)
-                val snum = qsoCursor.getInt(5).toString().padStart(4, '0')
-                val sexch = (qsoCursor.getString(6) ?: "").padEnd(6)
+                val sentSerial = qsoCursor.getInt(5)
+                val snum = if (qsoCursor.isNull(5) || sentSerial == 0) "    " else sentSerial.toString().padStart(4, '0')
+                val sexch = (qsoCursor.getString(6) ?: "").uppercase().padEnd(6)
                 val rrst = qsoCursor.getString(7).padEnd(3)
-                val rnum = qsoCursor.getInt(8).toString().padStart(4, '0')
-                val rexch = (qsoCursor.getString(9) ?: "").padEnd(6)
+                val rcvdSerial = qsoCursor.getInt(8)
+                val rnum = if (qsoCursor.isNull(8) || rcvdSerial == 0) "    " else rcvdSerial.toString().padStart(4, '0')
+                val rexch = (qsoCursor.getString(9) ?: "").uppercase().padEnd(6)
 
                 builder.appendLine("QSO: $freq $modo $date $time $callTx $srst $snum $sexch $callRx $rrst $rnum $rexch")
 
