@@ -943,9 +943,8 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </ScrollView>
-
-            <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
+            <!--pagina-->
+            <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:descendantFocusability="beforeDescendants"
@@ -1037,7 +1036,7 @@
                         app:layout_constraintTop_toBottomOf="@id/label_logger"
                         app:layout_constraintStart_toStartOf="@id/guideline_0"
                         app:layout_constraintEnd_toStartOf="@id/guideline_25"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="1dp"
                         android:layout_marginStart="0dp"
                         android:layout_marginEnd="0dp" />
 
@@ -1052,19 +1051,19 @@
                         app:layout_constraintTop_toBottomOf="@id/label_logger"
                         app:layout_constraintStart_toEndOf="@id/guideline_75"
                         app:layout_constraintEnd_toEndOf="parent"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="1dp"
                         android:layout_marginStart="0dp" />
 
                     <TextView
                         android:id="@+id/logger_status"
-                        android:layout_width="197dp"
+                        android:layout_width="150dp"
                         android:layout_height="40dp"
                         android:background="@android:drawable/dialog_holo_light_frame"
                         android:backgroundTint="#03FB37"
                         android:gravity="center"
                         android:text="LOG MODE"
                         android:textColor="@color/black"
-                        android:textSize="18sp"
+                        android:textSize="15sp"
                         app:layout_constraintBottom_toTopOf="@+id/editText_RX_Nr"
                         app:layout_constraintEnd_toStartOf="@+id/mode_indicator"
                         app:layout_constraintHorizontal_bias="0.5"
@@ -1208,39 +1207,41 @@
 
                     <Button
                         android:id="@+id/button_wipe_QSO"
-                        android:layout_width="130dp"
+                        android:layout_width="0dp"
                         android:layout_height="30dp"
-                        android:layout_marginStart="214dp"
-                        android:layout_marginTop="320dp"
-                        android:layout_marginEnd="387dp"
-                        android:layout_marginBottom="15dp"
+                        android:layout_marginStart="30dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="30dp"
+                        android:layout_marginBottom="5dp"
                         android:background="@drawable/rouded_button"
                         android:gravity="center"
                         android:text="wipe"
                         android:textColor="#FFFFFF"
                         android:textSize="20sp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintBottom_toTopOf="@id/editText_RX_Exch"
+                        app:layout_constraintEnd_toEndOf="@id/guideline_375"
+                        app:layout_constraintStart_toStartOf="@id/guideline_125"
+                        app:layout_constraintTop_toBottomOf="@id/qrg_indicator" />
 
                     <Button
                         android:id="@+id/button_log_QSO"
                         android:layout_width="130dp"
                         android:layout_height="30dp"
-                        android:layout_marginStart="42dp"
-                        android:layout_marginTop="320dp"
-                        android:layout_marginEnd="559dp"
-                        android:layout_marginBottom="15dp"
+                        android:layout_marginStart="30dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="30dp"
+                        android:layout_marginBottom="5dp"
                         android:background="@drawable/rouded_button"
                         android:gravity="center"
                         android:text="Log QSO"
                         android:textColor="#FFFFFF"
                         android:textSize="20sp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintBottom_toTopOf="@id/editText_TX_Exch"
+                        app:layout_constraintEnd_toEndOf="@id/guideline_875"
+                        app:layout_constraintStart_toStartOf="@id/guideline_625"
+                        app:layout_constraintTop_toBottomOf="@id/mode_indicator" />
+
+
 
                     <Button
                         android:id="@+id/button_delete_QSO"
@@ -1386,22 +1387,35 @@
 
                     </LinearLayout>
 
-
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recyclerViewQSOs"
                         android:layout_width="0dp"
                         android:layout_height="120dp"
-                        app:layout_constraintBottom_toTopOf="@+id/button_wipe_QSO"
+                        app:layout_constraintBottom_toTopOf="@id/button_log_cancel"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/header_qso_table"
                         app:layout_constraintVertical_bias="0.5" />
 
+                    <TextView
+                        android:id="@+id/textView_log_memory"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:background="@android:drawable/dialog_holo_light_frame"
+                        android:textSize="18sp"
+                        android:textColor="@color/design_default_color_primary"
+                        app:layout_constraintStart_toStartOf="@id/guideline_0"
+                        app:layout_constraintEnd_toStartOf="@id/button_wipe_QSO"
+                        app:layout_constraintBottom_toTopOf="@id/editText_RX_Call"
+
+
+                        />
+
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </ScrollView>
-            <!--pagina-->
+
             <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
