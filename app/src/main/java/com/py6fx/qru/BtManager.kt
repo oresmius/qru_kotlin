@@ -24,7 +24,7 @@ class BtManager(
     private val onQrgUpdate: ((String) -> Unit)? = null,
     private val onModeUpdate: ((String) -> Unit)? = null
 ) {
-
+    private var ultimaQrg: Double? = null // Armazena a última frequência em kHz
     private val bluetoothAdapter: BluetoothAdapter? =
         (context.getSystemService(Context.BLUETOOTH_SERVICE) as? android.bluetooth.BluetoothManager)?.adapter
     private val uuid: UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB") // UUID padrão para SPP
@@ -135,15 +135,41 @@ class BtManager(
                                 }
                             }
                             if (bytesLidos == 5) {
-                                val qrg = interpretarFrequencia(resposta) // usa resposta[0..3]
-                                val modo = interpretarModo(resposta)      // usa resposta[4]
+                                // Interpreta QRG e modo uma única vez
+                                val qrgString = interpretarFrequencia(resposta) // Ex: "7.074.00"
+                                val modo = interpretarModo(resposta)
+
+                                // Atualiza a interface (callback)
                                 onQrgUpdate?.let { callback ->
-                                    activity.runOnUiThread { callback(qrg) }
+                                    activity.runOnUiThread { callback(qrgString) }
                                 }
+
+                                // ------ AUTO WIPE ------
+                                // Extrai valor numérico da frequência (em Hz)
+                                val qrgAtual = qrgString.replace(".", "").toDoubleOrNull()
+                                if (qrgAtual != null) {
+                                    val qrgAtualKHz = qrgAtual / 100.0 // Exemplo: 707400 -> 7074.00 kHz
+
+                                    if (ultimaQrg != null) {
+                                        val diffKHz = kotlin.math.abs(qrgAtualKHz - ultimaQrg!!)
+                                        if (diffKHz >= 3.0) {
+                                            // Só faz wipe se estiver na tela do logger (pag_8 == 7)
+                                            val mainActivity = activity as? MainActivity
+                                            if (mainActivity != null && mainActivity.viewFlipper.displayedChild == 7) {
+                                                LoggerManager().limparCamposQSO(mainActivity)
+                                            }
+                                        }
+                                    }
+                                    ultimaQrg = qrgAtualKHz
+                                }
+                                // -----------------------
+
+                                // Atualiza o modo (callback)
                                 onModeUpdate?.let { callback ->
                                     activity.runOnUiThread { callback(modo) }
                                 }
                             }
+
                             Thread.sleep(1000)
                         }
 

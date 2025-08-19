@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var exportador: ExportCabrilloManager
 
     // Declaração universal de variável para o ViewFlipper
-    private lateinit var viewFlipper: ViewFlipper
+    lateinit var viewFlipper: ViewFlipper
 
     //teste do bluetotth
     private lateinit var SimpleBluetooth: SimpleBluetooth
