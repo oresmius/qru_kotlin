@@ -8,6 +8,35 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 
 class LoggerManager {
+    // --- Pré-log: memórias voláteis (sessão atual) ---
+    private data class MemoryQSO(
+        val freqKHz: Double,
+        val rxCall: String,
+        val rxRst: String?,
+        val txRst: String?,
+        val rxNr: String?,
+        val rxExch: String?,
+        val txExch: String?
+    )
+
+    private val memories = mutableListOf<MemoryQSO>()
+    private val MEM_TOL_KHZ = 2.5
+
+    // Converte "7.074.00" -> 7074.00 kHz
+    private fun qrgStringToKHz(qrgStr: String): Double? {
+        val num = qrgStr.replace(".", "").toDoubleOrNull() ?: return null
+        return num / 100.0
+    }
+
+    private fun findMemoryNear(freqKHz: Double): MemoryQSO? =
+        memories.minByOrNull { kotlin.math.abs(it.freqKHz - freqKHz) }
+            ?.takeIf { kotlin.math.abs(it.freqKHz - freqKHz) <= MEM_TOL_KHZ }
+
+    private fun upsertMemoryAt(freqKHz: Double, m: MemoryQSO) {
+        val idx = memories.indexOfFirst { kotlin.math.abs(it.freqKHz - freqKHz) <= MEM_TOL_KHZ }
+        if (idx >= 0) memories[idx] = m else memories.add(m)
+    }
+
 
     companion object {
         var isEditing: Boolean = false
@@ -146,6 +175,7 @@ class LoggerManager {
         activity.findViewById<EditText>(R.id.editText_RX_Call).setText("")
         activity.findViewById<EditText>(R.id.editText_RX_Nr).setText("")
         activity.findViewById<EditText>(R.id.editText_RX_Exch).setText("")
+        activity.findViewById<TextView>(R.id.textView_log_memory).text = ""
     }
 
     fun obterQsosDoContestAtual(activity: MainActivity): List<QsoLogItem> {
@@ -317,5 +347,70 @@ class LoggerManager {
             btnLog.text = "Log QSO"
             btnCancel.text = "Cancel Logger"
         }
+    }
+    // Cria/atualiza memória com base nos campos atuais do logger.
+    // Regras: RX Call obrigatório; overwrite sem aviso se houver memória na janela ±2,5 kHz.
+    // Sinal de criação: escrever RX Call no textView_log_memory.
+    fun createOrUpdateMemory(activity: MainActivity) {
+        val rxCall = activity.findViewById<EditText>(R.id.editText_RX_Call).text.toString().trim().uppercase()
+        if (rxCall.isEmpty()) return  // Sem toasts/avisos; simplesmente não cria.
+
+        val qrgStr = activity.findViewById<TextView>(R.id.qrg_indicator).text.toString().trim()
+        val freqKHz = qrgStringToKHz(qrgStr) ?: return
+
+        val rxRst  = activity.findViewById<EditText>(R.id.editText_RX_RST).text.toString().trim().ifEmpty { null }
+        val txRst  = activity.findViewById<EditText>(R.id.editText_TX_RST).text.toString().trim().ifEmpty { null }
+        val rxNr   = activity.findViewById<EditText>(R.id.editText_RX_Nr).text.toString().trim().ifEmpty { null }
+        val rxExch = activity.findViewById<EditText>(R.id.editText_RX_Exch).text.toString().trim().ifEmpty { null }
+        val txExch = activity.findViewById<EditText>(R.id.editText_TX_Exch).text.toString().trim().ifEmpty { null }
+
+        val mem = MemoryQSO(freqKHz, rxCall, rxRst, txRst, rxNr, rxExch, txExch)
+        upsertMemoryAt(freqKHz, mem)
+
+        // Sinal: exibir apenas o RX Call
+        activity.findViewById<TextView>(R.id.textView_log_memory).text = rxCall
+    }
+    // Aplica a memória próxima da QRG atual nos campos do logger.
+    // Campos faltantes na memória apagam o campo correspondente.
+    // A memória permanece viva (não é removida).
+    fun applyMemoryIfNear(activity: MainActivity) {
+        // só faz sentido na tela do logger (pag_8, index 7)
+        if (activity.viewFlipper.displayedChild != 7) return
+
+        val qrgStr = activity.findViewById<TextView>(R.id.qrg_indicator).text.toString().trim()
+        val freqKHz = qrgStringToKHz(qrgStr) ?: return
+
+        val mem = findMemoryNear(freqKHz) ?: return
+
+        activity.findViewById<EditText>(R.id.editText_RX_Call).setText(mem.rxCall)
+        activity.findViewById<EditText>(R.id.editText_RX_RST).setText(mem.rxRst ?: "")
+        activity.findViewById<EditText>(R.id.editText_TX_RST).setText(mem.txRst ?: "")
+        activity.findViewById<EditText>(R.id.editText_RX_Nr).setText(mem.rxNr ?: "")
+        activity.findViewById<EditText>(R.id.editText_RX_Exch).setText(mem.rxExch ?: "")
+        activity.findViewById<EditText>(R.id.editText_TX_Exch).setText(mem.txExch ?: "")
+
+        // Mantém a memória; nada de toasts.
+    }
+    // Atualiza o textView_log_memory com o RX Call da memória mais próxima (≤ 2,5 kHz),
+// exibindo somente na página do logger; fora disso, limpa.
+    fun updateMemorySuggestionForCurrentQrg(activity: MainActivity) {
+        val tv = activity.findViewById<TextView>(R.id.textView_log_memory)
+
+        if (activity.viewFlipper.displayedChild != 7) {
+            tv.text = ""
+            return
+        }
+
+        val qrgStr = activity.findViewById<TextView>(R.id.qrg_indicator).text.toString().trim()
+        val freqKHz = qrgStringToKHz(qrgStr)
+        if (freqKHz == null) { tv.text = ""; return }
+
+        val mem = findMemoryNear(freqKHz)
+        tv.text = mem?.rxCall ?: ""
+    }
+    // Zera todas as memórias voláteis e limpa a sugestão visual.
+    fun clearAllMemories(activity: MainActivity) {
+        memories.clear()
+        activity.findViewById<TextView>(R.id.textView_log_memory).text = ""
     }
 }

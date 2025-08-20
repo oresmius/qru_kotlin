@@ -77,6 +77,8 @@ class MainActivity : AppCompatActivity() {
             deviceContainer,
             onQrgUpdate = { qrg ->
                 findViewById<TextView>(R.id.qrg_indicator).text = qrg
+                //atualiza sugestão de memória quando a QRG muda
+                updateMemorySuggestionForCurrentFreq()
             },
             onModeUpdate = { modo ->
                 findViewById<TextView>(R.id.mode_indicator).text = modo
@@ -137,8 +139,21 @@ class MainActivity : AppCompatActivity() {
 
         val buttonSelectUser = findViewById<Button>(R.id.button_select_user)
         buttonSelectUser.setOnClickListener {
+            val userIndicator = findViewById<TextView>(R.id.user_indicator)
+            val before = userIndicator.text.toString()
+
             userManager.selectUser(findViewById(R.id.pag_3))
+
+            // Verifica se o usuário realmente mudou; se sim, limpa memórias e a sugestão visual
+            userIndicator.post {
+                val after = userIndicator.text.toString()
+                if (after.isNotEmpty() && after != before && after != "No users available") {
+                    memories.clear()
+                    findViewById<TextView>(R.id.textView_log_memory).text = ""
+                }
+            }
         }
+
         findViewById<Button>(R.id.button_cancel_new_user).setOnClickListener {
             navigateToPage(0)
         }
@@ -155,9 +170,21 @@ class MainActivity : AppCompatActivity() {
 
         // Chamar a função correta do ContestManager com o banco do usuário ativo
         findViewById<Button>(R.id.button_new_contests_ok).setOnClickListener {
+            val contestIndicator = findViewById<TextView>(R.id.contest_indicator)
+            val before = contestIndicator.text.toString()
+
             val userIndicator = findViewById<TextView>(R.id.user_indicator).text.toString().trim()
-            val userDbPath = File(dbPath, "$userIndicator.db") // Agora usa o banco correto
+            val userDbPath = File(dbPath, "$userIndicator.db")
             contestManager.createContestInstance(findViewById(R.id.pag_5), userDbPath)
+
+            // Se o contest ativo mudou, limpa memórias e a sugestão visual
+            contestIndicator.post {
+                val after = contestIndicator.text.toString()
+                if (after.isNotEmpty() && after != before) {
+                    memories.clear()
+                    findViewById<TextView>(R.id.textView_log_memory).text = ""
+                }
+            }
         }
 
         // chamar a função resumeContest
@@ -170,6 +197,7 @@ class MainActivity : AppCompatActivity() {
                 deviceContainer,
                 onQrgUpdate = { qrg ->
                     findViewById<TextView>(R.id.qrg_indicator).text = qrg
+                    updateMemorySuggestionForCurrentFreq()
                 },
                 onModeUpdate = { modo ->
                     findViewById<TextView>(R.id.mode_indicator).text = modo
@@ -225,13 +253,25 @@ class MainActivity : AppCompatActivity() {
                     )
                 }
                 recyclerView.adapter = adapter
-
+                updateMemorySuggestionForCurrentFreq()
             }
         }
 
         findViewById<Button>(R.id.button_resume_contest).setOnClickListener {
+            val contestIndicator = findViewById<TextView>(R.id.contest_indicator)
+            val before = contestIndicator.text.toString()
+
             contestManager.resumeContest(findViewById(R.id.pag_6))
+
+            contestIndicator.post {
+                val after = contestIndicator.text.toString()
+                if (after.isNotEmpty() && after != before) {
+                    memories.clear()
+                    findViewById<TextView>(R.id.textView_log_memory).text = ""
+                }
+            }
         }
+
         findViewById<Button>(R.id.button_edit_contest).setOnClickListener {
             contestManager.editContest(findViewById(R.id.pag_6))
         }
@@ -257,6 +297,8 @@ class MainActivity : AppCompatActivity() {
                 LoggerManager().logQSO(this)
                 LoggerManager().limparCamposQSO(this)
                 LoggerManager().preencherTXExch(this)
+
+
 
                 val recyclerView = findViewById<RecyclerView>(R.id.recyclerViewQSOs)
                 val listaAtualizada = LoggerManager().obterQsosDoContestAtual(this)
@@ -329,6 +371,56 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.button_Change_User).setOnClickListener {
             navigateToPage(2)
         }
+        // --- Botão MEM: cria/atualiza memória a partir dos campos atuais ---
+        findViewById<Button>(R.id.button_logger_mem).setOnClickListener {
+            // 1) Valida Rx Call
+            val rxCall = findViewById<EditText>(R.id.editText_RX_Call).text.toString().trim().uppercase()
+            if (rxCall.isEmpty()) {
+                // Sem Toasts/avisos; apenas não faz nada se vazio.
+                return@setOnClickListener
+
+
+            }
+
+            // 2) Captura QRG atual
+            val qrgStr = findViewById<TextView>(R.id.qrg_indicator).text.toString().trim()
+            val freqKHz = qrgStringToKHz(qrgStr) ?: return@setOnClickListener
+
+            // 3) Coleta demais campos
+            val rxRst  = findViewById<EditText>(R.id.editText_RX_RST).text.toString().trim().ifEmpty { null }
+            val txRst  = findViewById<EditText>(R.id.editText_TX_RST).text.toString().trim().ifEmpty { null }
+            val rxNr   = findViewById<EditText>(R.id.editText_RX_Nr).text.toString().trim().ifEmpty { null }
+            val rxExch = findViewById<EditText>(R.id.editText_RX_Exch).text.toString().trim().ifEmpty { null }
+            val txExch = findViewById<EditText>(R.id.editText_TX_Exch).text.toString().trim().ifEmpty { null }
+
+            // 4) Upsert na janela ±2.5 kHz
+            val m = MemoryQSO(freqKHz, rxCall, rxRst, txRst, rxNr, rxExch, txExch)
+            upsertMemoryAt(freqKHz, m)
+
+            // 5) Sinal: escrever o RX Call no textView_log_memory
+            findViewById<TextView>(R.id.textView_log_memory).text = rxCall
+        }
+
+            // --- Clique na sugestão: aplica memória aos campos ---
+        findViewById<TextView>(R.id.textView_log_memory).setOnClickListener {
+            val shown = findViewById<TextView>(R.id.textView_log_memory).text.toString().trim()
+            if (shown.isEmpty()) return@setOnClickListener
+            val qrgStr = findViewById<TextView>(R.id.qrg_indicator).text.toString().trim()
+            val freqKHz = qrgStringToKHz(qrgStr) ?: return@setOnClickListener
+
+            val mem = findMemoryNear(freqKHz) ?: return@setOnClickListener
+
+            // Preenche TODOS os campos definidos; ausentes → limpa
+            findViewById<EditText>(R.id.editText_RX_Call).setText(mem.rxCall)
+            findViewById<EditText>(R.id.editText_RX_RST).setText(mem.rxRst ?: "")
+            findViewById<EditText>(R.id.editText_TX_RST).setText(mem.txRst ?: "")
+            findViewById<EditText>(R.id.editText_RX_Nr).setText(mem.rxNr ?: "")
+            findViewById<EditText>(R.id.editText_RX_Exch).setText(mem.rxExch ?: "")
+            findViewById<EditText>(R.id.editText_TX_Exch).setText(mem.txExch ?: "")
+
+            // A memória permanece viva. Nada de toasts/avisos.
+        }
+
     }
 
     // Cria as opções do menu e as faz aparecer
@@ -373,5 +465,50 @@ class MainActivity : AppCompatActivity() {
     // Lógica para navegar entre páginas
     fun navigateToPage(pageIndex: Int) {
         viewFlipper.displayedChild = pageIndex
+    }
+    // --- Memórias de pré-log (voláteis, sessão atual) ---
+    private data class MemoryQSO(
+        val freqKHz: Double,
+        val rxCall: String,
+        val rxRst: String?,
+        val txRst: String?,
+        val rxNr: String?,
+        val rxExch: String?,
+        val txExch: String?
+    )
+
+    private val memories = mutableListOf<MemoryQSO>()
+    private val MEM_TOL_KHZ = 2.5
+
+    // Converte "7.074.00" -> 7074.00 kHz
+    private fun qrgStringToKHz(qrgStr: String): Double? {
+        val num = qrgStr.replace(".", "").toDoubleOrNull() ?: return null
+        return num / 100.0
+    }
+
+    // Encontra memória na janela ±2.5 kHz
+    private fun findMemoryNear(freqKHz: Double): MemoryQSO? =
+        memories.minByOrNull { kotlin.math.abs(it.freqKHz - freqKHz) }
+            ?.takeIf { kotlin.math.abs(it.freqKHz - freqKHz) <= MEM_TOL_KHZ }
+
+    // Cria/substitui memória na janela
+    private fun upsertMemoryAt(freqKHz: Double, m: MemoryQSO) {
+        val idx = memories.indexOfFirst { kotlin.math.abs(it.freqKHz - freqKHz) <= MEM_TOL_KHZ }
+        if (idx >= 0) memories[idx] = m else memories.add(m)
+    }
+
+    // Atualiza a sugestão visual (mostra só na página do logger, index 7)
+    private fun updateMemorySuggestionForCurrentFreq() {
+        if (viewFlipper.displayedChild != 7) {
+            findViewById<TextView>(R.id.textView_log_memory).text = ""
+            return
+        }
+        val qrgStr = findViewById<TextView>(R.id.qrg_indicator).text.toString().trim()
+        val freqKHz = qrgStringToKHz(qrgStr)
+        val tv = findViewById<TextView>(R.id.textView_log_memory)
+        if (freqKHz == null) { tv.text = ""; return }
+
+        val mem = findMemoryNear(freqKHz)
+        tv.text = mem?.rxCall ?: ""
     }
 }
