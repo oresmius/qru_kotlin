@@ -151,7 +151,7 @@ class BtManager(
                                     val qrgAtualKHz = qrgAtual / 100.0 // Exemplo: 707400 -> 7074.00 kHz
                                     if (ultimaQrg != null) {
                                         val diffKHz = kotlin.math.abs(qrgAtualKHz - ultimaQrg!!)
-                                        if (diffKHz >= 2.0) {
+                                        if (diffKHz >= 2.5) {
                                             // Só faz wipe se estiver na tela do logger (pag_8 == 7)
                                             val mainActivity = activity as? MainActivity
                                             if (mainActivity != null && mainActivity.viewFlipper.displayedChild == 7) {
