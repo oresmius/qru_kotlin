@@ -1,0 +1,9 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <!-- Cor de fundo RX -->
+    <solid android:color="#FAF014"/> <!-- Verde vivo, pode trocar para o tom que preferir -->
+    <!-- Contorno preto -->
+    <stroke
+        android:width="5dp"
+        android:color="#000000"/>
+</shape>
