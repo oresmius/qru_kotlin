@@ -41,7 +41,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btManager: BtManager
 
     //instância do logger manager
-
     private val logger = LoggerManager()
 
 
@@ -288,6 +287,7 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             } else {
+                logger.createOrUpdateMemory(this)
                 logger.logQSO(this)
                 logger.limparCamposQSO(this)
                 logger.preencherTXExch(this)

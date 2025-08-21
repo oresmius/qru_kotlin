@@ -1401,13 +1401,17 @@
                     <TextView
                         android:id="@+id/textView_log_memory"
                         android:layout_width="0dp"
-                        android:layout_height="50dp"
-                        android:background="@android:drawable/dialog_holo_light_frame"
+                        android:layout_height="0dp"
+                        android:background="#F0EF0F"
+                        android:textColor="@color/design_default_color_on_secondary"
                         android:textSize="18sp"
-                        android:textColor="@color/design_default_color_primary"
-                        app:layout_constraintStart_toStartOf="@id/guideline_0"
-                        app:layout_constraintEnd_toStartOf="@id/button_wipe_QSO"
+                        android:layout_marginBottom="3dp"
+                        android:gravity="center"
+                        android:layout_marginTop="10dp"
                         app:layout_constraintBottom_toTopOf="@id/editText_RX_Call"
+                        app:layout_constraintEnd_toStartOf="@id/guideline_125"
+                        app:layout_constraintStart_toStartOf="@id/guideline_0"
+                        app:layout_constraintTop_toBottomOf="@id/qrg_indicator"
 
 
                         />
