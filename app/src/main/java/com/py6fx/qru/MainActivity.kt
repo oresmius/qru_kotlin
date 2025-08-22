@@ -476,7 +476,9 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-
+        findViewById<Button>(R.id.button_wipe_QSO).setOnClickListener {
+            logger.limparCamposQSO(this)
+        }
 
     }
 
