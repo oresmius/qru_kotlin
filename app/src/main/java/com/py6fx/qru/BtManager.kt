@@ -145,17 +145,17 @@ class BtManager(
                                 }
 
                                 // ------ AUTO WIPE ------
-                                // Extrai valor numérico da frequência (em Hz)
                                 val qrgAtual = qrgString.replace(".", "").toDoubleOrNull()
                                 if (qrgAtual != null) {
-                                    val qrgAtualKHz = qrgAtual / 100.0 // Exemplo: 707400 -> 7074.00 kHz
+                                    val qrgAtualKHz = qrgAtual / 100.0
                                     if (ultimaQrg != null) {
                                         val diffKHz = kotlin.math.abs(qrgAtualKHz - ultimaQrg!!)
                                         if (diffKHz >= 2.5) {
-                                            // Só faz wipe se estiver na tela do logger (pag_8 == 7)
-                                            val mainActivity = activity as? MainActivity
-                                            if (mainActivity != null && mainActivity.viewFlipper.displayedChild == 7) {
-                                                LoggerManager().limparCamposQSO(mainActivity)
+                                            activity.runOnUiThread {
+                                                val mainActivity = activity as? MainActivity
+                                                if (mainActivity != null && mainActivity.viewFlipper.displayedChild == 7) {
+                                                    LoggerManager().limparCamposQSO(mainActivity)
+                                                }
                                             }
                                         }
                                     }

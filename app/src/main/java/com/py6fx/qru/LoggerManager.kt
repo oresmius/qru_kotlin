@@ -475,21 +475,17 @@ class LoggerManager {
         if (modeRaw.isNullOrBlank()) return null
         return when (modeRaw.trim().uppercase()) {
             "LSB", "USB" -> "SSB"
-            "CWR" -> "CW"
+            "CWR", "CW-R" -> "CW"   // <- inclui CW-R
             else -> modeRaw.trim().uppercase()
         }
     }
 
-    // "14.110.02" -> 14.11002 MHz, etc.
+
+    // "7.074.00" -> kHz -> MHz
     private fun qrgStringToMHzOrNull(qrgStr: String?): Double? {
         if (qrgStr.isNullOrBlank()) return null
-        val digits = qrgStr.filter { it.isDigit() }
-        if (digits.isBlank()) return null
-        return when {
-            digits.length >= 7 -> digits.toDoubleOrNull()?.div(1_000_000.0) // Hz → MHz
-            digits.length in 5..6 -> digits.toDoubleOrNull()?.div(1_000.0)?.div(1000.0)
-            else -> digits.toDoubleOrNull()?.div(100.0)?.div(1000.0)
-        }
+        val kHz = qrgStringToKHz(qrgStr) ?: return null  // remove pontos e divide corretamente
+        return kHz / 1000.0
     }
 
     fun checkDupeWithBtInterp(
