@@ -19,6 +19,34 @@ class LoggerManager {
         val txExch: String?
     )
 
+    // ===== DUPES: Tipos de apoio e tabela de bandas =====
+    private data class Band(val name: String, val fLowMHz: Double, val fHighMHz: Double)
+
+    private val bandTable: List<Band> = listOf(
+        Band("160m", 1.800, 2.000),
+        Band("80m", 3.500, 4.000),
+        Band("60m", 5.3515, 5.3665),
+        Band("40m", 7.000, 7.300),
+        Band("30m", 10.100, 10.150),
+        Band("20m", 14.000, 14.350),
+        Band("17m", 18.068, 18.168),
+        Band("15m", 21.000, 21.450),
+        Band("12m", 24.890, 24.990),
+        Band("10m", 28.000, 29.700),
+        Band("6m", 50.000, 54.000),
+        Band("2m", 144.000, 148.000),
+        Band("70cm", 430.000, 440.000)
+    )
+
+    data class DupeResult(
+        val isDupe: Boolean,
+        val qsoId: Long? = null,
+        val timestampUtc: String? = null,
+        val freqMHz: Double? = null,
+        val modeStored: String? = null,
+        val bandName: String? = null
+    )
+
     private val memories = mutableListOf<MemoryQSO>()
     private val MEM_TOL_KHZ = 2.5
 
@@ -36,7 +64,6 @@ class LoggerManager {
         val idx = memories.indexOfFirst { kotlin.math.abs(it.freqKHz - freqKHz) <= MEM_TOL_KHZ }
         if (idx >= 0) memories[idx] = m else memories.add(m)
     }
-
 
     companion object {
         var isEditing: Boolean = false
@@ -73,7 +100,7 @@ class LoggerManager {
 
             if (cursor.moveToFirst()) {
                 val contestId = cursor.getInt(0)
-                val sendExch = cursor.getString(1).trim()
+                val sendExch = cursor.getString(1)?.trim().orEmpty()
 
                 if (sendExch == "#") {
                     val qsoCursor = db.rawQuery(
@@ -98,7 +125,8 @@ class LoggerManager {
 
             cursor.close()
             db.close()
-        } catch (_: Exception) {}
+        } catch (_: Exception) {
+        }
     }
 
     fun logQSO(activity: MainActivity) {
@@ -116,9 +144,11 @@ class LoggerManager {
             return
         }
 
+        var db: SQLiteDatabase? = null
         try {
-            val db = SQLiteDatabase.openDatabase(dbPath.path, null, SQLiteDatabase.OPEN_READWRITE)
+            db = SQLiteDatabase.openDatabase(dbPath.path, null, SQLiteDatabase.OPEN_READWRITE)
 
+            // ——— Contest ID
             val contestCursor = db.rawQuery(
                 "SELECT id FROM Contest WHERE DisplayName = ? ORDER BY datetime(StartTime) DESC LIMIT 1",
                 arrayOf(contestName)
@@ -126,28 +156,49 @@ class LoggerManager {
             if (!contestCursor.moveToFirst()) {
                 Toast.makeText(activity, "Contest ID not found.", Toast.LENGTH_LONG).show()
                 contestCursor.close()
-                db.close()
                 return
             }
             val contestId = contestCursor.getInt(0)
             contestCursor.close()
 
+            // ——— Campos da UI
             val rxCall = activity.findViewById<EditText>(R.id.editText_RX_Call).text.toString().trim().uppercase()
-            val qrg = activity.findViewById<TextView>(R.id.qrg_indicator).text.toString().trim()
-            val modo = activity.findViewById<TextView>(R.id.mode_indicator).text.toString().trim()
-            val rxRST = activity.findViewById<EditText>(R.id.editText_RX_RST).text.toString().trim()
-            val txRST = activity.findViewById<EditText>(R.id.editText_TX_RST).text.toString().trim()
-            val rxNr = activity.findViewById<EditText>(R.id.editText_RX_Nr).text.toString().trim()
+            val qrg    = activity.findViewById<TextView>(R.id.qrg_indicator).text.toString().trim()
+            val modo   = activity.findViewById<TextView>(R.id.mode_indicator).text.toString().trim()
+            val rxRST  = activity.findViewById<EditText>(R.id.editText_RX_RST).text.toString().trim()
+            val txRST  = activity.findViewById<EditText>(R.id.editText_TX_RST).text.toString().trim()
+            val rxNr   = activity.findViewById<EditText>(R.id.editText_RX_Nr).text.toString().trim()
             val rxExch = activity.findViewById<EditText>(R.id.editText_RX_Exch).text.toString().trim()
-            val txNr = activity.findViewById<EditText>(R.id.editText_TX_Nr).text.toString().trim()
+            val txNr   = activity.findViewById<EditText>(R.id.editText_TX_Nr).text.toString().trim()
             val txExch = activity.findViewById<EditText>(R.id.editText_TX_Exch).text.toString().trim()
 
             if (rxCall.isEmpty() || qrg.isEmpty() || modo.isEmpty() || rxRST.isEmpty() || txRST.isEmpty()) {
                 Toast.makeText(activity, "Missing required fields (Call, QRG, Mode, RSTs)", Toast.LENGTH_LONG).show()
-                db.close()
                 return
             }
 
+            // ——— DUPLICATA: checar ANTES do INSERT
+            val dupe = checkDupeWithBtInterp(
+                db        = db,
+                contestId = contestId.toLong(),
+                callRx    = rxCall,
+                qrgInput  = qrg,     // ex.: "7.074.00"
+                modeRaw   = modo
+            )
+
+            if (dupe.isDupe) {
+                activity.showDupeBannerFor(dupe.qsoId)
+                Toast.makeText(
+                    activity,
+                    "DUPE: $rxCall já trabalhado em ${dupe.bandName} (${dupe.modeStored}) em ${dupe.timestampUtc}.",
+                    Toast.LENGTH_LONG
+                ).show()
+                return
+            } else {
+                activity.hideDupeBanner()
+            }
+
+            // ——— INSERT somente se NÃO for DUPE
             val insertQuery = """
                 INSERT INTO QSOS (
                     contest_id, call, freq, mode, sent_rst, rcvd_rst,
@@ -164,10 +215,11 @@ class LoggerManager {
                 )
             )
 
-            db.close()
             Toast.makeText(activity, "QSO logged successfully!", Toast.LENGTH_LONG).show()
         } catch (e: Exception) {
             Toast.makeText(activity, "Error logging QSO: ${e.message}", Toast.LENGTH_LONG).show()
+        } finally {
+            db?.close()
         }
     }
 
@@ -218,12 +270,17 @@ class LoggerManager {
                     val txNr = qsoCursor.getInt(9).toString()
                     val txExch = qsoCursor.getString(10) ?: ""
 
-                    lista.add(QsoLogItem(id, timestamp, qrg, mode, rxCall, rxRst, rxNr, rxExch, txRst, txNr, txExch))
+                    lista.add(
+                        QsoLogItem(
+                            id, timestamp, qrg, mode, rxCall, rxRst, rxNr, rxExch, txRst, txNr, txExch
+                        )
+                    )
                 } while (qsoCursor.moveToNext())
             }
             qsoCursor.close()
             db.close()
-        } catch (_: Exception) {}
+        } catch (_: Exception) {
+        }
         return lista
     }
 
@@ -348,12 +405,11 @@ class LoggerManager {
             btnCancel.text = "Cancel Logger"
         }
     }
+
     // Cria/atualiza memória com base nos campos atuais do logger.
-    // Regras: RX Call obrigatório; overwrite sem aviso se houver memória na janela ±2,5 kHz.
-    // Sinal de criação: escrever RX Call no textView_log_memory.
     fun createOrUpdateMemory(activity: MainActivity) {
         val rxCall = activity.findViewById<EditText>(R.id.editText_RX_Call).text.toString().trim().uppercase()
-        if (rxCall.isEmpty()) return  // Sem toasts/avisos; simplesmente não cria.
+        if (rxCall.isEmpty()) return
 
         val qrgStr = activity.findViewById<TextView>(R.id.qrg_indicator).text.toString().trim()
         val freqKHz = qrgStringToKHz(qrgStr) ?: return
@@ -367,14 +423,11 @@ class LoggerManager {
         val mem = MemoryQSO(freqKHz, rxCall, rxRst, txRst, rxNr, rxExch, txExch)
         upsertMemoryAt(freqKHz, mem)
 
-        // Sinal: exibir apenas o RX Call
         activity.findViewById<TextView>(R.id.textView_log_memory).text = rxCall
     }
+
     // Aplica a memória próxima da QRG atual nos campos do logger.
-    // Campos faltantes na memória apagam o campo correspondente.
-    // A memória permanece viva (não é removida).
     fun applyMemoryIfNear(activity: MainActivity) {
-        // só faz sentido na tela do logger (pag_8, index 7)
         if (activity.viewFlipper.displayedChild != 7) return
 
         val qrgStr = activity.findViewById<TextView>(R.id.qrg_indicator).text.toString().trim()
@@ -388,11 +441,9 @@ class LoggerManager {
         activity.findViewById<EditText>(R.id.editText_RX_Nr).setText(mem.rxNr ?: "")
         activity.findViewById<EditText>(R.id.editText_RX_Exch).setText(mem.rxExch ?: "")
         activity.findViewById<EditText>(R.id.editText_TX_Exch).setText(mem.txExch ?: "")
-
-        // Mantém a memória; nada de toasts.
     }
-    // Atualiza o textView_log_memory com o RX Call da memória mais próxima (≤ 2,5 kHz),
-// exibindo somente na página do logger; fora disso, limpa.
+
+    // Atualiza a sugestão visual da memória atual (somente pag_8).
     fun updateMemorySuggestionForCurrentQrg(activity: MainActivity) {
         val tv = activity.findViewById<TextView>(R.id.textView_log_memory)
 
@@ -408,9 +459,97 @@ class LoggerManager {
         val mem = findMemoryNear(freqKHz)
         tv.text = mem?.rxCall ?: ""
     }
+
     // Zera todas as memórias voláteis e limpa a sugestão visual.
     fun clearAllMemories(activity: MainActivity) {
         memories.clear()
         activity.findViewById<TextView>(R.id.textView_log_memory).text = ""
+    }
+
+    private fun bandOf(freqMHz: Double?): Band? {
+        if (freqMHz == null || freqMHz.isNaN() || freqMHz <= 0.0) return null
+        return bandTable.firstOrNull { freqMHz >= it.fLowMHz && freqMHz <= it.fHighMHz }
+    }
+
+    private fun normalizeModeForDupe(modeRaw: String?): String? {
+        if (modeRaw.isNullOrBlank()) return null
+        return when (modeRaw.trim().uppercase()) {
+            "LSB", "USB" -> "SSB"
+            "CWR" -> "CW"
+            else -> modeRaw.trim().uppercase()
+        }
+    }
+
+    // "14.110.02" -> 14.11002 MHz, etc.
+    private fun qrgStringToMHzOrNull(qrgStr: String?): Double? {
+        if (qrgStr.isNullOrBlank()) return null
+        val digits = qrgStr.filter { it.isDigit() }
+        if (digits.isBlank()) return null
+        return when {
+            digits.length >= 7 -> digits.toDoubleOrNull()?.div(1_000_000.0) // Hz → MHz
+            digits.length in 5..6 -> digits.toDoubleOrNull()?.div(1_000.0)?.div(1000.0)
+            else -> digits.toDoubleOrNull()?.div(100.0)?.div(1000.0)
+        }
+    }
+
+    fun checkDupeWithBtInterp(
+        db: SQLiteDatabase,
+        contestId: Long,
+        callRx: String?,
+        qrgInput: String?,
+        modeRaw: String?
+    ): DupeResult {
+        val call = callRx?.trim()?.uppercase()
+        if (call.isNullOrEmpty()) return DupeResult(false)
+
+        val freqMHzAtual = qrgStringToMHzOrNull(qrgInput)
+        val bandAtual = bandOf(freqMHzAtual) ?: return DupeResult(false)
+
+        val modeNorm = normalizeModeForDupe(modeRaw) ?: return DupeResult(false)
+        val modesForMatch: List<String> = when (modeNorm) {
+            "SSB" -> listOf("SSB", "USB", "LSB")
+            "CW" -> listOf("CW", "CWR")
+            else -> listOf(modeNorm)
+        }
+
+        val placeholders = modesForMatch.joinToString(",") { "?" }
+        val sql = """
+            SELECT id, timestamp, freq, mode
+            FROM QSOS
+            WHERE contest_id = ?
+              AND call = ?
+              AND mode IN ($placeholders)
+            ORDER BY datetime(timestamp) ASC
+        """.trimIndent()
+
+        val args = ArrayList<String>(2 + modesForMatch.size).apply {
+            add(contestId.toString())
+            add(call)
+            addAll(modesForMatch)
+        }.toTypedArray()
+
+        db.rawQuery(sql, args).use { c ->
+            while (c.moveToNext()) {
+                val id = c.getLong(0)
+                val timestamp = c.getString(1)
+                val freqStr = c.getString(2)
+                val modeStored = c.getString(3)
+
+                val fMHzStored = qrgStringToMHzOrNull(freqStr)
+                val bandStored = bandOf(fMHzStored)
+
+                if (bandStored?.name == bandAtual.name) {
+                    return DupeResult(
+                        isDupe = true,
+                        qsoId = id,
+                        timestampUtc = timestamp,
+                        freqMHz = fMHzStored,
+                        modeStored = modeStored,
+                        bandName = bandAtual.name
+                    )
+                }
+            }
+        }
+        return DupeResult(false)
     }
 }

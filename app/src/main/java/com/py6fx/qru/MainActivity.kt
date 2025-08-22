@@ -16,9 +16,16 @@ import androidx.recyclerview.widget.RecyclerView
 import android.widget.Spinner
 import android.widget.Toast
 import android.util.DisplayMetrics
+import android.view.inputmethod.InputMethodManager
 
 
 class MainActivity : AppCompatActivity() {
+    // --- DUPE banner state ---
+    private var lastDupeQsoId: Long? = null
+
+    // Views do aviso e da lista
+    private lateinit var dupeBanner: TextView
+    private lateinit var qsoRecycler: RecyclerView
 
     private lateinit var exportador: ExportCabrilloManager
 
@@ -287,20 +294,26 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             } else {
+                // 1) mantém seu pré‑log como está
                 logger.createOrUpdateMemory(this)
-                logger.logQSO(this)
-                logger.limparCamposQSO(this)
-                logger.preencherTXExch(this)
 
-                val recyclerView = findViewById<RecyclerView>(R.id.recyclerViewQSOs)
-                val listaAtualizada = logger.obterQsosDoContestAtual(this)
-                recyclerView.adapter = QsoLogAdapter(listaAtualizada) { item ->
-                    logger.entrarEditMode(this, item.id, item.rxCall, item.rxRst, item.rxNr, item.rxExch, item.txRst, item.txExch)
+                // 2) tenta logar (pode sinalizar DUPE via banner)
+                logger.logQSO(this)
+
+                // 3) **SOMENTE** limpa e atualiza a lista se NÃO houver DUPE
+                val dupeIsVisible = findViewById<TextView>(R.id.textView_logger_dupe).visibility == View.VISIBLE
+                if (!dupeIsVisible) {
+                    logger.limparCamposQSO(this)
+                    logger.preencherTXExch(this)
+
+                    val recyclerView = findViewById<RecyclerView>(R.id.recyclerViewQSOs)
+                    val listaAtualizada = logger.obterQsosDoContestAtual(this)
+                    recyclerView.adapter = QsoLogAdapter(listaAtualizada) { item ->
+                        logger.entrarEditMode(this, item.id, item.rxCall, item.rxRst, item.rxNr, item.rxExch, item.txRst, item.txExch)
+                    }
                 }
+                // Se for DUPE, os campos permanecem para correção e o banner guia até o QSO causador.
             }
-        }
-        findViewById<Button>(R.id.button_wipe_QSO).setOnClickListener {
-            logger.limparCamposQSO(this)
         }
 
         findViewById<Button>(R.id.button_export_cabrillo_contest).setOnClickListener {
@@ -363,6 +376,42 @@ class MainActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.textView_log_memory).setOnClickListener {
             logger.applyMemoryIfNear(this)
         }
+        dupeBanner = findViewById(R.id.textView_logger_dupe)
+        qsoRecycler = findViewById(R.id.recyclerViewQSOs)
+
+// Banner começa oculto no XML (visibility="gone"); aqui só definimos o clique
+        dupeBanner.setOnClickListener {
+            // 1) Fechar o teclado e remover foco do campo ativo
+            currentFocus?.let { view ->
+                val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(view.windowToken, 0)
+                view.clearFocus()
+            }
+
+            // 2) Rolar a RecyclerView até o QSO causador (alinhado no topo)
+            val targetId = lastDupeQsoId
+            if (targetId != null) {
+                val adapter = qsoRecycler.adapter
+                // Tentamos localizar a posição do item pelo ID no adapter
+                val position = when (adapter) {
+                    is QsoLogAdapter -> adapter.items.indexOfFirst { it.id.toLong() == targetId }
+                    else -> -1
+                }
+
+                if (position >= 0) {
+                    val lm = qsoRecycler.layoutManager as? LinearLayoutManager
+                    if (lm != null) {
+                        lm.scrollToPositionWithOffset(position, 0) // item “no topo”
+                    } else {
+                        qsoRecycler.scrollToPosition(position)
+                    }
+                } else {
+                    // Caso extremo: não achou o item (pode ter sido removido)
+                    // Mantemos o comportamento silencioso (sem bloqueio)
+                }
+            }
+        }
+
 
     }
 
@@ -409,5 +458,17 @@ class MainActivity : AppCompatActivity() {
     fun navigateToPage(pageIndex: Int) {
         viewFlipper.displayedChild = pageIndex
     }
+    // Chame isto quando detectar DUPE
+    fun showDupeBannerFor(qsoId: Long?) {
+        lastDupeQsoId = qsoId
+        dupeBanner.visibility = View.VISIBLE
+    }
+
+    // Chame isto quando NÃO houver dupe
+    fun hideDupeBanner() {
+        lastDupeQsoId = null
+        dupeBanner.visibility = View.GONE
+    }
+
 
 }

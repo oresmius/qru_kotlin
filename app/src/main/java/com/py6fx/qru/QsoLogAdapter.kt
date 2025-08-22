@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
+
 // Representa um item de QSO para o RecyclerView
 data class QsoLogItem(
     val id: Int,             // ID do QSO no banco de dados
@@ -21,8 +22,9 @@ data class QsoLogItem(
     val txExch: String       // Exchange transmitido
 )
 
+
 class QsoLogAdapter(
-    private var items: List<QsoLogItem>,
+    var items: List<QsoLogItem>,
     private val onItemLongPress: ((QsoLogItem) -> Unit)? = null
 ) : RecyclerView.Adapter<QsoLogAdapter.QsoLogViewHolder>() {
 
@@ -38,6 +40,14 @@ class QsoLogAdapter(
         val txNr: TextView = itemView.findViewById(R.id.text_tx_nr)
         val txExch: TextView = itemView.findViewById(R.id.text_tx_exch)
     }
+    init {
+        setHasStableIds(true)
+    }
+
+    override fun getItemId(position: Int): Long {
+        return items[position].id.toLong()
+    }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QsoLogViewHolder {
         val view = LayoutInflater.from(parent.context)
