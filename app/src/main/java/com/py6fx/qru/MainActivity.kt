@@ -20,6 +20,11 @@ import android.view.inputmethod.InputMethodManager
 
 
 class MainActivity : AppCompatActivity() {
+
+    private var lastQrgText: String? = null
+    private var lastModeText: String? = null
+    private var callWatcher: android.text.TextWatcher? = null
+
     // --- DUPE banner state ---
     private var lastDupeQsoId: Long? = null
 
@@ -87,20 +92,29 @@ class MainActivity : AppCompatActivity() {
             this,
             deviceContainer,
             onQrgUpdate = { qrg ->
-                findViewById<TextView>(R.id.qrg_indicator).text = qrg
-                // antes: updateMemorySuggestionForCurrentFreq()
+                val qrgView = findViewById<TextView>(R.id.qrg_indicator)
+                val old = lastQrgText
+                qrgView.text = qrg
+                if (old == null || old != qrg) {   // só limpa se mudou de fato
+                    lastQrgText = qrg
+                    hideDupeBanner()
+                }
                 logger.updateMemorySuggestionForCurrentQrg(this)
             },
             onModeUpdate = { modo ->
-                findViewById<TextView>(R.id.mode_indicator).text = modo
+                val modeView = findViewById<TextView>(R.id.mode_indicator)
+                val old = lastModeText
+                modeView.text = modo
+                if (old == null || old != modo) {  // só limpa se mudou de fato
+                    lastModeText = modo
+                    hideDupeBanner()
+                }
                 if (viewFlipper.displayedChild == 7) {
                     val editTextTX = findViewById<EditText>(R.id.editText_TX_RST)
                     val editTextRX = findViewById<EditText>(R.id.editText_RX_RST)
-                    // antes: LoggerManager().RSTAutomatico(...)
                     logger.RSTAutomatico(modo, editTextTX, editTextRX)
                 }
             }
-
         )
 
         // inicia o teste simplebluetooth
@@ -204,16 +218,26 @@ class MainActivity : AppCompatActivity() {
                 this,
                 deviceContainer,
                 onQrgUpdate = { qrg ->
-                    findViewById<TextView>(R.id.qrg_indicator).text = qrg
-                    // antes: updateMemorySuggestionForCurrentFreq()
+                    val qrgView = findViewById<TextView>(R.id.qrg_indicator)
+                    val old = lastQrgText
+                    qrgView.text = qrg
+                    if (old == null || old != qrg) {   // só limpa se mudou de fato
+                        lastQrgText = qrg
+                        hideDupeBanner()
+                    }
                     logger.updateMemorySuggestionForCurrentQrg(this)
                 },
                 onModeUpdate = { modo ->
-                    findViewById<TextView>(R.id.mode_indicator).text = modo
+                    val modeView = findViewById<TextView>(R.id.mode_indicator)
+                    val old = lastModeText
+                    modeView.text = modo
+                    if (old == null || old != modo) {  // só limpa se mudou de fato
+                        lastModeText = modo
+                        hideDupeBanner()
+                    }
                     if (viewFlipper.displayedChild == 7) {
                         val editTextTX = findViewById<EditText>(R.id.editText_TX_RST)
                         val editTextRX = findViewById<EditText>(R.id.editText_RX_RST)
-                        // antes: LoggerManager().RSTAutomatico(...)
                         logger.RSTAutomatico(modo, editTextTX, editTextRX)
                     }
                 }
@@ -262,9 +286,50 @@ class MainActivity : AppCompatActivity() {
                 recyclerView.adapter = adapter
                 logger.updateMemorySuggestionForCurrentQrg(this)
             }
+            // --- Verificação de DUPE em tempo real (a cada tecla) ---
+            val etCall = findViewById<EditText>(R.id.editText_RX_Call)
+
+// Remova watcher antigo (se existir) para não ter duplicata
+            callWatcher?.let { etCall.removeTextChangedListener(it) }
+
+            callWatcher = object : android.text.TextWatcher {
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    if (viewFlipper.displayedChild != 7) return
+
+                    val partial = s?.toString()?.trim()
+                    // IMPORTANTE: não mexa no banner até ter 4+ chars; se zerou, aí sim esconda
+                    if (partial.isNullOrEmpty()) {
+                        hideDupeBanner(); return
+                    }
+                    if (partial.length < 4) return
+
+                    val qrg = findViewById<TextView>(R.id.qrg_indicator).text.toString().trim()
+                    val modo = findViewById<TextView>(R.id.mode_indicator).text.toString().trim()
+
+                    val result = logger.checkDupeRealtime(
+                        activity = this@MainActivity,
+                        currentQrg = qrg,
+                        currentMode = modo,
+                        partialCall = partial
+                    )
+
+                    if (result.isDupe) showDupeBannerFor(result.qsoId) else hideDupeBanner()
+                }
+
+                override fun afterTextChanged(s: android.text.Editable?) {}
+            }
+            etCall.addTextChangedListener(callWatcher)
         }
 
-        findViewById<Button>(R.id.button_resume_contest).setOnClickListener {
+            findViewById<Button>(R.id.button_resume_contest).setOnClickListener {
             val contestIndicator = findViewById<TextView>(R.id.contest_indicator)
             val before = contestIndicator.text.toString()
 

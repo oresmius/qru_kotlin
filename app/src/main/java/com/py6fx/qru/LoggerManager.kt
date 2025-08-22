@@ -548,4 +548,109 @@ class LoggerManager {
         }
         return DupeResult(false)
     }
+    // --- DUPES: checagem em tempo real durante a digitação ---
+    enum class DupeStatus {
+        NOT_APPLICABLE,   // Ainda não é hora de checar (ex: <4 caracteres, QRG não encontrada, etc.)
+        NOT_DUPE,         // Não é dupe
+        DUPE              // É dupe!
+    }
+
+    // Checagem de DUPE em tempo real durante a digitação.
+    // Regra: mesma QRG + mesmo MODO, e só alerta com CALL completo (>= 4 chars).
+    fun checkDupeRealtime(
+        activity: MainActivity,
+        currentQrg: String?,
+        currentMode: String?,
+        partialCall: String?
+    ): DupeResult {
+        // Pré-condições mínimas
+        if (currentQrg.isNullOrBlank() || currentMode.isNullOrBlank()) return DupeResult(false)
+
+        // Descobrir usuário e contest ativos (seguindo seu padrão atual)
+        val userCall = activity.findViewById<TextView>(R.id.user_indicator).text.toString().trim()
+        val contestName = activity.findViewById<TextView>(R.id.contest_indicator).text.toString().trim()
+        if (userCall.isEmpty() || userCall == "USER?" || contestName.isEmpty() || contestName == "CONTEST?") {
+            return DupeResult(false)
+        }
+
+        // Abrir o BD do usuário
+        val dbFile = File(activity.filesDir, "db/$userCall.db")
+        if (!dbFile.exists()) return DupeResult(false)
+
+        try {
+            SQLiteDatabase.openDatabase(dbFile.path, null, SQLiteDatabase.OPEN_READONLY).use { db ->
+                // Obter contest_id mais recente com esse DisplayName (igual ao seu logQSO/obterQsosDoContestAtual)
+                val contestId = db.rawQuery(
+                    "SELECT id FROM Contest WHERE DisplayName = ? ORDER BY datetime(StartTime) DESC LIMIT 1",
+                    arrayOf(contestName)
+                ).use { c ->
+                    if (!c.moveToFirst()) return DupeResult(false)
+                    c.getLong(0)
+                }
+
+                // STEP 1+2+3: mesma QRG + mesmo MODO (com normalização SSB↔LSB/USB, CW↔CWR)
+                val modeNorm = normalizeModeForDupe(currentMode) ?: return DupeResult(false)
+                val modesForMatch = when (modeNorm) {
+                    "SSB" -> listOf("SSB", "USB", "LSB")
+                    "CW"  -> listOf("CW", "CWR")
+                    else  -> listOf(modeNorm)
+                }
+
+                val placeholders = modesForMatch.joinToString(",") { "?" }
+                val sqlSameFreqMode = """
+                SELECT id, timestamp, freq, mode, call
+                  FROM QSOS
+                 WHERE contest_id = ?
+                   AND freq = ?
+                   AND mode IN ($placeholders)
+            """.trimIndent()
+                val argsSame = ArrayList<String>(2 + modesForMatch.size).apply {
+                    add(contestId.toString())
+                    add(currentQrg)
+                    addAll(modesForMatch)
+                }.toTypedArray()
+
+                db.rawQuery(sqlSameFreqMode, argsSame).use { cFM ->
+                    if (!cFM.moveToFirst()) {
+                        // Não há nada nessa QRG+modo neste contest → não verificar mais nada
+                        return DupeResult(false)
+                    }
+
+                    // Só começa a comparar CALL a partir do 4º caractere
+                    val callTyped = partialCall?.trim()?.uppercase()
+                    if (callTyped == null || callTyped.length < 4) {
+                        // Condição "não verificar ainda"
+                        return DupeResult(false)
+                    }
+
+                    do {
+                        val id          = cFM.getLong(0)
+                        val ts          = cFM.getString(1)
+                        val modeStored  = cFM.getString(3)
+                        val callStored  = cFM.getString(4)?.trim()?.uppercase()
+
+                        if (callStored == callTyped) {
+                            // Monta retorno completo (aproveitando seu DupeResult existente)
+                            val fMHz = qrgStringToMHzOrNull(currentQrg)
+                            val band = bandOf(fMHz)?.name
+                            return DupeResult(
+                                isDupe       = true,
+                                qsoId        = id,
+                                timestampUtc = ts,
+                                freqMHz      = fMHz,
+                                modeStored   = modeStored,
+                                bandName     = band
+                            )
+                        }
+                    } while (cFM.moveToNext())
+                }
+            }
+        } catch (_: Exception) {
+            // silencioso, segue padrão do projeto
+        }
+
+        return DupeResult(false)
+    }
+
+
 }
