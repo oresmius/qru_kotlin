@@ -329,7 +329,7 @@ class MainActivity : AppCompatActivity() {
             etCall.addTextChangedListener(callWatcher)
         }
 
-            findViewById<Button>(R.id.button_resume_contest).setOnClickListener {
+        findViewById<Button>(R.id.button_resume_contest).setOnClickListener {
             val contestIndicator = findViewById<TextView>(R.id.contest_indicator)
             val before = contestIndicator.text.toString()
 
@@ -355,29 +355,31 @@ class MainActivity : AppCompatActivity() {
                     val recyclerView = findViewById<RecyclerView>(R.id.recyclerViewQSOs)
                     val listaAtualizada = logger.obterQsosDoContestAtual(this)
                     recyclerView.adapter = QsoLogAdapter(listaAtualizada) { item ->
-                        logger.entrarEditMode(this, item.id, item.rxCall, item.rxRst, item.rxNr, item.rxExch, item.txRst, item.txExch)
+                        logger.entrarEditMode(
+                            this, item.id, item.rxCall, item.rxRst,
+                            item.rxNr, item.rxExch, item.txRst, item.txExch
+                        )
                     }
                 }
             } else {
-                // 1) mantém seu pré‑log como está
+                // 1) mantém seu pré-log como está
                 logger.createOrUpdateMemory(this)
 
-                // 2) tenta logar (pode sinalizar DUPE via banner)
+                // 2) Loga (se for DUPE, apenas mostra o banner; o INSERT ocorre do mesmo jeito)
                 logger.logQSO(this)
 
-                // 3) **SOMENTE** limpa e atualiza a lista se NÃO houver DUPE
-                val dupeIsVisible = findViewById<TextView>(R.id.textView_logger_dupe).visibility == View.VISIBLE
-                if (!dupeIsVisible) {
-                    logger.limparCamposQSO(this)
-                    logger.preencherTXExch(this)
+                // 3) SEMPRE limpar e atualizar a lista — DUPE se comporta como QSO normal
+                logger.limparCamposQSO(this)
+                logger.preencherTXExch(this)
 
-                    val recyclerView = findViewById<RecyclerView>(R.id.recyclerViewQSOs)
-                    val listaAtualizada = logger.obterQsosDoContestAtual(this)
-                    recyclerView.adapter = QsoLogAdapter(listaAtualizada) { item ->
-                        logger.entrarEditMode(this, item.id, item.rxCall, item.rxRst, item.rxNr, item.rxExch, item.txRst, item.txExch)
-                    }
+                val recyclerView = findViewById<RecyclerView>(R.id.recyclerViewQSOs)
+                val listaAtualizada = logger.obterQsosDoContestAtual(this)
+                recyclerView.adapter = QsoLogAdapter(listaAtualizada) { item ->
+                    logger.entrarEditMode(
+                        this, item.id, item.rxCall, item.rxRst,
+                        item.rxNr, item.rxExch, item.txRst, item.txExch
+                    )
                 }
-                // Se for DUPE, os campos permanecem para correção e o banner guia até o QSO causador.
             }
         }
 

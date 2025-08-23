@@ -185,20 +185,15 @@ class LoggerManager {
                 qrgInput  = qrg,     // ex.: "7.074.00"
                 modeRaw   = modo
             )
-
+            // Em caso de DUPE: apenas sinaliza no banner e segue o fluxo normal (SEM bloquear)
             if (dupe.isDupe) {
                 activity.showDupeBannerFor(dupe.qsoId)
-                Toast.makeText(
-                    activity,
-                    "DUPE: $rxCall já trabalhado em ${dupe.bandName} (${dupe.modeStored}) em ${dupe.timestampUtc}.",
-                    Toast.LENGTH_LONG
-                ).show()
-                return
             } else {
                 activity.hideDupeBanner()
             }
 
-            // ——— INSERT somente se NÃO for DUPE
+
+            // ——— INSERT (inclusive quando for DUPE)
             val insertQuery = """
                 INSERT INTO QSOS (
                     contest_id, call, freq, mode, sent_rst, rcvd_rst,
@@ -214,7 +209,6 @@ class LoggerManager {
                     txExch.ifEmpty { null }, rxExch.ifEmpty { null }
                 )
             )
-
             Toast.makeText(activity, "QSO logged successfully!", Toast.LENGTH_LONG).show()
         } catch (e: Exception) {
             Toast.makeText(activity, "Error logging QSO: ${e.message}", Toast.LENGTH_LONG).show()
