@@ -177,29 +177,35 @@ class LoggerManager {
                 return
             }
 
-            // ——— DUPLICATA: checar ANTES do INSERT
-            val dupe = checkDupeWithBtInterp(
-                db        = db,
-                contestId = contestId.toLong(),
-                callRx    = rxCall,
-                qrgInput  = qrg,     // ex.: "7.074.00"
-                modeRaw   = modo
-            )
-            // Em caso de DUPE: apenas sinaliza no banner e segue o fluxo normal (SEM bloquear)
-            if (dupe.isDupe) {
-                activity.showDupeBannerFor(dupe.qsoId)
+            // === CHAVE LÓGICA: se estiver em Edit Mode, não checar DUPE nem exibir banner ===
+            if (!LoggerManager.isEditing) {
+                // ——— DUPLICATA: checar ANTES do INSERT (lógica já existente)
+                val dupe = checkDupeWithBtInterp(
+                    db        = db,
+                    contestId = contestId.toLong(),
+                    callRx    = rxCall,
+                    qrgInput  = qrg,     // ex.: "7.074.00"
+                    modeRaw   = modo
+                )
+
+                // Apenas sinaliza banner; NÃO bloqueia o INSERT
+                if (dupe.isDupe) {
+                    activity.showDupeBannerFor(dupe.qsoId)
+                } else {
+                    activity.hideDupeBanner()
+                }
             } else {
+                // Em Edit Mode: garante banner oculto
                 activity.hideDupeBanner()
             }
 
-
             // ——— INSERT (inclusive quando for DUPE)
             val insertQuery = """
-                INSERT INTO QSOS (
-                    contest_id, call, freq, mode, sent_rst, rcvd_rst,
-                    sent_serial, rcvd_serial, sent_exchange, rcvd_exchange
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """.trimIndent()
+            INSERT INTO QSOS (
+                contest_id, call, freq, mode, sent_rst, rcvd_rst,
+                sent_serial, rcvd_serial, sent_exchange, rcvd_exchange
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """.trimIndent()
 
             db.execSQL(
                 insertQuery,
@@ -209,13 +215,17 @@ class LoggerManager {
                     txExch.ifEmpty { null }, rxExch.ifEmpty { null }
                 )
             )
+
+            // Mantém o toast de sucesso
             Toast.makeText(activity, "QSO logged successfully!", Toast.LENGTH_LONG).show()
+
         } catch (e: Exception) {
             Toast.makeText(activity, "Error logging QSO: ${e.message}", Toast.LENGTH_LONG).show()
         } finally {
             db?.close()
         }
     }
+
 
     fun limparCamposQSO(activity: MainActivity) {
         activity.findViewById<EditText>(R.id.editText_RX_Call).setText("")
@@ -288,6 +298,7 @@ class LoggerManager {
         txRst: String,
         txExch: String?
     ) {
+        activity.hideDupeBanner()
         activity.findViewById<EditText>(R.id.editText_RX_Call).setText(rxCall)
         activity.findViewById<EditText>(R.id.editText_RX_RST).setText(rxRst)
         activity.findViewById<EditText>(R.id.editText_RX_Nr).setText(rxNr ?: "")
@@ -559,6 +570,8 @@ class LoggerManager {
         currentMode: String?,
         partialCall: String?
     ): DupeResult {
+        // CHAVE LÓGICA: em Edit Mode, verificador totalmente desligado
+        if (LoggerManager.isEditing) return DupeResult(false)
         // Pré‑condições mínimas
         if (currentQrg.isNullOrBlank() || currentMode.isNullOrBlank()) return DupeResult(false)
 
