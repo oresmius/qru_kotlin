@@ -362,13 +362,11 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             } else {
-                // 1) mantém seu pré-log como está
-                logger.createOrUpdateMemory(this)
 
-                // 2) Loga (se for DUPE, apenas mostra o banner; o INSERT ocorre do mesmo jeito)
+                // Loga (se for DUPE, apenas mostra o banner; o INSERT ocorre do mesmo jeito)
                 logger.logQSO(this)
 
-                // 3) SEMPRE limpar e atualizar a lista — DUPE se comporta como QSO normal
+                // SEMPRE limpar e atualizar a lista — DUPE se comporta como QSO normal
                 logger.limparCamposQSO(this)
                 logger.preencherTXExch(this)
 
