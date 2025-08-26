@@ -106,18 +106,24 @@ class LoggerManager {
                 val sendExch = cursor.getString(1)?.trim().orEmpty()
 
                 if (sendExch == "#") {
-                    val qsoCursor = db.rawQuery(
-                        "SELECT COUNT(*) FROM QSOS WHERE contest_id = ?",
+                    val dbRw = SQLiteDatabase.openDatabase(dbPath.path, null, SQLiteDatabase.OPEN_READWRITE)
+
+                    // Garante coluna e inicialização
+                    ensureLastSerialColumnAndInit(dbRw, contestId.toLong())
+
+                    // Lê o próximo serial a emitir (monotônico)
+                    val sCur = dbRw.rawQuery(
+                        "SELECT LastSerialIssued FROM Contest WHERE id = ?",
                         arrayOf(contestId.toString())
                     )
-                    val count = if (qsoCursor.moveToFirst()) qsoCursor.getInt(0) else 0
-                    val nextSerial = count + 1
+                    val nextSerial = if (sCur.moveToFirst()) sCur.getInt(0) else 1
+                    sCur.close()
+                    dbRw.close()
 
                     editTextTxNr.setText(nextSerial.toString())
                     editTextTxNr.isEnabled = false
                     editTextTxExch.setText("")
                     editTextTxExch.isEnabled = false
-                    qsoCursor.close()
                 } else {
                     editTextTxExch.setText(sendExch)
                     editTextTxExch.isEnabled = false
@@ -179,6 +185,31 @@ class LoggerManager {
                 Toast.makeText(activity, "Missing required fields (Call, QRG, Mode, RSTs)", Toast.LENGTH_LONG).show()
                 return
             }
+            var serialToUse: Int? = null
+            var exchToUse: String? = null
+
+            val cc = db.rawQuery(
+                "SELECT SendExchange FROM Contest WHERE id = ?",
+                arrayOf(contestId.toString())
+            )
+            val sendExchStr = if (cc.moveToFirst()) cc.getString(0)?.trim().orEmpty() else ""
+            cc.close()
+
+            if (sendExchStr == "#") {
+                // Serial controlado pelo contador monotônico
+                ensureLastSerialColumnAndInit(db, contestId.toLong())
+                db.rawQuery(
+                    "SELECT LastSerialIssued FROM Contest WHERE id = ?",
+                    arrayOf(contestId.toString())
+                ).use { sCur ->
+                    serialToUse = if (sCur.moveToFirst()) sCur.getInt(0) else 1
+                }
+                exchToUse = null
+            } else {
+                // Contest de exchange fixo: sem serial, usa EXCH
+                serialToUse = null
+                exchToUse = sendExchStr
+            }
 
             // === CHAVE LÓGICA: se estiver em Edit Mode, não checar DUPE nem exibir banner ===
             if (!LoggerManager.isEditing) {
@@ -204,20 +235,31 @@ class LoggerManager {
 
             // ——— INSERT (inclusive quando for DUPE)
             val insertQuery = """
-            INSERT INTO QSOS (
-                contest_id, call, freq, mode, sent_rst, rcvd_rst,
-                sent_serial, rcvd_serial, sent_exchange, rcvd_exchange
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """.trimIndent()
+    INSERT INTO QSOS (
+        contest_id, call, freq, mode, sent_rst, rcvd_rst,
+        sent_serial, rcvd_serial, sent_exchange, rcvd_exchange
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+""".trimIndent()
 
             db.execSQL(
                 insertQuery,
                 arrayOf(
                     contestId, rxCall, qrg, modo, txRST, rxRST,
-                    txNr.toIntOrNull(), rxNr.toIntOrNull(),
-                    txExch.ifEmpty { null }, rxExch.ifEmpty { null }
+                    // >>> usar o serial monotônico calculado:
+                    serialToUse,
+                    rxNr.toIntOrNull(),
+                    // >>> usar o exchange definido pela regra do contest:
+                    exchToUse,
+                    rxExch.ifEmpty { null }
                 )
             )
+            // >>> se for contest com serial, avançar o contador monotônico
+            if (sendExchStr == "#") {
+                db.execSQL(
+                    "UPDATE Contest SET LastSerialIssued = LastSerialIssued + 1 WHERE id = ?",
+                    arrayOf(contestId)
+                )
+            }
 
             // Mantém o toast de sucesso
             Toast.makeText(activity, "QSO logged successfully!", Toast.LENGTH_LONG).show()
@@ -301,7 +343,14 @@ class LoggerManager {
         txRst: String,
         txExch: String?
     ) {
+        // Sinaliza modo edição ANTES de tocar nos campos (evita TextWatcher acionar DUPE)
+        isEditing = true
+        editingQsoId = qsoId
+
+        // (opcional) esconder banner logo de cara
         activity.hideDupeBanner()
+
+        // Agora preenche os campos
         activity.findViewById<EditText>(R.id.editText_RX_Call).setText(rxCall)
         activity.findViewById<EditText>(R.id.editText_RX_RST).setText(rxRst)
         activity.findViewById<EditText>(R.id.editText_RX_Nr).setText(rxNr ?: "")
@@ -310,10 +359,10 @@ class LoggerManager {
         activity.findViewById<EditText>(R.id.editText_TX_Exch).isEnabled = false
         activity.findViewById<EditText>(R.id.editText_TX_Nr).isEnabled = false
 
-        isEditing = true
-        editingQsoId = qsoId
-
         setEditModeUI(activity, true)
+
+        // Garante que qualquer banner exibido por um disparo residual seja ocultado
+        activity.hideDupeBanner()
 
         Toast.makeText(activity, "Editing QSO #$qsoId – press “Up. QSO” to save.", Toast.LENGTH_LONG).show()
     }
@@ -709,7 +758,39 @@ class LoggerManager {
 
         return DupeResult(false)
     }
+    private fun ensureLastSerialColumnAndInit(db: SQLiteDatabase, contestId: Long) {
+        // 1) Se a coluna não existir, cria
+        db.rawQuery("PRAGMA table_info(Contest)", null).use { c ->
+            var hasCol = false
+            while (c.moveToNext()) {
+                if (c.getString(1).equals("LastSerialIssued", ignoreCase = true)) {
+                    hasCol = true; break
+                }
+            }
+            if (!hasCol) {
+                db.execSQL("ALTER TABLE Contest ADD COLUMN LastSerialIssued INTEGER")
+            }
+        }
 
+        // 2) Se o valor estiver nulo, inicializa com MAX(sent_serial)+1 (ou 1 se não houver QSOs)
+        val cur = db.rawQuery(
+            "SELECT LastSerialIssued FROM Contest WHERE id = ?",
+            arrayOf(contestId.toString())
+        )
+        val needsInit = if (cur.moveToFirst()) cur.isNull(0) else true
+        cur.close()
 
-
+        if (needsInit) {
+            val maxCur = db.rawQuery(
+                "SELECT COALESCE(MAX(sent_serial), 0) + 1 FROM QSOS WHERE contest_id = ?",
+                arrayOf(contestId.toString())
+            )
+            val startVal = if (maxCur.moveToFirst()) maxCur.getInt(0) else 1
+            maxCur.close()
+            db.execSQL(
+                "UPDATE Contest SET LastSerialIssued = ? WHERE id = ?",
+                arrayOf(startVal, contestId)
+            )
+        }
+    }
 }

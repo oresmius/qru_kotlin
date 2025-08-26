@@ -303,6 +303,7 @@ class MainActivity : AppCompatActivity() {
 
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                     if (viewFlipper.displayedChild != 7) return
+                    if (LoggerManager.isEditing) return   // <- evita DUPE durante edição
 
                     val partial = s?.toString()?.trim()
                     // IMPORTANTE: não mexa no banner até ter 4+ chars; se zerou, aí sim esconda
