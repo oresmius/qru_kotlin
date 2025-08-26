@@ -360,6 +360,7 @@ class MainActivity : AppCompatActivity() {
                             item.rxNr, item.rxExch, item.txRst, item.txExch
                         )
                     }
+                    logger.preencherTXExch(this)
                 }
             } else {
 
@@ -479,7 +480,33 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.button_wipe_QSO).setOnClickListener {
             logger.limparCamposQSO(this)
         }
+        findViewById<Button>(R.id.button_delete_QSO).setOnClickListener {
+            if (!LoggerManager.isEditing) {
+                Toast.makeText(this, "Not in Edit Mode.", Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
 
+            // Confirmação simples
+            android.app.AlertDialog.Builder(this)
+                .setTitle("Delete QSO")
+                .setMessage("Are you sure you want to delete this QSO?")
+                .setPositiveButton("Delete") { _, _ ->
+                    val ok = logger.deleteQSO(this)
+                    if (ok) {
+                        hideDupeBanner()
+                        val recyclerView = findViewById<RecyclerView>(R.id.recyclerViewQSOs)
+                        val listaAtualizada = logger.obterQsosDoContestAtual(this)
+                        recyclerView.adapter = QsoLogAdapter(listaAtualizada) { item ->
+                            logger.entrarEditMode(
+                                this, item.id, item.rxCall, item.rxRst,
+                                item.rxNr, item.rxExch, item.txRst, item.txExch
+                            )
+                        }
+                    }
+                }
+                .setNegativeButton("Cancel", null)
+                .show()
+        }
     }
 
     // Cria as opções do menu e as faz aparecer

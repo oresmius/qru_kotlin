@@ -6,6 +6,9 @@ import android.widget.TextView
 import java.io.File
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import android.view.View
+import android.widget.Button
+
 
 class LoggerManager {
     // --- Pré-log: memórias voláteis (sessão atual) ---
@@ -382,6 +385,43 @@ class LoggerManager {
         }
     }
 
+    fun deleteQSO(activity: MainActivity): Boolean {
+        val qsoId = editingQsoId
+        if (!isEditing || qsoId == null) {
+            Toast.makeText(activity, "No QSO in Edit Mode.", Toast.LENGTH_LONG).show()
+            return false
+        }
+
+        val userCall = activity.findViewById<TextView>(R.id.user_indicator).text.toString().trim()
+        if (userCall.isEmpty() || userCall == "USER?") {
+            Toast.makeText(activity, "No active user selected.", Toast.LENGTH_LONG).show()
+            return false
+        }
+
+        val dbPath = File(activity.filesDir, "db/$userCall.db")
+        if (!dbPath.exists()) {
+            Toast.makeText(activity, "Database not found for user $userCall", Toast.LENGTH_LONG).show()
+            return false
+        }
+
+        return try {
+            val db = SQLiteDatabase.openDatabase(dbPath.path, null, SQLiteDatabase.OPEN_READWRITE)
+            db.execSQL("DELETE FROM QSOS WHERE id = ?", arrayOf(qsoId))
+            db.close()
+
+            // Sai do Edit Mode e limpa os campos
+            sairDoEditMode(activity)
+            limparCamposQSO(activity)
+
+            Toast.makeText(activity, "QSO deleted successfully!", Toast.LENGTH_LONG).show()
+            true
+        } catch (e: Exception) {
+            Toast.makeText(activity, "Error deleting QSO: ${e.message}", Toast.LENGTH_LONG).show()
+            false
+        }
+    }
+
+
     private fun sairDoEditMode(activity: MainActivity) {
         isEditing = false
         editingQsoId = null
@@ -396,20 +436,32 @@ class LoggerManager {
         val btnLog = activity.findViewById<TextView>(R.id.button_log_QSO)
         val btnCancel = activity.findViewById<TextView>(R.id.button_log_cancel)
 
+        // referência ao botão de deletar
+        val btnDelete = activity.findViewById<Button>(R.id.button_delete_QSO)
+
         if (enabled) {
             status.text = "EDIT MODE"
             status.backgroundTintList = ContextCompat.getColorStateList(activity, android.R.color.holo_orange_light)
             mainLabel.text = "Cancel Ed."
             btnLog.text = "Up. QSO"
             btnCancel.text = "Cancel Ed."
+
+            // >>> ADIÇÃO: exibe/habilita o botão de deletar somente no Edit Mode
+            btnDelete.visibility = View.VISIBLE
+            btnDelete.isEnabled = true
         } else {
             status.text = "LOG MODE"
             status.backgroundTintList = ContextCompat.getColorStateList(activity, android.R.color.holo_green_light)
             mainLabel.text = "Main Menu"
             btnLog.text = "Log QSO"
             btnCancel.text = "Cancel Logger"
+
+            //oculta/desabilita fora do Edit Mode
+            btnDelete.visibility = View.GONE
+            btnDelete.isEnabled = false
         }
     }
+
 
     // Cria/atualiza memória com base nos campos atuais do logger.
     fun createOrUpdateMemory(activity: MainActivity) {
