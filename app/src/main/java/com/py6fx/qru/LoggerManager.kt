@@ -21,6 +21,17 @@ class LoggerManager {
         val rxExch: String?,
         val txExch: String?
     )
+    // --- Memória HISTÓRICA (derivada do banco do contest ativo) ---
+    private data class HistMemQSO(
+        val id: Long,
+        val freqKHz: Double,
+        val rxCall: String,
+        val modeNorm: String,
+        val timestampUtc: String
+    )
+
+    private val historical = mutableListOf<HistMemQSO>()
+
 
     // ===== DUPES: Tipos de apoio e tabela de bandas =====
     private data class Band(val name: String, val fLowMHz: Double, val fHighMHz: Double)
@@ -264,6 +275,19 @@ class LoggerManager {
             // Mantém o toast de sucesso
             Toast.makeText(activity, "QSO logged successfully!", Toast.LENGTH_LONG).show()
 
+            // Após o INSERT, pega o id inserido e atualiza cache histórico
+            try {
+                val cur = db.rawQuery("SELECT last_insert_rowid()", null)
+                if (cur.moveToFirst()) {
+                    val newId = cur.getLong(0)
+                    onQsoInserted(activity, newId)
+                }
+                cur.close()
+            } catch (_: Exception) { }
+
+// Atualiza a sugestão visual
+            updateMemorySuggestionForCurrentQrg(activity)
+
         } catch (e: Exception) {
             Toast.makeText(activity, "Error logging QSO: ${e.message}", Toast.LENGTH_LONG).show()
         } finally {
@@ -424,6 +448,8 @@ class LoggerManager {
             )
 
             db.close()
+            onQsoUpdated(activity, qsoId)
+            updateMemorySuggestionForCurrentQrg(activity)
             sairDoEditMode(activity)
             limparCamposQSO(activity)
             Toast.makeText(activity, "QSO updated successfully!", Toast.LENGTH_LONG).show()
@@ -456,11 +482,13 @@ class LoggerManager {
         return try {
             val db = SQLiteDatabase.openDatabase(dbPath.path, null, SQLiteDatabase.OPEN_READWRITE)
             db.execSQL("DELETE FROM QSOS WHERE id = ?", arrayOf(qsoId))
+            onQsoDeleted(qsoId)
             db.close()
 
             // Sai do Edit Mode e limpa os campos
             sairDoEditMode(activity)
             limparCamposQSO(activity)
+            updateMemorySuggestionForCurrentQrg(activity)
 
             Toast.makeText(activity, "QSO deleted successfully!", Toast.LENGTH_LONG).show()
             true
@@ -536,18 +564,35 @@ class LoggerManager {
     fun applyMemoryIfNear(activity: MainActivity) {
         if (activity.viewFlipper.displayedChild != 7) return
 
-        val qrgStr = activity.findViewById<TextView>(R.id.qrg_indicator).text.toString().trim()
+        val qrgStr  = activity.findViewById<TextView>(R.id.qrg_indicator).text.toString().trim()
+        val modeStr = activity.findViewById<TextView>(R.id.mode_indicator).text.toString().trim()
         val freqKHz = qrgStringToKHz(qrgStr) ?: return
 
-        val mem = findMemoryNear(freqKHz) ?: return
+        val etCall  = activity.findViewById<EditText>(R.id.editText_RX_Call)
+        val etRxRst = activity.findViewById<EditText>(R.id.editText_RX_RST)
+        val etTxRst = activity.findViewById<EditText>(R.id.editText_TX_RST)
+        val etRxNr  = activity.findViewById<EditText>(R.id.editText_RX_Nr)
+        val etRxEx  = activity.findViewById<EditText>(R.id.editText_RX_Exch)
+        val etTxEx  = activity.findViewById<EditText>(R.id.editText_TX_Exch)
 
-        activity.findViewById<EditText>(R.id.editText_RX_Call).setText(mem.rxCall)
-        activity.findViewById<EditText>(R.id.editText_RX_RST).setText(mem.rxRst ?: "")
-        activity.findViewById<EditText>(R.id.editText_TX_RST).setText(mem.txRst ?: "")
-        activity.findViewById<EditText>(R.id.editText_RX_Nr).setText(mem.rxNr ?: "")
-        activity.findViewById<EditText>(R.id.editText_RX_Exch).setText(mem.rxExch ?: "")
-        activity.findViewById<EditText>(R.id.editText_TX_Exch).setText(mem.txExch ?: "")
+        // 1) Tenta MANUAL
+        val memManual = findMemoryNear(freqKHz)
+        if (memManual != null) {
+            etCall.setText(memManual.rxCall)
+            etRxRst.setText(memManual.rxRst ?: "")
+            etTxRst.setText(memManual.txRst ?: "")
+            etRxNr.setText(memManual.rxNr ?: "")
+            etRxEx.setText(memManual.rxExch ?: "")
+            etTxEx.setText(memManual.txExch ?: "")
+            return
+        }
+
+        // 2) Cai para HISTÓRICO (aplica APENAS o CALL — histórico guarda só call/freq/mode)
+        val modeNorm = normalizeModeForMemory(modeStr)
+        val memHist = findHistoricalNearByMode(freqKHz, modeNorm) ?: return
+        etCall.setText(memHist.rxCall)
     }
+
 
     // Atualiza a sugestão visual da memória atual (somente pag_8).
     fun updateMemorySuggestionForCurrentQrg(activity: MainActivity) {
@@ -558,17 +603,29 @@ class LoggerManager {
             return
         }
 
-        val qrgStr = activity.findViewById<TextView>(R.id.qrg_indicator).text.toString().trim()
+        val qrgStr  = activity.findViewById<TextView>(R.id.qrg_indicator).text.toString().trim()
+        val modeStr = activity.findViewById<TextView>(R.id.mode_indicator).text.toString().trim()
         val freqKHz = qrgStringToKHz(qrgStr)
         if (freqKHz == null) { tv.text = ""; return }
 
-        val mem = findMemoryNear(freqKHz)
-        tv.text = mem?.rxCall ?: ""
+        // 1) PRIORIDADE: memória MANUAL (volátil)
+        val memManual = findMemoryNear(freqKHz)
+        if (memManual != null) {
+            tv.text = memManual.rxCall
+            return
+        }
+
+        // 2) FALLBACK: memória HISTÓRICA (mesma QRG ±2,5 kHz e MESMO modo normalizado)
+        val modeNorm = normalizeModeForMemory(modeStr)
+        val memHist = findHistoricalNearByMode(freqKHz, modeNorm)
+        tv.text = memHist?.rxCall ?: ""
     }
+
 
     // Zera todas as memórias voláteis e limpa a sugestão visual.
     fun clearAllMemories(activity: MainActivity) {
         memories.clear()
+        historical.clear()
         activity.findViewById<TextView>(R.id.textView_log_memory).text = ""
     }
 
@@ -585,6 +642,20 @@ class LoggerManager {
             else -> modeRaw.trim().uppercase()
         }
     }
+
+    // Normalização reaproveita a do DUPE
+    private fun normalizeModeForMemory(modeRaw: String?): String? = normalizeModeForDupe(modeRaw)
+
+    // Encontra item histórico mais próximo (± MEM_TOL_KHZ) e MESMO modo (normalizado).
+    private fun findHistoricalNearByMode(freqKHz: Double, modeNorm: String?): HistMemQSO? {
+        if (modeNorm.isNullOrBlank()) return null
+        val matches = historical.filter {
+            kotlin.math.abs(it.freqKHz - freqKHz) <= MEM_TOL_KHZ && it.modeNorm == modeNorm
+        }
+        // timestampUtc está em formato ISO do SQLite → ordena lexicograficamente
+        return matches.maxByOrNull { it.timestampUtc }
+    }
+
 
 
     // "7.074.00" -> kHz -> MHz
@@ -758,6 +829,120 @@ class LoggerManager {
 
         return DupeResult(false)
     }
+    // Inicializa a memória histórica lendo TODO o contest ativo
+    fun initHistoricalFromDb(activity: MainActivity): Int {
+        historical.clear()
+
+        val userCall = activity.findViewById<TextView>(R.id.user_indicator).text.toString().trim()
+        val contestName = activity.findViewById<TextView>(R.id.contest_indicator).text.toString().trim()
+        val dbFile = File(activity.filesDir, "db/$userCall.db")
+        if (userCall.isEmpty() || contestName.isEmpty() || !dbFile.exists()) return 0
+
+        return try {
+            SQLiteDatabase.openDatabase(dbFile.path, null, SQLiteDatabase.OPEN_READONLY).use { db ->
+                // Descobre contest_id
+                val contestId = db.rawQuery(
+                    "SELECT id FROM Contest WHERE DisplayName = ? ORDER BY datetime(StartTime) DESC LIMIT 1",
+                    arrayOf(contestName)
+                ).use { c ->
+                    if (!c.moveToFirst()) return 0
+                    c.getLong(0)
+                }
+
+                db.rawQuery(
+                    "SELECT id, timestamp, freq, mode, call FROM QSOS WHERE contest_id = ?",
+                    arrayOf(contestId.toString())
+                ).use { q ->
+                    while (q.moveToNext()) {
+                        val id  = q.getLong(0)
+                        val ts  = q.getString(1) ?: continue
+                        val fqS = q.getString(2) ?: continue
+                        val md  = q.getString(3) ?: continue
+                        val cl  = q.getString(4) ?: continue
+
+                        val kHz = qrgStringToKHz(fqS) ?: continue
+                        val mNorm = normalizeModeForMemory(md) ?: continue
+
+                        historical.add(HistMemQSO(id, kHz, cl.uppercase(), mNorm, ts))
+                    }
+                }
+            }
+            historical.size
+        } catch (_: Exception) {
+            0
+        }
+    }
+
+    // Atualiza o cache histórico após INSERT (lê o próprio registro do DB)
+    private fun onQsoInserted(activity: MainActivity, newRowId: Long) {
+        val userCall = activity.findViewById<TextView>(R.id.user_indicator).text.toString().trim()
+        val dbFile = File(activity.filesDir, "db/$userCall.db")
+        if (!dbFile.exists()) return
+
+        try {
+            SQLiteDatabase.openDatabase(dbFile.path, null, SQLiteDatabase.OPEN_READONLY).use { db ->
+                db.rawQuery(
+                    "SELECT id, timestamp, freq, mode, call FROM QSOS WHERE id = ? LIMIT 1",
+                    arrayOf(newRowId.toString())
+                ).use { q ->
+                    if (q.moveToFirst()) {
+                        val id  = q.getLong(0)
+                        val ts  = q.getString(1) ?: return
+                        val fqS = q.getString(2) ?: return
+                        val md  = q.getString(3) ?: return
+                        val cl  = q.getString(4) ?: return
+
+                        val kHz   = qrgStringToKHz(fqS) ?: return
+                        val mNorm = normalizeModeForMemory(md) ?: return
+
+                        // Remove duplicata de id (precaução) e insere atualizado
+                        historical.removeAll { it.id == id }
+                        historical.add(HistMemQSO(id, kHz, cl.uppercase(), mNorm, ts))
+                    }
+                }
+            }
+        } catch (_: Exception) { /* silencioso como no resto do projeto */ }
+    }
+
+    // Atualiza o cache histórico após UPDATE
+    private fun onQsoUpdated(activity: MainActivity, qsoId: Int) {
+        val userCall = activity.findViewById<TextView>(R.id.user_indicator).text.toString().trim()
+        val dbFile = File(activity.filesDir, "db/$userCall.db")
+        if (!dbFile.exists()) return
+
+        try {
+            SQLiteDatabase.openDatabase(dbFile.path, null, SQLiteDatabase.OPEN_READONLY).use { db ->
+                db.rawQuery(
+                    "SELECT id, timestamp, freq, mode, call FROM QSOS WHERE id = ? LIMIT 1",
+                    arrayOf(qsoId.toString())
+                ).use { q ->
+                    if (q.moveToFirst()) {
+                        val id  = q.getLong(0)
+                        val ts  = q.getString(1) ?: return
+                        val fqS = q.getString(2) ?: return
+                        val md  = q.getString(3) ?: return
+                        val cl  = q.getString(4) ?: return
+
+                        val kHz   = qrgStringToKHz(fqS) ?: return
+                        val mNorm = normalizeModeForMemory(md) ?: return
+
+                        historical.removeAll { it.id == id }
+                        historical.add(HistMemQSO(id, kHz, cl.uppercase(), mNorm, ts))
+                    } else {
+                        // Se não encontrar o registro (caso raro), remove do cache
+                        historical.removeAll { it.id == qsoId.toLong() }
+                    }
+                }
+            }
+        } catch (_: Exception) { }
+    }
+
+    // Atualiza o cache histórico após DELETE
+    private fun onQsoDeleted(qsoId: Int) {
+        historical.removeAll { it.id == qsoId.toLong() }
+    }
+
+
     private fun ensureLastSerialColumnAndInit(db: SQLiteDatabase, contestId: Long) {
         // 1) Se a coluna não existir, cria
         db.rawQuery("PRAGMA table_info(Contest)", null).use { c ->

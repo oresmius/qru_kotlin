@@ -13,7 +13,12 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
 import java.io.File
 
-class ContestManager(private val context: Context, private val activity: MainActivity){
+// >>> Callback opcional para avisar que um contest foi ativado/retomado
+interface ContestCallbacks {
+    fun onContestActivated(displayName: String)
+}
+
+class ContestManager(private val context: Context, private val activity: MainActivity, private val callbacks: ContestCallbacks? = null){
     var editingContestId: Int? = null
     fun createContestInstance(page: ConstraintLayout, dbPath: File) {
 
@@ -168,6 +173,8 @@ class ContestManager(private val context: Context, private val activity: MainAct
 
             //atualiza a exibição do conteste
             contestIndicator(displayName)
+            // Notifica a ativação do contest para inicializar memórias históricas
+            callbacks?.onContestActivated(displayName)
 
             activity.navigateToPage(3)
 
@@ -354,6 +361,9 @@ class ContestManager(private val context: Context, private val activity: MainAct
 
         // Atualiza o contest_indicator na UI
         contestIndicator(selectedContest)
+        // Notifica a retomada do contest para inicializar memórias históricas
+        callbacks?.onContestActivated(selectedContest)
+
 
         // Exibe mensagem de sucesso
         showToast("Contest $selectedContest resumed successfully!")

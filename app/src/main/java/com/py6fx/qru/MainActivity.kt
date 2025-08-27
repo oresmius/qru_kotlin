@@ -79,8 +79,16 @@ class MainActivity : AppCompatActivity() {
         // Inicializa o caminho do banco de dados
         dbPath = File(applicationContext.filesDir, "db")
 
-        // Inicializa o ContestManager
-        contestManager = ContestManager(this, this)
+        // Inicializa o ContestManager com callback para memórias históricas
+        contestManager = ContestManager(this, this, object : ContestCallbacks {
+            override fun onContestActivated(displayName: String) {
+                // Ordem: limpa (manual + histórico) → recarrega histórico do contest → atualiza sugestão
+                logger.clearAllMemories(this@MainActivity)
+                logger.initHistoricalFromDb(this@MainActivity)
+                logger.updateMemorySuggestionForCurrentQrg(this@MainActivity)
+            }
+        })
+
 
         // Inicializa o UserManager
         userManager = UserManager(this, this)
@@ -193,20 +201,10 @@ class MainActivity : AppCompatActivity() {
 
         // Chamar a função correta do ContestManager com o banco do usuário ativo
         findViewById<Button>(R.id.button_new_contests_ok).setOnClickListener {
-            val contestIndicator = findViewById<TextView>(R.id.contest_indicator)
-            val before = contestIndicator.text.toString()
-
             val userIndicator = findViewById<TextView>(R.id.user_indicator).text.toString().trim()
             val userDbPath = File(dbPath, "$userIndicator.db")
             contestManager.createContestInstance(findViewById(R.id.pag_5), userDbPath)
-
-            // Se o contest ativo mudou, limpa memórias e a sugestão visual
-            contestIndicator.post {
-                val after = contestIndicator.text.toString()
-                if (after.isNotEmpty() && after != before) {
-                    logger.clearAllMemories(this)
-                }
-            }
+            // O callback onContestActivated tratará de limpar/recarregar/atualizar a sugestão.
         }
 
         // chamar a função resumeContest
@@ -331,17 +329,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.button_resume_contest).setOnClickListener {
-            val contestIndicator = findViewById<TextView>(R.id.contest_indicator)
-            val before = contestIndicator.text.toString()
-
             contestManager.resumeContest(findViewById(R.id.pag_6))
-
-            contestIndicator.post {
-                val after = contestIndicator.text.toString()
-                if (after.isNotEmpty() && after != before) {
-                    logger.clearAllMemories(this)
-                }
-            }
+            // O callback onContestActivated tratará de limpar/recarregar/atualizar a sugestão.
         }
 
         findViewById<Button>(R.id.button_edit_contest).setOnClickListener {
@@ -503,8 +492,11 @@ class MainActivity : AppCompatActivity() {
                                 item.rxNr, item.rxExch, item.txRst, item.txExch
                             )
                         }
+                        // >>> Recalcula a sugestão respeitando prioridade (manual > histórica)
+                        logger.updateMemorySuggestionForCurrentQrg(this)
                     }
                 }
+
                 .setNegativeButton("Cancel", null)
                 .show()
         }
