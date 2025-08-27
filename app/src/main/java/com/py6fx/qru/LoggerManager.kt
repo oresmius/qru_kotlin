@@ -29,6 +29,20 @@ class LoggerManager {
         val modeNorm: String,
         val timestampUtc: String
     )
+    private enum class MemUiState { EMPTY, HISTORICAL, MANUAL }
+
+    private fun setLogMemoryUi(activity: MainActivity, state: MemUiState, text: String?) {
+        val tv = activity.findViewById<TextView>(R.id.textView_log_memory)
+        tv.text = text ?: ""
+
+        // Cores (ajustáveis depois, se preferir outros tons)
+        val colorInt = when (state) {
+            MemUiState.EMPTY -> android.graphics.Color.WHITE          // branco
+            MemUiState.HISTORICAL -> android.graphics.Color.parseColor("#FFF59D") // amarelo suave
+            MemUiState.MANUAL -> android.graphics.Color.parseColor("#C8E6C9")     // verde suave
+        }
+        tv.setBackgroundColor(colorInt)
+    }
 
     private val historical = mutableListOf<HistMemQSO>()
 
@@ -557,7 +571,7 @@ class LoggerManager {
         val mem = MemoryQSO(freqKHz, rxCall, rxRst, txRst, rxNr, rxExch, txExch)
         upsertMemoryAt(freqKHz, mem)
 
-        activity.findViewById<TextView>(R.id.textView_log_memory).text = rxCall
+        setLogMemoryUi(activity, MemUiState.MANUAL, rxCall)
     }
 
     // Aplica a memória próxima da QRG atual nos campos do logger.
@@ -599,35 +613,40 @@ class LoggerManager {
         val tv = activity.findViewById<TextView>(R.id.textView_log_memory)
 
         if (activity.viewFlipper.displayedChild != 7) {
-            tv.text = ""
+            setLogMemoryUi(activity, MemUiState.EMPTY, null)
             return
         }
 
         val qrgStr  = activity.findViewById<TextView>(R.id.qrg_indicator).text.toString().trim()
         val modeStr = activity.findViewById<TextView>(R.id.mode_indicator).text.toString().trim()
         val freqKHz = qrgStringToKHz(qrgStr)
-        if (freqKHz == null) { tv.text = ""; return }
+        if (freqKHz == null) { setLogMemoryUi(activity, MemUiState.EMPTY, null); return }
 
-        // 1) PRIORIDADE: memória MANUAL (volátil)
+        // 1) Prioridade: MEMÓRIA MANUAL (volátil)
         val memManual = findMemoryNear(freqKHz)
         if (memManual != null) {
-            tv.text = memManual.rxCall
+            setLogMemoryUi(activity, MemUiState.MANUAL, memManual.rxCall)
             return
         }
 
-        // 2) FALLBACK: memória HISTÓRICA (mesma QRG ±2,5 kHz e MESMO modo normalizado)
+        // 2) Fallback: MEMÓRIA HISTÓRICA (mesma QRG ±2,5 kHz e mesmo modo normalizado)
         val modeNorm = normalizeModeForMemory(modeStr)
         val memHist = findHistoricalNearByMode(freqKHz, modeNorm)
-        tv.text = memHist?.rxCall ?: ""
+        if (memHist != null) {
+            setLogMemoryUi(activity, MemUiState.HISTORICAL, memHist.rxCall)
+        } else {
+            setLogMemoryUi(activity, MemUiState.EMPTY, null)
+        }
     }
-
 
     // Zera todas as memórias voláteis e limpa a sugestão visual.
     fun clearAllMemories(activity: MainActivity) {
         memories.clear()
-        historical.clear()
-        activity.findViewById<TextView>(R.id.textView_log_memory).text = ""
+        // se sua versão tem 'historical', limpe também:
+        try { historical.clear() } catch (_: Exception) {}
+        setLogMemoryUi(activity, MemUiState.EMPTY, null)
     }
+
 
     private fun bandOf(freqMHz: Double?): Band? {
         if (freqMHz == null || freqMHz.isNaN() || freqMHz <= 0.0) return null

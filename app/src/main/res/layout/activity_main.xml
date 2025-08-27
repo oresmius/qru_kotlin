@@ -1410,7 +1410,6 @@
                         android:layout_marginBottom="3dp"
                         android:gravity="center"
                         android:layout_marginTop="10dp"
-
                         app:layout_constraintBottom_toTopOf="@id/editText_RX_Call"
                         app:layout_constraintEnd_toStartOf="@id/guideline_125"
                         app:layout_constraintStart_toStartOf="@id/guideline_0"
