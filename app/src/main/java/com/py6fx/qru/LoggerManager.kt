@@ -12,6 +12,7 @@ import android.widget.Button
 
 class LoggerManager {
     // --- Pré-log: memórias voláteis (sessão atual) ---
+    // --- Pré-log: memórias MANUAIS (sessão atual) ---
     private data class MemoryQSO(
         val freqKHz: Double,
         val rxCall: String,
@@ -19,8 +20,13 @@ class LoggerManager {
         val txRst: String?,
         val rxNr: String?,
         val rxExch: String?,
-        val txExch: String?
+        val txExch: String?,
+        // NOVOS METADADOS
+        val modeNorm: String,   // modo normalizado (SSB≡LSB/USB; CW≡CWR)
+        val bandName: String,   // nome da banda (ex.: "40m")
+        val dupeAttached: Boolean  // true = criada com DUPE aceso → cor de HISTÓRICO
     )
+
     // --- Memória HISTÓRICA (derivada do banco do contest ativo) ---
     private data class HistMemQSO(
         val id: Long,
@@ -495,11 +501,30 @@ class LoggerManager {
 
         return try {
             val db = SQLiteDatabase.openDatabase(dbPath.path, null, SQLiteDatabase.OPEN_READWRITE)
+
+            // 1) Coleta dados do QSO "mãe" antes de apagar
+            var callUpper: String? = null
+            var bandName: String? = null
+            var modeNorm: String? = null
+            db.rawQuery("SELECT call, freq, mode FROM QSOS WHERE id = ? LIMIT 1", arrayOf(qsoId.toString())).use { c ->
+                if (c.moveToFirst()) {
+                    callUpper = (c.getString(0) ?: "").trim().uppercase()
+                    val freqStr = c.getString(1)
+                    val rawMode = c.getString(2)
+                    bandName = bandNameForQrgStr(freqStr)
+                    modeNorm = normalizeModeForMemory(rawMode)
+                }
+            }
+
+            // 2) Apaga no banco
             db.execSQL("DELETE FROM QSOS WHERE id = ?", arrayOf(qsoId))
-            onQsoDeleted(qsoId)
             db.close()
 
-            // Sai do Edit Mode e limpa os campos
+            // 3) Remove do cache HISTÓRICO e PURGA memórias MANUAIS relacionadas
+            onQsoDeleted(qsoId)
+            if (!callUpper.isNullOrEmpty()) purgeManualMemories(callUpper!!, bandName, modeNorm)
+
+            // 4) Sai do Edit Mode, limpa campos e atualiza sugestão
             sairDoEditMode(activity)
             limparCamposQSO(activity)
             updateMemorySuggestionForCurrentQrg(activity)
@@ -510,6 +535,7 @@ class LoggerManager {
             Toast.makeText(activity, "Error deleting QSO: ${e.message}", Toast.LENGTH_LONG).show()
             false
         }
+
     }
 
 
@@ -559,7 +585,8 @@ class LoggerManager {
         val rxCall = activity.findViewById<EditText>(R.id.editText_RX_Call).text.toString().trim().uppercase()
         if (rxCall.isEmpty()) return
 
-        val qrgStr = activity.findViewById<TextView>(R.id.qrg_indicator).text.toString().trim()
+        val qrgStr  = activity.findViewById<TextView>(R.id.qrg_indicator).text.toString().trim()
+        val modoStr = activity.findViewById<TextView>(R.id.mode_indicator).text.toString().trim()
         val freqKHz = qrgStringToKHz(qrgStr) ?: return
 
         val rxRst  = activity.findViewById<EditText>(R.id.editText_RX_RST).text.toString().trim().ifEmpty { null }
@@ -568,11 +595,60 @@ class LoggerManager {
         val rxExch = activity.findViewById<EditText>(R.id.editText_RX_Exch).text.toString().trim().ifEmpty { null }
         val txExch = activity.findViewById<EditText>(R.id.editText_TX_Exch).text.toString().trim().ifEmpty { null }
 
-        val mem = MemoryQSO(freqKHz, rxCall, rxRst, txRst, rxNr, rxExch, txExch)
+        // Metadados necessários
+        val modeNorm = normalizeModeForMemory(modoStr) ?: return
+        val bandName = bandNameForQrgStr(qrgStr) ?: return
+
+        // Determina se é DUPE agora (equivalente a “banner aceso”)
+        var dupeNow = false
+        try {
+            val userCall = activity.findViewById<TextView>(R.id.user_indicator).text.toString().trim()
+            val contestName = activity.findViewById<TextView>(R.id.contest_indicator).text.toString().trim()
+            val dbFile = File(activity.filesDir, "db/$userCall.db")
+            if (userCall.isNotEmpty() && contestName.isNotEmpty() && dbFile.exists()) {
+                SQLiteDatabase.openDatabase(dbFile.path, null, SQLiteDatabase.OPEN_READONLY).use { db ->
+                    val contestId = db.rawQuery(
+                        "SELECT id FROM Contest WHERE DisplayName = ? ORDER BY datetime(StartTime) DESC LIMIT 1",
+                        arrayOf(contestName)
+                    ).use { c ->
+                        if (!c.moveToFirst()) null else c.getLong(0)
+                    }
+                    if (contestId != null) {
+                        val res = checkDupeWithBtInterp(
+                            db        = db,
+                            contestId = contestId,
+                            callRx    = rxCall,
+                            qrgInput  = qrgStr,
+                            modeRaw   = modoStr
+                        )
+                        dupeNow = res.isDupe
+                    }
+                }
+            }
+        } catch (_: Exception) {}
+
+        val mem = MemoryQSO(
+            freqKHz = freqKHz,
+            rxCall  = rxCall,
+            rxRst   = rxRst,
+            txRst   = txRst,
+            rxNr    = rxNr,
+            rxExch  = rxExch,
+            txExch  = txExch,
+            modeNorm = modeNorm,
+            bandName = bandName,
+            dupeAttached = dupeNow
+        )
         upsertMemoryAt(freqKHz, mem)
 
-        setLogMemoryUi(activity, MemUiState.MANUAL, rxCall)
+        // Pintura conforme regra: dupe-anexada = amarelo (histórica); senão, verde (manual)
+        if (dupeNow) {
+            setLogMemoryUi(activity, MemUiState.HISTORICAL, rxCall)
+        } else {
+            setLogMemoryUi(activity, MemUiState.MANUAL, rxCall)
+        }
     }
+
 
     // Aplica a memória próxima da QRG atual nos campos do logger.
     fun applyMemoryIfNear(activity: MainActivity) {
@@ -581,6 +657,7 @@ class LoggerManager {
         val qrgStr  = activity.findViewById<TextView>(R.id.qrg_indicator).text.toString().trim()
         val modeStr = activity.findViewById<TextView>(R.id.mode_indicator).text.toString().trim()
         val freqKHz = qrgStringToKHz(qrgStr) ?: return
+        val modeNorm = normalizeModeForMemory(modeStr) ?: return
 
         val etCall  = activity.findViewById<EditText>(R.id.editText_RX_Call)
         val etRxRst = activity.findViewById<EditText>(R.id.editText_RX_RST)
@@ -589,8 +666,8 @@ class LoggerManager {
         val etRxEx  = activity.findViewById<EditText>(R.id.editText_RX_Exch)
         val etTxEx  = activity.findViewById<EditText>(R.id.editText_TX_Exch)
 
-        // 1) Tenta MANUAL
-        val memManual = findMemoryNear(freqKHz)
+        // 1) MANUAL (dupe-anexada ou normal) — aplica TODOS os campos
+        val memManual = findManualNearByMode(freqKHz, modeNorm)
         if (memManual != null) {
             etCall.setText(memManual.rxCall)
             etRxRst.setText(memManual.rxRst ?: "")
@@ -601,36 +678,39 @@ class LoggerManager {
             return
         }
 
-        // 2) Cai para HISTÓRICO (aplica APENAS o CALL — histórico guarda só call/freq/mode)
-        val modeNorm = normalizeModeForMemory(modeStr)
+        // 2) HISTÓRICO — aplica apenas o CALL
         val memHist = findHistoricalNearByMode(freqKHz, modeNorm) ?: return
         etCall.setText(memHist.rxCall)
     }
 
 
+
     // Atualiza a sugestão visual da memória atual (somente pag_8).
     fun updateMemorySuggestionForCurrentQrg(activity: MainActivity) {
-        val tv = activity.findViewById<TextView>(R.id.textView_log_memory)
-
         if (activity.viewFlipper.displayedChild != 7) {
-            setLogMemoryUi(activity, MemUiState.EMPTY, null)
-            return
+            setLogMemoryUi(activity, MemUiState.EMPTY, null); return
         }
 
         val qrgStr  = activity.findViewById<TextView>(R.id.qrg_indicator).text.toString().trim()
         val modeStr = activity.findViewById<TextView>(R.id.mode_indicator).text.toString().trim()
-        val freqKHz = qrgStringToKHz(qrgStr)
-        if (freqKHz == null) { setLogMemoryUi(activity, MemUiState.EMPTY, null); return }
+        val freqKHz = qrgStringToKHz(qrgStr) ?: run { setLogMemoryUi(activity, MemUiState.EMPTY, null); return }
+        val modeNorm = normalizeModeForMemory(modeStr) ?: run { setLogMemoryUi(activity, MemUiState.EMPTY, null); return }
 
-        // 1) Prioridade: MEMÓRIA MANUAL (volátil)
-        val memManual = findMemoryNear(freqKHz)
-        if (memManual != null) {
-            setLogMemoryUi(activity, MemUiState.MANUAL, memManual.rxCall)
+        // 1) Manual DUPE-ANEXADA
+        findManualNearByMode(freqKHz, modeNorm)?.let { mem ->
+            if (mem.dupeAttached) {
+                setLogMemoryUi(activity, MemUiState.HISTORICAL, mem.rxCall)
+                return
+            }
+        }
+
+        // 2) Manual NORMAL
+        findManualNearByMode(freqKHz, modeNorm)?.let { mem ->
+            setLogMemoryUi(activity, MemUiState.MANUAL, mem.rxCall)
             return
         }
 
-        // 2) Fallback: MEMÓRIA HISTÓRICA (mesma QRG ±2,5 kHz e mesmo modo normalizado)
-        val modeNorm = normalizeModeForMemory(modeStr)
+        // 3) HISTÓRICO (DB)
         val memHist = findHistoricalNearByMode(freqKHz, modeNorm)
         if (memHist != null) {
             setLogMemoryUi(activity, MemUiState.HISTORICAL, memHist.rxCall)
@@ -638,6 +718,7 @@ class LoggerManager {
             setLogMemoryUi(activity, MemUiState.EMPTY, null)
         }
     }
+
 
     // Zera todas as memórias voláteis e limpa a sugestão visual.
     fun clearAllMemories(activity: MainActivity) {
@@ -664,6 +745,29 @@ class LoggerManager {
 
     // Normalização reaproveita a do DUPE
     private fun normalizeModeForMemory(modeRaw: String?): String? = normalizeModeForDupe(modeRaw)
+
+    private fun purgeManualMemories(callUpper: String, bandName: String?, modeNorm: String?) {
+        if (bandName.isNullOrBlank() || modeNorm.isNullOrBlank()) return
+        memories.removeAll { it.rxCall == callUpper && it.bandName == bandName && it.modeNorm == modeNorm }
+    }
+
+
+    // Banda a partir de uma QRG string; retorna "40m", "20m", etc.
+    private fun bandNameForQrgStr(qrgStr: String?): String? {
+        val fMHz = qrgStringToMHzOrNull(qrgStr) ?: return null
+        return bandOf(fMHz)?.name
+    }
+
+    // Busca memória MANUAL mais próxima (± MEM_TOL_KHZ) E MESMO modo normalizado
+    private fun findManualNearByMode(freqKHz: Double, modeNorm: String?): MemoryQSO? {
+        if (modeNorm.isNullOrBlank()) return null
+        val matches = memories.filter {
+            kotlin.math.abs(it.freqKHz - freqKHz) <= MEM_TOL_KHZ && it.modeNorm == modeNorm
+        }
+        // em empate: a mais recente é a que foi inserida por último (fica “mais ao fim” da lista)
+        return matches.lastOrNull()
+    }
+
 
     // Encontra item histórico mais próximo (± MEM_TOL_KHZ) e MESMO modo (normalizado).
     private fun findHistoricalNearByMode(freqKHz: Double, modeNorm: String?): HistMemQSO? {
