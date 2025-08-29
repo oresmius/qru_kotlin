@@ -92,7 +92,7 @@
                     />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-
+             <!--pagina-->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/pag_2"
                 android:layout_width="match_parent"
@@ -132,120 +132,265 @@
                         android:orientation="vertical"
                         android:padding="24dp">
 
+                        <!-- RÓTULO PERMANENTE -->
+                        <TextView
+                            android:id="@+id/label_new_user_call"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="CALL"
+                            android:textStyle="bold"
+                            android:textSize="14sp"
+                            android:textColor="#222222"
+                            android:paddingTop="1dp"
+                            android:paddingBottom="1dp"/>
+
+                        <!-- CAMPO DE DIGITAÇÃO -->
                         <EditText
                             android:id="@+id/editText_new_user_call"
                             style="@style/text_new_user"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Call"
-                            android:inputType="text"
-                            android:imeOptions="flagNoExtractUi|actionNext" />
+                            android:inputType="text|textCapCharacters"
+                            android:imeOptions="flagNoExtractUi|actionNext"
+                            android:hint="" />
+
+                        <TextView
+                            android:id="@+id/label_new_user_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="NAME"
+                            android:textStyle="bold"
+                            android:textSize="14sp"
+                            android:textColor="#222222"
+                            android:paddingTop="1dp"
+                            android:paddingBottom="1dp"/>
 
                         <EditText
                             android:id="@+id/editText_new_user_name"
                             style="@style/text_new_user"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Name"
-                            android:inputType="textPersonName"
-                            android:imeOptions="flagNoExtractUi|actionNext" />
+                            android:inputType="text|textCapCharacters"
+                            android:imeOptions="flagNoExtractUi|actionNext"
+                            android:hint="" />
+
+                        <TextView
+                            android:id="@+id/label_new_user_address"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="ADDRESS"
+                            android:textStyle="bold"
+                            android:textSize="14sp"
+                            android:textColor="#222222"
+                            android:paddingTop="1dp"
+                            android:paddingBottom="1dp"/>
 
                         <EditText
                             android:id="@+id/editText_new_user_address"
                             style="@style/text_new_user"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Address"
+                            android:hint=""
                             android:inputType="textPostalAddress"
                             android:imeOptions="flagNoExtractUi|actionNext" />
+
+                        <TextView
+                            android:id="@+id/label_new_user_city"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="CITY"
+                            android:textStyle="bold"
+                            android:textSize="14sp"
+                            android:textColor="#222222"
+                            android:paddingTop="1dp"
+                            android:paddingBottom="1dp"/>
 
                         <EditText
                             android:id="@+id/editText_new_user_city"
                             style="@style/text_new_user"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="City"
+                            android:hint=""
                             android:inputType="text"
                             android:imeOptions="flagNoExtractUi|actionNext" />
+
+                        <TextView
+                            android:id="@+id/label_new_user_state"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="STATE"
+                            android:textStyle="bold"
+                            android:textSize="14sp"
+                            android:textColor="#222222"
+                            android:paddingTop="1dp"
+                            android:paddingBottom="1dp"/>
 
                         <EditText
                             android:id="@+id/editText_new_user_state"
                             style="@style/text_new_user"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="State"
+                            android:hint=""
                             android:inputType="text"
                             android:imeOptions="flagNoExtractUi|actionNext" />
+
+                        <TextView
+                            android:id="@+id/label_new_user_zip"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="ZIP"
+                            android:textStyle="bold"
+                            android:textSize="14sp"
+                            android:textColor="#222222"
+                            android:paddingTop="1dp"
+                            android:paddingBottom="1dp"/>
 
                         <EditText
                             android:id="@+id/editText_new_user_zip"
                             style="@style/text_new_user"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="ZIP"
+                            android:hint=""
                             android:inputType="textPostalAddress"
                             android:imeOptions="flagNoExtractUi|actionNext" />
+
+                        <TextView
+                            android:id="@+id/label_new_user_contry"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="CONTRY"
+                            android:textStyle="bold"
+                            android:textSize="14sp"
+                            android:textColor="#222222"
+                            android:paddingTop="1dp"
+                            android:paddingBottom="1dp"/>
 
                         <EditText
                             android:id="@+id/editText_new_user_country"
                             style="@style/text_new_user"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Country"
+                            android:hint=""
                             android:inputType="text"
                             android:imeOptions="flagNoExtractUi|actionNext" />
+
+                        <TextView
+                            android:id="@+id/label_new_user_grid_square"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="GRID SQUARE"
+                            android:textStyle="bold"
+                            android:textSize="14sp"
+                            android:textColor="#222222"
+                            android:paddingTop="1dp"
+                            android:paddingBottom="1dp"/>
 
                         <EditText
                             android:id="@+id/editText_new_user_grid_square"
                             style="@style/text_new_user"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Grid Square"
+                            android:hint=""
                             android:inputType="text"
                             android:imeOptions="flagNoExtractUi|actionNext" />
+
+                        <TextView
+                            android:id="@+id/label_new_user_arrl_sction"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="ARRL SECTION"
+                            android:textStyle="bold"
+                            android:textSize="14sp"
+                            android:textColor="#222222"
+                            android:paddingTop="1dp"
+                            android:paddingBottom="1dp"/>
 
                         <EditText
                             android:id="@+id/editText_new_user_arrl_section"
                             style="@style/text_new_user"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="ARRL Section"
+                            android:hint=""
                             android:inputType="text"
                             android:imeOptions="flagNoExtractUi|actionNext" />
+
+                        <TextView
+                            android:id="@+id/label_new_user_club"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="CLUB"
+                            android:textStyle="bold"
+                            android:textSize="14sp"
+                            android:textColor="#222222"
+                            android:paddingTop="1dp"
+                            android:paddingBottom="1dp"/>
 
                         <EditText
                             android:id="@+id/editText_new_user_club"
                             style="@style/text_new_user"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Club"
+                            android:hint=""
                             android:inputType="text"
                             android:imeOptions="flagNoExtractUi|actionNext" />
+
+                        <TextView
+                            android:id="@+id/label_new_user_cq_zone"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="CQ ZONE"
+                            android:textStyle="bold"
+                            android:textSize="14sp"
+                            android:textColor="#222222"
+                            android:paddingTop="1dp"
+                            android:paddingBottom="1dp"/>
 
                         <EditText
                             android:id="@+id/editText_new_user_cq_zone"
                             style="@style/text_new_user"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="CQ Zone"
+                            android:hint=""
                             android:inputType="text"
                             android:imeOptions="flagNoExtractUi|actionNext" />
+
+                        <TextView
+                            android:id="@+id/label_new_user_itu_zone"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="ITU ZONE"
+                            android:textStyle="bold"
+                            android:textSize="14sp"
+                            android:textColor="#222222"
+                            android:paddingTop="1dp"
+                            android:paddingBottom="1dp"/>
 
                         <EditText
                             android:id="@+id/editText_new_user_itu_zone"
                             style="@style/text_new_user"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="ITU Zone"
+                            android:hint=""
                             android:inputType="text"
                             android:imeOptions="flagNoExtractUi|actionNext" />
+
+                        <TextView
+                            android:id="@+id/label_new_user_email"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="E-MAIL"
+                            android:textStyle="bold"
+                            android:textSize="14sp"
+                            android:textColor="#222222"
+                            android:paddingTop="1dp"
+                            android:paddingBottom="1dp"/>
 
                         <EditText
                             android:id="@+id/editText_new_user_email"
                             style="@style/text_new_user"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="E-Mail"
+                            android:hint=""
                             android:inputType="textEmailAddress"
                             android:imeOptions="flagNoExtractUi|actionDone" />
 
@@ -943,7 +1088,7 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </ScrollView>
-            <!--pagina-->
+
             <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
