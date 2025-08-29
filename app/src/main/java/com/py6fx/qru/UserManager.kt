@@ -10,6 +10,8 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import java.io.File
+import android.graphics.Color
+import android.widget.Button
 
 class UserManager(private val context: Context, private val activity: MainActivity) {
 
@@ -179,5 +181,192 @@ class UserManager(private val context: Context, private val activity: MainActivi
     fun updateUserIndicator(call: String) {
         val userIndicator = activity.findViewById<TextView>(R.id.user_indicator)
         userIndicator.text = call
+    }
+    // ---- Estado de edição de usuário ----
+    private var isEditingUser: Boolean = false
+    private var editingCall: String? = null
+    private var originalCallTextColor: Int? = null
+
+    fun editUser(pag2: View) {
+        // 1) Usuário ativo (do indicador)
+        val call = activity.findViewById<TextView>(R.id.user_indicator).text.toString().trim()
+        if (call.isEmpty() || call == "USER?" || call == "USER") {
+            Toast.makeText(context, "No active user selected!", Toast.LENGTH_LONG).show()
+            return
+        }
+
+        // 2) Abre DB desse usuário e carrega dados
+        val dbPath = File(context.filesDir, "db/$call.db")
+        if (!dbPath.exists()) {
+            Toast.makeText(context, "Database for $call not found!", Toast.LENGTH_LONG).show()
+            return
+        }
+
+        try {
+            val db = SQLiteDatabase.openDatabase(dbPath.path, null, SQLiteDatabase.OPEN_READONLY)
+            val c = db.rawQuery(
+                "SELECT Call, Name, Address, City, State, ZIP, Country, GridSquare, CQZone, ITUZone, ARRLSection, Club, Email " +
+                        "FROM user WHERE Call = ? LIMIT 1",
+                arrayOf(call)
+            )
+            if (!c.moveToFirst()) {
+                Toast.makeText(context, "User data not found!", Toast.LENGTH_LONG).show()
+                c.close(); db.close(); return
+            }
+
+            // 3) Preenche formulário da pag_2
+            pag2.findViewById<EditText>(R.id.editText_new_user_call).setText(c.getString(c.getColumnIndexOrThrow("Call")))
+            pag2.findViewById<EditText>(R.id.editText_new_user_name).setText(c.getString(c.getColumnIndexOrThrow("Name")))
+            pag2.findViewById<EditText>(R.id.editText_new_user_address).setText(c.getString(c.getColumnIndexOrThrow("Address")))
+            pag2.findViewById<EditText>(R.id.editText_new_user_city).setText(c.getString(c.getColumnIndexOrThrow("City")))
+            pag2.findViewById<EditText>(R.id.editText_new_user_state).setText(c.getString(c.getColumnIndexOrThrow("State")))
+            pag2.findViewById<EditText>(R.id.editText_new_user_zip).setText(c.getString(c.getColumnIndexOrThrow("ZIP")))
+            pag2.findViewById<EditText>(R.id.editText_new_user_country).setText(c.getString(c.getColumnIndexOrThrow("Country")))
+            pag2.findViewById<EditText>(R.id.editText_new_user_grid_square).setText(c.getString(c.getColumnIndexOrThrow("GridSquare")))
+            pag2.findViewById<EditText>(R.id.editText_new_user_cq_zone).setText(c.getString(c.getColumnIndexOrThrow("CQZone")))
+            pag2.findViewById<EditText>(R.id.editText_new_user_itu_zone).setText(c.getString(c.getColumnIndexOrThrow("ITUZone")))
+            pag2.findViewById<EditText>(R.id.editText_new_user_arrl_section).setText(c.getString(c.getColumnIndexOrThrow("ARRLSection")))
+            pag2.findViewById<EditText>(R.id.editText_new_user_club).setText(c.getString(c.getColumnIndexOrThrow("Club")))
+            pag2.findViewById<EditText>(R.id.editText_new_user_email).setText(c.getString(c.getColumnIndexOrThrow("Email")))
+
+            c.close(); db.close()
+        } catch (e: SQLiteException) {
+            Toast.makeText(context, "Error loading user: ${e.message}", Toast.LENGTH_LONG).show()
+            return
+        }
+
+        // 4) Ativa UI de edição: desabilita CALL (vermelho), ajusta rótulos e ações
+        isEditingUser = true
+        editingCall = call
+        setEditUserUi(pag2, active = true)
+    }
+
+    private fun setEditUserUi(pag2: View, active: Boolean) {
+        val label = activity.findViewById<TextView>(R.id.label_new_user)
+        val btnSave = activity.findViewById<Button>(R.id.button_save_user)
+        val btnCancel = activity.findViewById<Button>(R.id.button_cancel_new_user)
+        val callField = activity.findViewById<EditText>(R.id.editText_new_user_call)
+
+        if (active) {
+            label.text = "EDIT USER"
+
+            // CALL fixo em vermelho
+            originalCallTextColor = callField.currentTextColor
+            callField.isEnabled = false
+            callField.setTextColor(Color.RED)
+
+            btnSave.text = "Update User"
+            btnSave.setOnClickListener { updateUserInDb(pag2) }
+
+            // Cancel Edit User → volta p/ Main Menu (pag_4) e restaura UI neutra
+            btnCancel.text = "Cancel"
+            btnCancel.setOnClickListener { cancelEditUser() }
+        } else {
+            label.text = "NEW USER"
+
+            // Reabilita CALL e cor original
+            callField.isEnabled = true
+            originalCallTextColor?.let { callField.setTextColor(it) }
+
+            btnSave.text = "Save User"
+            btnSave.setOnClickListener { saveUserToDb(pag2) }
+
+            btnCancel.text = "Cancel"
+            btnCancel.setOnClickListener { activity.navigateToPage(0) } // comportamento original (pag_1)
+        }
+    }
+
+    fun updateUserInDb(pag2: View) {
+        val call = editingCall ?: run {
+            Toast.makeText(context, "No user in edit mode.", Toast.LENGTH_LONG).show()
+            return
+        }
+
+        // Lê campos (todos menos CALL)
+        val name = pag2.findViewById<EditText>(R.id.editText_new_user_name).text.toString().trim()
+        val address = pag2.findViewById<EditText>(R.id.editText_new_user_address).text.toString().trim()
+        val city = pag2.findViewById<EditText>(R.id.editText_new_user_city).text.toString().trim()
+        val state = pag2.findViewById<EditText>(R.id.editText_new_user_state).text.toString().trim()
+        val zip = pag2.findViewById<EditText>(R.id.editText_new_user_zip).text.toString().trim()
+        val country = pag2.findViewById<EditText>(R.id.editText_new_user_country).text.toString().trim()
+        val grid = pag2.findViewById<EditText>(R.id.editText_new_user_grid_square).text.toString().trim()
+        val cq = pag2.findViewById<EditText>(R.id.editText_new_user_cq_zone).text.toString().trim()
+        val itu = pag2.findViewById<EditText>(R.id.editText_new_user_itu_zone).text.toString().trim()
+        val arrl = pag2.findViewById<EditText>(R.id.editText_new_user_arrl_section).text.toString().trim()
+        val club = pag2.findViewById<EditText>(R.id.editText_new_user_club).text.toString().trim()
+        val email = pag2.findViewById<EditText>(R.id.editText_new_user_email).text.toString().trim()
+
+        // (Validação simples — opcional: pode reutilizar a do save)
+        val missing = listOf(
+            "Name" to name, "Address" to address, "City" to city, "State" to state, "ZIP" to zip,
+            "Country" to country, "Grid Square" to grid, "CQ Zone" to cq, "ITU Zone" to itu,
+            "ARRL Section" to arrl, "Club" to club, "Email" to email
+        ).filter { it.second.isEmpty() }.map { it.first }
+        if (missing.isNotEmpty()) {
+            Toast.makeText(context, "Os seguintes campos estão vazios: ${missing.joinToString(", ")}", Toast.LENGTH_LONG).show()
+            return
+        }
+
+        val dbPath = File(context.filesDir, "db/$call.db")
+        if (!dbPath.exists()) {
+            Toast.makeText(context, "Database for $call not found!", Toast.LENGTH_LONG).show()
+            return
+        }
+
+        try {
+            val db = SQLiteDatabase.openDatabase(dbPath.path, null, SQLiteDatabase.OPEN_READWRITE)
+            val update = """
+            UPDATE user SET
+                Name=?, Address=?, City=?, State=?, ZIP=?, Country=?, GridSquare=?,
+                CQZone=?, ITUZone=?, ARRLSection=?, Club=?, Email=?
+            WHERE Call=?
+        """.trimIndent()
+            db.execSQL(update, arrayOf(name, address, city, state, zip, country, grid, cq, itu, arrl, club, email, call))
+            db.close()
+
+            Toast.makeText(context, "User updated successfully!", Toast.LENGTH_LONG).show()
+
+            // Sai do modo edição e volta p/ Main Menu (pag_4)
+            isEditingUser = false
+            editingCall = null
+            setEditUserUi(pag2, active = false)
+            clearUserForm(pag2) // deixa no estado neutro
+            activity.navigateToPage(3)
+        } catch (e: SQLiteException) {
+            Toast.makeText(context, "Error updating user: ${e.message}", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    fun cancelEditUser() {
+        if (!isEditingUser) { activity.navigateToPage(3); return }
+
+        val pag2 = activity.findViewById<View>(R.id.pag_2)
+        // Restaura UI neutra, reabilita CALL, zera flags e limpa campos
+        isEditingUser = false
+        editingCall = null
+        setEditUserUi(pag2, active = false)
+        clearUserForm(pag2)
+
+        // >>> AÇÃO SOLICITADA: apenas voltar ao Main Menu (pag_4)
+        activity.navigateToPage(3)
+    }
+
+    // Utilitário: limpa todos os campos da pag_2
+    private fun clearUserForm(pag2: View) {
+        listOf(
+            R.id.editText_new_user_call,
+            R.id.editText_new_user_name,
+            R.id.editText_new_user_address,
+            R.id.editText_new_user_city,
+            R.id.editText_new_user_state,
+            R.id.editText_new_user_zip,
+            R.id.editText_new_user_country,
+            R.id.editText_new_user_grid_square,
+            R.id.editText_new_user_arrl_section,
+            R.id.editText_new_user_club,
+            R.id.editText_new_user_cq_zone,
+            R.id.editText_new_user_itu_zone,
+            R.id.editText_new_user_email
+        ).forEach { id -> pag2.findViewById<EditText>(id).setText("") }
     }
 }

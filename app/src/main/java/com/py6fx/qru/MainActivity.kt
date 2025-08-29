@@ -500,6 +500,13 @@ class MainActivity : AppCompatActivity() {
                 .setNegativeButton("Cancel", null)
                 .show()
         }
+        findViewById<Button>(R.id.button_Edit_User).setOnClickListener {
+            // Reaproveita a pág. 2 com os campos preenchidos e CALL travado
+            val pag2 = findViewById<View>(R.id.pag_2)
+            userManager.editUser(pag2)
+            navigateToPage(1) // mostra a página 2
+        }
+
     }
 
     // Cria as opções do menu e as faz aparecer
