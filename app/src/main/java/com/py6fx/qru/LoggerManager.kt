@@ -44,8 +44,8 @@ class LoggerManager {
         // Cores (ajustáveis depois, se preferir outros tons)
         val colorInt = when (state) {
             MemUiState.EMPTY -> android.graphics.Color.WHITE          // branco
-            MemUiState.HISTORICAL -> android.graphics.Color.parseColor("#FFF59D") // amarelo suave
-            MemUiState.MANUAL -> android.graphics.Color.parseColor("#C8E6C9")     // verde suave
+            MemUiState.HISTORICAL -> android.graphics.Color.parseColor("#FAF014")
+            MemUiState.MANUAL -> android.graphics.Color.parseColor("#39E639")
         }
         tv.setBackgroundColor(colorInt)
     }
