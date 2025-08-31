@@ -92,7 +92,7 @@
                     />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-             <!--pagina-->
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/pag_2"
                 android:layout_width="match_parent"
@@ -132,7 +132,6 @@
                         android:orientation="vertical"
                         android:padding="24dp">
 
-                        <!-- RÓTULO PERMANENTE -->
                         <TextView
                             android:id="@+id/label_new_user_call"
                             android:layout_width="match_parent"
@@ -144,7 +143,6 @@
                             android:paddingTop="1dp"
                             android:paddingBottom="1dp"/>
 
-                        <!-- CAMPO DE DIGITAÇÃO -->
                         <EditText
                             android:id="@+id/editText_new_user_call"
                             style="@style/text_new_user"
@@ -882,9 +880,9 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         android:layout_marginEnd="16dp"
                         android:layout_marginStart="8dp"/>
-
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </ScrollView>
+            <!--pagina-->
             <ScrollView
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -917,7 +915,7 @@
                         android:id="@+id/label_resume_export_delete_contest"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="Contest General Options"
+                        android:text="CONTEST GENERAL OPTIONS"
                         android:textSize="20sp"
                         android:textColor="#FFFFFF"
                         android:background="@drawable/rouded_button"
@@ -942,7 +940,7 @@
                         android:layout_height="50dp"
                         android:text="Resume"
                         android:textColor="#FFFFFF"
-                        android:layout_marginTop="50dp"
+                        android:layout_marginTop="180dp"
                         android:background="@drawable/rouded_button"
                         app:layout_constraintTop_toBottomOf="@id/spinner_contests_initialized"
                         app:layout_constraintStart_toStartOf="parent"
@@ -955,7 +953,7 @@
                         android:layout_height="50dp"
                         android:text="Edit"
                         android:textColor="#FFFFFF"
-                        android:layout_marginTop="50dp"
+                        android:layout_marginTop="180dp"
                         android:background="@drawable/rouded_button"
                         app:layout_constraintTop_toBottomOf="@id/spinner_contests_initialized"
                         app:layout_constraintStart_toStartOf="@id/guideline_33"
@@ -969,7 +967,7 @@
                         android:layout_height="50dp"
                         android:text="Delete"
                         android:textColor="#FFFFFF"
-                        android:layout_marginTop="50dp"
+                        android:layout_marginTop="180dp"
                         android:background="@drawable/rouded_button"
                         app:layout_constraintTop_toBottomOf="@id/spinner_contests_initialized"
                         app:layout_constraintStart_toStartOf="@id/guideline_66"
@@ -986,7 +984,7 @@
                         app:layout_constraintTop_toBottomOf="@id/button_resume_contest"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toStartOf="@id/guideline_33"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="10dp"
                         android:layout_marginEnd="8dp" />
 
                     <Button
@@ -999,7 +997,7 @@
                         app:layout_constraintTop_toBottomOf="@id/button_edit_contest"
                         app:layout_constraintStart_toStartOf="@id/guideline_33"
                         app:layout_constraintEnd_toStartOf="@id/guideline_66"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="10dp"
                         android:layout_marginStart="8dp"
                         android:layout_marginEnd="8dp" />
 
@@ -1013,8 +1011,22 @@
                         app:layout_constraintTop_toBottomOf="@id/button_delete_contest"
                         app:layout_constraintStart_toStartOf="@id/guideline_66"
                         app:layout_constraintEnd_toEndOf="parent"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="10dp"
                         android:layout_marginStart="8dp" />
+
+                    <Button
+                        android:id="@+id/button_new_contest"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:text="New Contest"
+                        android:textColor="#FFFFFF"
+                        android:layout_marginTop="120dp"
+                        android:background="@drawable/rouded_button"
+                        app:layout_constraintTop_toBottomOf="@id/spinner_contests_initialized"
+                        app:layout_constraintStart_toStartOf="@id/guideline_33"
+                        app:layout_constraintEnd_toStartOf="@id/guideline_66"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </ScrollView>

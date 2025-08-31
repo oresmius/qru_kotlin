@@ -8,7 +8,6 @@ import java.io.File
 import android.view.MenuItem
 import android.view.View
 import android.widget.LinearLayout
-import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.EditText
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -134,8 +133,6 @@ class MainActivity : AppCompatActivity() {
         // Configura os botões
         setupButtonListeners()
 
-        // Inicializa menus popup
-        setupPopupMenu()
 
         //exportador do Cabrillo
 
@@ -337,6 +334,17 @@ class MainActivity : AppCompatActivity() {
             contestManager.editContest(findViewById(R.id.pag_6))
         }
 
+        findViewById<Button>(R.id.button_contests).setOnClickListener {
+            contestManager.loadInitializedContests(findViewById(R.id.pag_6))
+            navigateToPage(5)
+        }
+
+        findViewById<Button>(R.id.button_new_contest).setOnClickListener {
+            contestManager.resetContestForm()
+            contestManager.loadContests(findViewById(R.id.pag_5))
+            navigateToPage(4)
+        }
+
         //chamada função de log
         findViewById<Button>(R.id.button_log_QSO).setOnClickListener {
             if (LoggerManager.isEditing) {
@@ -509,44 +517,6 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    // Cria as opções do menu e as faz aparecer
-    private fun setupPopupMenu() {
-        val buttonContests = findViewById<Button>(R.id.button_contests)
-        buttonContests.setOnClickListener { view -> showPopupMenu(view) }
-    }
-
-    private fun showPopupMenu(view: View) {
-        val popup = PopupMenu(this, view)
-        popup.menuInflater.inflate(R.menu.contests_menu, popup.menu)
-
-        popup.setOnMenuItemClickListener { item: MenuItem ->
-            when (item.itemId) {
-                R.id.menu_new_contest -> {
-                    contestManager.resetContestForm()
-                    contestManager.loadContests(findViewById(R.id.pag_5))
-                    navigateToPage(4)
-                }
-                R.id.menu_resume_contest -> {
-                    contestManager.loadInitializedContests(findViewById(R.id.pag_6))
-                    navigateToPage(5)
-                }
-                R.id.menu_edit_contest -> {
-                    contestManager.loadInitializedContests(findViewById(R.id.pag_6))
-                    navigateToPage(5)
-                }
-                R.id.menu_export_contest -> {
-                    contestManager.loadInitializedContests(findViewById(R.id.pag_6))
-                    navigateToPage(5)
-                }
-                R.id.menu_delete_contest -> {
-                    contestManager.loadInitializedContests(findViewById(R.id.pag_6))
-                    navigateToPage(5)
-                }
-            }
-            true
-        }
-        popup.show()
-    }
 
     // Lógica para navegar entre páginas
     fun navigateToPage(pageIndex: Int) {
