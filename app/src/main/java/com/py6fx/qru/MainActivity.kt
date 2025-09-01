@@ -5,7 +5,6 @@ import android.widget.Button
 import android.widget.ViewFlipper
 import androidx.appcompat.app.AppCompatActivity
 import java.io.File
-import android.view.MenuItem
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -14,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.widget.Spinner
 import android.widget.Toast
-import android.util.DisplayMetrics
 import android.view.inputmethod.InputMethodManager
 
 
@@ -514,9 +512,21 @@ class MainActivity : AppCompatActivity() {
             userManager.editUser(pag2)
             navigateToPage(1) // mostra a página 2
         }
+        findViewById<Button>(R.id.button_delete_contest).setOnClickListener {
+            android.app.AlertDialog.Builder(this)
+                .setTitle("Delete Contest")
+                .setMessage("Are you sure you want to delete this contest?")
+                .setPositiveButton("Delete") { _, _ ->
+                    contestManager.deleteContest(findViewById(R.id.pag_6))
+                }
+                .setNegativeButton("Cancel", null)
+                .show()
+        }
+        findViewById<Button>(R.id.button_contest_general_cancel).setOnClickListener {
+            navigateToPage(3)
+        }
 
     }
-
 
     // Lógica para navegar entre páginas
     fun navigateToPage(pageIndex: Int) {

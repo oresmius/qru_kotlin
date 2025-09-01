@@ -534,4 +534,72 @@ class ContestManager(private val context: Context, private val activity: MainAct
 
     }
 
+    fun deleteContest(pag6: View) {
+        // 1) Conferir seleção no spinner
+        val spinner = pag6.findViewById<Spinner>(R.id.spinner_contests_initialized)
+        val selectedItem = spinner.selectedItem?.toString()
+
+        if (selectedItem.isNullOrEmpty()) {
+            Toast.makeText(context, "No contest selected!", Toast.LENGTH_LONG).show()
+            return
+        }
+
+        // O padrão de item é "STARTTIME - DISPLAY", igual ao usado na exportação
+        val startTime = selectedItem.substringBefore(" - ").trim()
+        if (startTime.isEmpty()) {
+            Toast.makeText(context, "Invalid contest selection!", Toast.LENGTH_LONG).show()
+            return
+        }
+
+        // 2) Localizar o DB do usuário ativo
+        val userIndicator = activity.findViewById<TextView>(R.id.user_indicator).text.toString().trim()
+        if (userIndicator.isEmpty() || userIndicator == "USER?") {
+            Toast.makeText(context, "No active user!", Toast.LENGTH_LONG).show()
+            return
+        }
+        val userDbPath = File(activity.filesDir, "db/$userIndicator.db")
+        if (!userDbPath.exists()) {
+            Toast.makeText(context, "User database not found!", Toast.LENGTH_LONG).show()
+            return
+        }
+
+        // 3) Hard delete: apagar QSOs do contest e o contest em si (transação)
+        try {
+            val db = SQLiteDatabase.openDatabase(userDbPath.path, null, SQLiteDatabase.OPEN_READWRITE)
+            db.beginTransaction()
+            try {
+                // Apaga QSOs do contest alvo
+                val sqlDelQsos = """
+                DELETE FROM QSOS
+                WHERE contest_id = (SELECT id FROM Contest WHERE StartTime = ?)
+            """.trimIndent()
+                db.execSQL(sqlDelQsos, arrayOf(startTime))
+
+                // Apaga o contest alvo
+                val sqlDelContest = "DELETE FROM Contest WHERE StartTime = ?"
+                db.execSQL(sqlDelContest, arrayOf(startTime))
+
+                db.setTransactionSuccessful()
+            } finally {
+                db.endTransaction()
+                db.close()
+            }
+
+            // 4) Pós-processamento: limpar e recarregar memórias históricas
+            val logger = LoggerManager()
+            logger.clearAllMemories(activity)
+            logger.initHistoricalFromDb(activity)
+            logger.updateMemorySuggestionForCurrentQrg(activity)
+
+            // 5) Atualizar a lista de contests inicializados na UI
+            loadInitializedContests(pag6)
+
+            // 6) Feedback
+            Toast.makeText(context, "Contest $startTime deleted successfully", Toast.LENGTH_LONG).show()
+
+        } catch (e: SQLiteException) {
+            Toast.makeText(context, "Error deleting contest: ${e.message}", Toast.LENGTH_LONG).show()
+        }
+    }
+
 }

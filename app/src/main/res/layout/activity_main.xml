@@ -1640,7 +1640,7 @@
                         android:background="@android:drawable/alert_light_frame"
                         android:gravity="center"
                         android:padding="12dp"
-                        android:text="QRU - V0.4.3\nDeveloped by:\nPY6FX / PY1XR - Fábio\nRecruit 0101 (Chat GPT)"
+                        android:text="QRU - V0.6.0\nDeveloped by:\nPY6FX / PY1XR - Fábio\nRecruit 0101 (Chat GPT)"
                         android:textColor="#0B0B0B"
                         android:textSize="16sp"
                         app:layout_constraintEnd_toEndOf="parent"
