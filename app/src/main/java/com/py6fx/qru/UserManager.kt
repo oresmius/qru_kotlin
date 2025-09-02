@@ -12,6 +12,9 @@ import android.widget.Toast
 import java.io.File
 import android.graphics.Color
 import android.widget.Button
+import android.app.AlertDialog
+import androidx.recyclerview.widget.RecyclerView
+
 
 class UserManager(private val context: Context, private val activity: MainActivity) {
 
@@ -369,4 +372,63 @@ class UserManager(private val context: Context, private val activity: MainActivi
             R.id.editText_new_user_email
         ).forEach { id -> pag2.findViewById<EditText>(id).setText("") }
     }
+    fun deleteUser(pag3: View) {
+        val spinnerUsers = pag3.findViewById<Spinner>(R.id.user_menu_spinner_users)
+        val selectedUser = spinnerUsers.selectedItem?.toString()
+
+        if (selectedUser.isNullOrEmpty() || selectedUser == "No users available") {
+            Toast.makeText(context, "No valid user selected!", Toast.LENGTH_LONG).show()
+            return
+        }
+
+        AlertDialog.Builder(context)
+            .setTitle("Delete User")
+            .setMessage("Are you sure you want to delete user $selectedUser?")
+            .setPositiveButton("Delete") { _, _ ->
+                val userDbPath = File(context.filesDir, "db/$selectedUser.db")
+                try {
+                    // Tenta apagar o arquivo .db (hard delete)
+                    if (userDbPath.exists()) {
+                        val ok = userDbPath.delete()
+                        if (!ok) {
+                            Toast.makeText(context, "Error deleting user: unable to delete file.", Toast.LENGTH_LONG).show()
+                            return@setPositiveButton
+                        }
+                    } // se não existe, tratamos como deletado
+
+                    // Se o usuário apagado era o ativo, resetar indicadores e estados
+                    val userIndicator = activity.findViewById<TextView>(R.id.user_indicator)
+                    val wasActive = userIndicator.text.toString().trim() == selectedUser
+                    if (wasActive) {
+                        // Reset indicadores
+                        userIndicator.text = "USER?"
+                        activity.findViewById<TextView?>(R.id.contest_indicator)?.text = "No contest"
+
+                        // Limpar memórias e UI relacionadas
+                        val logger = LoggerManager()
+                        logger.clearAllMemories(activity)
+
+                        // Esconder banner de DUPE (se visível)
+                        activity.hideDupeBanner()
+
+                        // Se estiver na tela do Logger, esvaziar a lista e voltar ao Main Menu
+                        if (activity.viewFlipper.displayedChild == 7) {
+                            val recycler = activity.findViewById<RecyclerView>(R.id.recyclerViewQSOs)
+                            recycler.adapter = QsoLogAdapter(emptyList()) { /* no-op */ }
+                        }
+                        activity.navigateToPage(3) // Main Menu
+                    }
+
+                    // Recarregar o spinner de usuários
+                    loadUsers(pag3)
+
+                    Toast.makeText(context, "User $selectedUser deleted successfully!", Toast.LENGTH_LONG).show()
+                } catch (e: Exception) {
+                    Toast.makeText(context, "Error deleting user: ${e.message}", Toast.LENGTH_LONG).show()
+                }
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
 }

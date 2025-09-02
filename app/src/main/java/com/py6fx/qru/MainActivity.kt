@@ -426,6 +426,16 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.button_about_back).setOnClickListener {
             navigateToPage(3)
         }
+
+        // Botão "Delete User" (pag_3)
+        findViewById<Button>(R.id.user_menu_button_delete).setOnClickListener {
+            userManager.deleteUser(findViewById(R.id.pag_3))
+        }
+
+
+        findViewById<Button>(R.id.user_menu_button_new).setOnClickListener {
+            navigateToPage(1)
+        }
         findViewById<Button>(R.id.button_Change_User).setOnClickListener {
             navigateToPage(2)
         }
