@@ -156,7 +156,7 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.button_new_user).setOnClickListener {
             navigateToPage(1)
         }
-        findViewById<Button>(R.id.button_cancel_load_user).setOnClickListener {
+        findViewById<Button>(R.id.user_menu_button_cancel).setOnClickListener {
             navigateToPage(0)
         }
         findViewById<Button>(R.id.button_cancel_new_contest).setOnClickListener {
@@ -164,7 +164,7 @@ class MainActivity : AppCompatActivity() {
             navigateToPage(3)
         }
 
-        val buttonSelectUser = findViewById<Button>(R.id.button_select_user)
+        val buttonSelectUser = findViewById<Button>(R.id.user_menu_button_select_user)
         buttonSelectUser.setOnClickListener {
             val userIndicator = findViewById<TextView>(R.id.user_indicator)
             val before = userIndicator.text.toString()

@@ -18,7 +18,7 @@ class UserManager(private val context: Context, private val activity: MainActivi
     // Método que lê os dbs que são os usuários e cria uma lista de seleção.
 
     fun loadUsers(loadUserPage: View) {
-        val spinnerUsers = loadUserPage.findViewById<Spinner>(R.id.spinner_users)
+        val spinnerUsers = loadUserPage.findViewById<Spinner>(R.id.user_menu_spinner_users)
         val dbFolder = File(context.filesDir, "db")
         val dbFiles = dbFolder.listFiles { _, name -> name.endsWith(".db") } ?: arrayOf()
         val userList = dbFiles.map { it.nameWithoutExtension }
@@ -149,7 +149,7 @@ class UserManager(private val context: Context, private val activity: MainActivi
     // função que seleciona o usuário
 
     fun selectUser(loadUserPage: View) {
-        val spinnerUsers = loadUserPage.findViewById<Spinner>(R.id.spinner_users)
+        val spinnerUsers = loadUserPage.findViewById<Spinner>(R.id.user_menu_spinner_users)
         val selectedUser = spinnerUsers.selectedItem?.toString()
 
         if (selectedUser.isNullOrEmpty() || selectedUser == "No users available") {

@@ -432,6 +432,7 @@
                 </LinearLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+             <!--pagina-->
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/pag_3"
@@ -440,70 +441,107 @@
                 android:background="#CCC2C2">
 
                 <TextView
-                    android:id="@+id/label_load_user"
+                    android:id="@+id/user_menu_textview_title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginEnd="32dp"
                     android:background="@drawable/rouded_button"
                     android:gravity="center"
-                    android:text="Load User"
+                    android:text="USER MENU"
                     android:textColor="#FFFFFF"
                     android:textSize="16sp"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_marginTop="24dp"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginEnd="32dp"/>
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <Spinner
-                    android:id="@+id/spinner_users"
+                    android:id="@+id/user_menu_spinner_users"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/label_load_user"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_marginTop="24dp"
                     android:layout_marginStart="32dp"
-                    android:layout_marginEnd="32dp"/>
+                    android:layout_marginTop="24dp"
+                    android:layout_marginEnd="32dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/user_menu_textview_title" />
 
                 <Button
-                    android:id="@+id/button_cancel_load_user"
+                    android:id="@+id/user_menu_button_cancel"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/rouded_button"
                     android:minHeight="0dp"
-                    android:text="Cancel"
                     android:padding="10dp"
-                    android:textColor="#FFFFFF"
-                    android:textSize="14sp"
                     android:paddingTop="6dp"
                     android:paddingBottom="6dp"
-                    android:background="@drawable/rouded_button"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/button_select_user"
+                    android:text="Cancel"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="@id/user_menu_button_select_user"
+                    app:layout_constraintTop_toBottomOf="@id/user_menu_button_select_user"
+                    android:layout_marginTop="24dp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/spinner_users"
-                    app:layout_constraintHorizontal_chainStyle="packed"
-                    android:layout_marginBottom="32dp"/>
+                    android:layout_marginBottom="80dp"
+                    app:layout_constraintEnd_toEndOf="@id/user_menu_button_select_user"
+                    />
 
                 <Button
-                    android:id="@+id/button_select_user"
+                    android:id="@+id/user_menu_button_select_user"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
+                    android:background="@drawable/rouded_button"
                     android:minHeight="0dp"
                     android:text="Select"
                     android:textColor="#FFFFFF"
-                    android:textSize="14sp"
+                    android:padding="10dp"
                     android:paddingTop="6dp"
                     android:paddingBottom="6dp"
-                    android:padding="10dp"
-                    android:background="@drawable/rouded_button"
-                    app:layout_constraintStart_toEndOf="@id/button_cancel_load_user"
+                    android:textSize="14sp"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/user_menu_spinner_users"
+                    app:layout_constraintStart_toEndOf="@id/user_menu_button_new"
+                    android:layout_marginEnd="50dp"
+                    android:layout_marginTop="130dp"/>
+
+                <Button
+                    android:id="@+id/user_menu_button_delete"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:background="@drawable/rouded_button"
+                    android:minHeight="0dp"
+                    android:padding="10dp"
+                    android:paddingTop="6dp"
+                    android:paddingBottom="6dp"
+                    android:text="Delete"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/spinner_users"
-                    android:layout_marginBottom="32dp"/>
+                    app:layout_constraintEnd_toEndOf="@id/user_menu_button_new"
+                    app:layout_constraintStart_toStartOf="@id/user_menu_button_new"
+                    app:layout_constraintTop_toBottomOf="@id/user_menu_button_new"
+                    android:layout_marginBottom="80dp"/>
+
+                <Button
+                    android:id="@+id/user_menu_button_new"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="50dp"
+                    android:layout_marginTop="130dp"
+                    android:background="@drawable/rouded_button"
+                    android:minHeight="0dp"
+                    android:padding="10dp"
+                    android:paddingTop="6dp"
+                    android:paddingBottom="6dp"
+                    android:text="New"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/user_menu_button_select_user"
+                    android:layout_marginEnd="50dp"
+                    app:layout_constraintTop_toBottomOf="@id/user_menu_spinner_users" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -882,7 +920,7 @@
                         android:layout_marginStart="8dp"/>
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </ScrollView>
-            <!--pagina-->
+
             <ScrollView
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
