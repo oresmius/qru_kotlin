@@ -628,15 +628,15 @@
                     android:background="@drawable/rouded_button"
                     app:layout_constraintTop_toBottomOf="@id/user_indicator"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/button_Change_User"
+                    app:layout_constraintEnd_toStartOf="@id/main_menu_button_user_menu"
                     app:layout_constraintWidth_percent="0.3" />
 
                 <Button
-                    android:id="@+id/button_Change_User"
+                    android:id="@+id/main_menu_button_user_menu"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:minHeight="48dp"
-                    android:text="Change User"
+                    android:text="User Menu"
                     android:textColor="#FFFFFF"
                     android:textSize="14sp"
                     android:layout_marginTop="24dp"
@@ -661,7 +661,7 @@
                     android:layout_marginStart="8dp"
                     android:background="@drawable/rouded_button"
                     app:layout_constraintTop_toBottomOf="@id/user_indicator"
-                    app:layout_constraintStart_toEndOf="@id/button_Change_User"
+                    app:layout_constraintStart_toEndOf="@id/main_menu_button_user_menu"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintWidth_percent="0.3" />
 

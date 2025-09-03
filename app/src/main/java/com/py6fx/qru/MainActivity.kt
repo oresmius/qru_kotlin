@@ -17,6 +17,7 @@ import android.view.inputmethod.InputMethodManager
 
 
 class MainActivity : AppCompatActivity() {
+    private val navHistory = ArrayDeque<Int>()
 
     private var lastQrgText: String? = null
     private var lastModeText: String? = null
@@ -157,7 +158,7 @@ class MainActivity : AppCompatActivity() {
             navigateToPage(1)
         }
         findViewById<Button>(R.id.user_menu_button_cancel).setOnClickListener {
-            navigateToPage(0)
+            navigateBack()
         }
         findViewById<Button>(R.id.button_cancel_new_contest).setOnClickListener {
             contestManager.resetContestForm()
@@ -436,7 +437,7 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.user_menu_button_new).setOnClickListener {
             navigateToPage(1)
         }
-        findViewById<Button>(R.id.button_Change_User).setOnClickListener {
+        findViewById<Button>(R.id.main_menu_button_user_menu).setOnClickListener {
             navigateToPage(2)
         }
         // --- Botão MEM: cria memória a partir dos campos atuais ---
@@ -539,7 +540,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     // Lógica para navegar entre páginas
-    fun navigateToPage(pageIndex: Int) {
+    fun navigateToPage(pageIndex: Int, pushToHistory: Boolean = true) {
+        val current = viewFlipper.displayedChild
+        if (pushToHistory && current != pageIndex) {
+            navHistory.addLast(current)   // guarda de onde veio
+        }
         viewFlipper.displayedChild = pageIndex
     }
     // Chame isto quando detectar DUPE
@@ -553,6 +558,13 @@ class MainActivity : AppCompatActivity() {
         lastDupeQsoId = null
         dupeBanner.visibility = View.GONE
     }
-
-
+    // Lógica para navegar para página anterior
+    fun navigateBack() {
+        if (navHistory.isNotEmpty()) {
+            val previous = navHistory.removeLast()
+            viewFlipper.displayedChild = previous
+        } else {
+            Toast.makeText(this, "No previous page.", Toast.LENGTH_SHORT).show()
+        }
+    }
 }
