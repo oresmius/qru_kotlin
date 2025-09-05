@@ -53,6 +53,10 @@ class MainActivity : AppCompatActivity() {
     //instância do logger manager
     private val logger = LoggerManager()
 
+    // intância do udc import
+    private lateinit var udcImporter: UdcImportManager
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,6 +90,15 @@ class MainActivity : AppCompatActivity() {
                 logger.updateMemorySuggestionForCurrentQrg(this@MainActivity)
             }
         })
+
+        // Inicializa o udc importer
+
+        udcImporter = UdcImportManager(this) {
+            // Refresh contest templates spinner on the "New Contest" page (pag_5)
+            contestManager.loadContests(findViewById(R.id.pag_5))
+        }
+        udcImporter.registerImporter()
+
 
 
         // Inicializa o UserManager
@@ -536,6 +549,11 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.button_contest_general_cancel).setOnClickListener {
             navigateToPage(3)
         }
+
+        findViewById<Button>(R.id.button_import_contest).setOnClickListener {
+            udcImporter.startImport()
+        }
+
 
     }
 
