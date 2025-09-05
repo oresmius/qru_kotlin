@@ -41,6 +41,16 @@ This project also aims to put into practice what I learned in my degree in Data 
 
 ---
 
+## THE AUXILIARY MEMORYS
+
+Although the app is quite intuitive (at least I tried), the auxiliary memory system (the field just above the RX Call field) can be a bit confusing at first.
+
+Yellow call: The last QSO made in the current QRG and mode. This is a dupe.
+
+Green call: This is an auxiliary memory created by the MEM button and can be created in any situation, even over a dupe.
+
+---
+
 ## How to Build
 
 1. Clone the repository:
