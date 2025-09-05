@@ -23,7 +23,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/pag_1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -92,7 +92,7 @@
                     />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-
+            <!--pagina-->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/pag_2"
                 android:layout_width="match_parent"
@@ -407,12 +407,12 @@
                     app:layout_constraintEnd_toEndOf="parent">
 
                     <Button
-                        android:id="@+id/button_cancel_new_user"
+                        android:id="@+id/button_save_user"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:background="@drawable/rouded_button"
-                        android:text="Cancel"
+                        android:text="Save User"
                         android:textColor="#FFFFFF"
                         android:textSize="14sp" />
 
@@ -421,12 +421,12 @@
                         android:layout_height="wrap_content" />
 
                     <Button
-                        android:id="@+id/button_save_user"
+                        android:id="@+id/button_cancel_new_user"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:background="@drawable/rouded_button"
-                        android:text="Save User"
+                        android:text="CANCEL"
                         android:textColor="#FFFFFF"
                         android:textSize="14sp" />
                 </LinearLayout>
@@ -717,7 +717,7 @@
                     app:layout_constraintWidth_percent="0.3" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-             <!--pagina-->
+
             <ScrollView
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
@@ -1092,6 +1092,20 @@
                         android:layout_width="0dp"
                         android:layout_height="50dp"
                         android:text="New Contest"
+                        android:textColor="#FFFFFF"
+                        android:layout_marginTop="120dp"
+                        android:background="@drawable/rouded_button"
+                        app:layout_constraintTop_toBottomOf="@id/spinner_contests_initialized"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/guideline_33"
+                        android:layout_marginStart="0dp"
+                        android:layout_marginEnd="8dp" />
+
+                    <Button
+                        android:id="@+id/button_import_contest"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:text="IMPORT .UDC"
                         android:textColor="#FFFFFF"
                         android:layout_marginTop="120dp"
                         android:background="@drawable/rouded_button"
