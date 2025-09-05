@@ -121,5 +121,3 @@ Author
   Recruit [0101] — My Chat GPT Assistant
 
   73
-
-  ![1](screenshots/1 QRU.jpeg) 
