@@ -241,7 +241,7 @@ class ExportCabrilloManager(private val activity: MainActivity) {
             builder.appendLine("CATEGORY-POWER: LOW")
             builder.appendLine("CATEGORY-ASSISTED: NON-ASSISTED")
             builder.appendLine("CLUB: ${club.ifEmpty { "UNKNOWN" }}")
-            builder.appendLine("CREATED-BY: QRU v0.6.0")
+            builder.appendLine("CREATED-BY: QRU v0.7.0")
             builder.appendLine("EMAIL: ${email.ifEmpty { "unknown@qru.app" }}")
             builder.appendLine("NAME: $name")
             builder.appendLine("ADDRESS: $address1")
