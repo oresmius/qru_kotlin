@@ -195,7 +195,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.button_cancel_new_user).setOnClickListener {
-            navigateToPage(0)
+            navigateBack()
         }
 
         // Configuração do botão "Load User"
@@ -530,12 +530,7 @@ class MainActivity : AppCompatActivity() {
                 .setNegativeButton("Cancel", null)
                 .show()
         }
-        findViewById<Button>(R.id.button_Edit_User).setOnClickListener {
-            // Reaproveita a pág. 2 com os campos preenchidos e CALL travado
-            val pag2 = findViewById<View>(R.id.pag_2)
-            userManager.editUser(pag2)
-            navigateToPage(1) // mostra a página 2
-        }
+
         findViewById<Button>(R.id.button_delete_contest).setOnClickListener {
             android.app.AlertDialog.Builder(this)
                 .setTitle("Delete Contest")
@@ -554,6 +549,11 @@ class MainActivity : AppCompatActivity() {
             udcImporter.startImport()
         }
 
+        findViewById<Button>(R.id.user_menu_button_edit).setOnClickListener {
+            val pag2 = findViewById<View>(R.id.pag_2)
+            userManager.editUser(pag2)   // agora já funciona com o Spinner
+            navigateToPage(1)            // abre a tela de edição (pag_2)
+        }
 
     }
 

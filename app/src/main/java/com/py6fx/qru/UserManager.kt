@@ -191,10 +191,12 @@ class UserManager(private val context: Context, private val activity: MainActivi
     private var originalCallTextColor: Int? = null
 
     fun editUser(pag2: View) {
-        // 1) Usuário ativo (do indicador)
-        val call = activity.findViewById<TextView>(R.id.user_indicator).text.toString().trim()
-        if (call.isEmpty() || call == "USER?" || call == "USER") {
-            Toast.makeText(context, "No active user selected!", Toast.LENGTH_LONG).show()
+        // 1) Usuário selecionado no User Menu (Spinner)
+        val spinner = activity.findViewById<Spinner>(R.id.user_menu_spinner_users)
+        val call = spinner.selectedItem?.toString()?.trim().orEmpty()
+
+        if (call.isEmpty() || call == "No users available") {
+            Toast.makeText(context, "No valid user selected!", Toast.LENGTH_LONG).show()
             return
         }
 
@@ -334,7 +336,7 @@ class UserManager(private val context: Context, private val activity: MainActivi
             editingCall = null
             setEditUserUi(pag2, active = false)
             clearUserForm(pag2) // deixa no estado neutro
-            activity.navigateToPage(3)
+            activity.navigateToPage(2)
         } catch (e: SQLiteException) {
             Toast.makeText(context, "Error updating user: ${e.message}", Toast.LENGTH_LONG).show()
         }
