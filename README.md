@@ -27,12 +27,12 @@ This project also aims to put into practice what I learned in my degree in Data 
 
 - **.UDC Files**
   
-QRU can import N1MM Logger+ .udc contest definition files that you provide.
-QRU does not include or redistribute any .udc files.
-N1MM Logger+ and related marks are trademarks of their respective owners.
-References to “N1MM Logger+” are for compatibility description only; there is no affiliation, partnership, or endorsement.
-Users are responsible for ensuring they have the rights to use any files they import.
-All imports are processed locally on your device.
+  QRU can import N1MM Logger+ .udc contest definition files that you provide.
+  QRU does not include or redistribute any .udc files.
+  N1MM Logger+ and related marks are trademarks of their respective owners.
+  References to “N1MM Logger+” are for compatibility description only; there is no affiliation, partnership, or endorsement.
+  Users are responsible for ensuring they have the rights to use any files they import.
+  All imports are processed locally on your device.
 
 - **Open Source:**  
   Project is fully open for study and community contributions. Commercial use is prohibited.
