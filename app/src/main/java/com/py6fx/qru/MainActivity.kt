@@ -554,7 +554,6 @@ class MainActivity : AppCompatActivity() {
             userManager.editUser(pag2)   // agora já funciona com o Spinner
             navigateToPage(1)            // abre a tela de edição (pag_2)
         }
-
     }
 
     // Lógica para navegar entre páginas
