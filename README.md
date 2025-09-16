@@ -28,11 +28,6 @@ This project also aims to put into practice what I learned in my degree in Data 
 - **.UDC Files**
   
   QRU can import N1MM Logger+ .udc contest definition files that you provide.
-  QRU does not include or redistribute any .udc files.
-  N1MM Logger+ and related marks are trademarks of their respective owners.
-  References to “N1MM Logger+” are for compatibility description only; there is no affiliation, partnership, or endorsement.
-  Users are responsible for ensuring they have the rights to use any files they import.
-  All imports are processed locally on your device.
 
 - **Open Source:**  
   Project is fully open for study and community contributions. Commercial use is prohibited.
@@ -101,41 +96,44 @@ Green call: This is an auxiliary memory created by the MEM button and can be cre
 
     Export: Export logs in Cabrillo or ADIF.
 
-----------------------
+--------------------------------------------------------------------
 
-Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)
+QRU - Amateur Radio Contest Logger
+Copyright (C) 2025 Fabio Sousa (PY6FX)
 
-Copyright (c) 2025 Fábio Sousa [PY6FX]
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
-To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/
-or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-You are free to:
-- Share — copy and redistribute the material in any medium or format
-- Adapt — remix, transform, and build upon the material
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-Under the following terms:
-- Attribution — You must give appropriate credit, provide a link to the license, and indicate if changes were made.
-- NonCommercial — You may not use the material for commercial purposes.
+----------------------------------------------------------------------
+Disclaimer:
 
-No additional restrictions — You may not apply legal terms or technological measures that legally restrict others from doing anything the license permits.
+QRU does not include or redistribute any `.udc` files.  
+N1MM Logger+ and related marks are trademarks of their respective owners.  
+References to “N1MM Logger+” are for compatibility description only;  
+there is no affiliation, partnership, or endorsement.  
 
-Disclaimer
+----------------------------------------------------------------------
 
-This software is provided "as is", without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose and noninfringement.
-The author shall not be liable for any claim, damages, or other liability, whether in an action of contract, tort or otherwise, arising from, out of or in connection with the software or the use or other dealings in the software.
-Use at your own risk.
-Contributing
+Full text of the GNU General Public License v3:
+<https://www.gnu.org/licenses/gpl-3.0.txt>
 
------------------------
-
+----------------------------------------------------------------------
 PRs and suggestions are welcome!
 Please open issues for bugs or ideas, but keep in mind the minimalist, single-radio focus of this app.
 
 Author
 
-  Fábio Sousa [PY6FX] — [py1xr.qsl@gmail.com]
+  Fábio Almeida e Sousa [PY6FX] — [py1xr.qsl@gmail.com]
 
   Recruit [0101] — My Chat GPT Assistant
 
