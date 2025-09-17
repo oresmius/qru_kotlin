@@ -25,6 +25,9 @@ This project also aims to put into practice what I learned in my degree in Data 
 - **Contest Management:**  
   Create, edit, resume, export, and delete contests per user.
 
+- **Auxiliary memories:**
+  To avoid unnecessary typing.
+
 - **.UDC Files**
   
   QRU can import N1MM Logger+ .udc contest definition files that you provide.
@@ -45,7 +48,7 @@ This project also aims to put into practice what I learned in my degree in Data 
 
 ---
 
-## THE AUXILIARY MEMORYS
+## The Auxiliary Memories
 
 Although the app is quite intuitive (at least I tried), the auxiliary memory system (the field just above the RX Call field) can be a bit confusing at first.
 
