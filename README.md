@@ -26,7 +26,7 @@ This project also aims to put into practice what I learned in my degree in Data 
   Create, edit, resume, export, and delete contests per user.
 
 - **Auxiliary memories:**
-- 
+  
   To avoid unnecessary typing.
 
 - **.UDC Files**
