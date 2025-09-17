@@ -1,9 +1,34 @@
+/*
+ * QRU - Amateur Radio Contest Logger
+ * Copyright (C) 2025 Fabio Almeida e Sousa (PY6FX)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+ * Disclaimer:
+ * QRU does not include or redistribute any .udc files.
+ * N1MM Logger+ and related marks are trademarks of their respective owners.
+ * References to "N1MM Logger+" are for compatibility description only;
+ * there is no affiliation, partnership, or endorsement.
+ * Users are responsible for ensuring they have the rights to use any files
+ * they import. All imports are processed locally on the user's device.
+ */
+
 package com.py6fx.qru
 
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
-import android.provider.DocumentsContract
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import java.io.OutputStream
@@ -23,7 +48,7 @@ class ExportCabrilloManager(private val activity: MainActivity) {
         CABRILLO, ADIF
     }
 
-    fun registrarExportador(callback: (Uri?) -> Unit) {
+    fun registrarExportador() {
         createFileLauncher = activity.registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) { result ->
@@ -241,7 +266,7 @@ class ExportCabrilloManager(private val activity: MainActivity) {
             builder.appendLine("CATEGORY-POWER: LOW")
             builder.appendLine("CATEGORY-ASSISTED: NON-ASSISTED")
             builder.appendLine("CLUB: ${club.ifEmpty { "UNKNOWN" }}")
-            builder.appendLine("CREATED-BY: QRU v0.7.0")
+            builder.appendLine("CREATED-BY: QRU v0.7.1")
             builder.appendLine("EMAIL: ${email.ifEmpty { "unknown@qru.app" }}")
             builder.appendLine("NAME: $name")
             builder.appendLine("ADDRESS: $address1")
