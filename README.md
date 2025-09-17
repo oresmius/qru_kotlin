@@ -103,7 +103,7 @@ Green call: This is an auxiliary memory created by the MEM button and can be cre
 --------------------------------------------------------------------
 
 QRU - Amateur Radio Contest Logger
-Copyright (C) 2025 Fabio Sousa (PY6FX)
+Copyright (C) 2025 Fabio Almeida e Sousa (PY6FX)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
