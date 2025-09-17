@@ -34,7 +34,7 @@ This project also aims to put into practice what I learned in my degree in Data 
   QRU can import N1MM Logger+ .udc contest definition files that you provide.
 
 - **Open Source:**  
-  Project is fully open for study and community contributions. Commercial use is prohibited.
+  Project is fully open for study and community contributions. 
 
 ---
 
