@@ -228,12 +228,13 @@ class ExportCabrilloManager(private val activity: MainActivity) {
             }
 
             val contestId = contestCursor.getInt(contestCursor.getColumnIndexOrThrow("id"))
-            val displayName = contestCursor.getString(contestCursor.getColumnIndexOrThrow("DisplayName"))
+            val cabrilloName = contestCursor.getString(contestCursor.getColumnIndexOrThrow("CabrilloName"))
             val modeRaw = contestCursor.getString(contestCursor.getColumnIndexOrThrow("Mode"))
             val cabrilloMode = mapearModoParaCabrillo(modeRaw)
             val sendExchange = contestCursor.getString(contestCursor.getColumnIndexOrThrow("SendExchange"))
             val category = contestCursor.getString(contestCursor.getColumnIndexOrThrow("Operator"))
             val band = contestCursor.getString(contestCursor.getColumnIndexOrThrow("Band"))
+            val power = contestCursor.getString(contestCursor.getColumnIndexOrThrow("Power"))
 
             contestCursor.close()
 
@@ -257,14 +258,14 @@ class ExportCabrilloManager(private val activity: MainActivity) {
 
             // Cabeçalho Cabrillo
             builder.appendLine("START-OF-LOG: 3.0")
+            builder.appendLine("CONTEST: $cabrilloName")
             builder.appendLine("CALLSIGN: $userCall")
-            builder.appendLine("CONTEST: $displayName")
             builder.appendLine("CATEGORY-OPERATOR: $category")
+            builder.appendLine("CATEGORY-ASSISTED: NON-ASSISTED")
             builder.appendLine("CATEGORY-BAND: $band")
             builder.appendLine("CATEGORY-MODE: $cabrilloMode")
             builder.appendLine("CATEGORY-TRANSMITTER: ONE")
-            builder.appendLine("CATEGORY-POWER: LOW")
-            builder.appendLine("CATEGORY-ASSISTED: NON-ASSISTED")
+            builder.appendLine("CATEGORY-POWER: $power")
             builder.appendLine("CLUB: ${club.ifEmpty { "UNKNOWN" }}")
             builder.appendLine("CREATED-BY: QRU v0.7.1")
             builder.appendLine("EMAIL: ${email.ifEmpty { "unknown@qru.app" }}")
